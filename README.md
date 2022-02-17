@@ -15,7 +15,7 @@ Add your own name (do not add the names for others!) to the section below.
 | ![](https://eu.ui-avatars.com/api/?name=Aksel+Tacettin&length=2&size=50&color=FFF&background=FFC0CB&font-size=0.325) | Aksel Tacettin | E.A.Tacettin@student.tudelft.nl |
 | ![](https://eu.ui-avatars.com/api/?name=Jordano+decastro&length=2&size=50&color=FF0&background=FFCCB&font-size=0.325) | Jordano de Castro | j.b.decastro@student.tudelft.nl |
 | ![](https://eu.ui-avatars.com/api/?name=Stiliyan+Nanovski&length=2&size=50&color=FFF&background=FFC0CB&font-size=0.325) | Stiliyan Nanovski | S.I.Nanovski@student.tudelft.nl |
-| ![](https://eu.ui-avatars.com/api/?name=Divit+Mittal&length=2&size=50&color=FFF&background=FFC0CB&font-size=0.325) | Divit Mittal | D.Mittal-1@student.tudelft.nl |
+| ![](https://eu.ui-avatars.com/api/?name=Divit+Mittal&length=2&size=50&color=FF0&background=FFCCB&font-size=0.325) | Divit Mittal | D.Mittal-1@student.tudelft.nl |
 
 <!-- Instructions (remove once assignment has been completed -->
 <!-- - Add (only!) your own name to the table above (use Markdown formatting) -->
