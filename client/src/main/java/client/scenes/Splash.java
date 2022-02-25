@@ -20,6 +20,8 @@ import javax.xml.stream.EventFilter;
 import javax.xml.stream.events.XMLEvent;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
 
 
 public class Splash {
@@ -28,7 +30,7 @@ public class Splash {
 
     private Scene overview;
 
-    public void initialize(Stage primaryStage, Color sceneColor){
+    public void initialize(Stage primaryStage, Color sceneColor) throws IOException {
         this.primaryStage = primaryStage;
         Group root = new Group();
         this.overview = new Scene(root, 1720, 920);
@@ -38,7 +40,7 @@ public class Splash {
         LinearGradient linear = new LinearGradient(0, 1, 0, 0, true, CycleMethod.NO_CYCLE, stops);
         overview.setFill(linear);
 
-        Image image = new Image("D:\\OOPP Project\\repository-template\\client\\src\\337afabe49c9ad1e0dcf554fb3b642ff.jpg");
+        Image image = new Image(new File("./client/resources/images/background.jpg").getCanonicalPath());
         ImageView imageView = new ImageView(image);
         imageView.setFitWidth(1980);
         imageView.setY(220);
