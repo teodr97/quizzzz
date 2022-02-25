@@ -35,13 +35,19 @@ public class QuestionController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<HttpStatus> deleteQuestion(@PathVariable int id){
+    public String deleteQuestion(@PathVariable int id){
         Question question = repository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Question not found with id: " + id));
 
         repository.delete(question);
 
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return "Entry deleted";
+    }
+
+    @DeleteMapping
+    public String deleteAll(){
+        repository.deleteAll();
+        return "All entries deleted";
     }
 
 
