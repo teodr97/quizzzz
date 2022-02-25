@@ -40,7 +40,7 @@ public class Main {
     }
 
     private void insertJavaAdvocates(QuestionRepository repository){
-        //repository.save(new Question("Why are you running?"));
-        //repository.save(new Question("I like it, Picasso?"));
+        repository.save(new Question("Why are you running?"));
+        repository.save(new Question("I like it, Picasso?"));
     }
 }
