@@ -15,33 +15,36 @@
  */
 package client;
 
-import static com.google.inject.Guice.createInjector;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 
 import client.scenes.Splash;
+import client.scenes.TestMainCtrl;
 import com.google.inject.Injector;
-
-import client.scenes.AddQuoteCtrl;
-import client.scenes.MainCtrl;
-import client.scenes.QuoteOverviewCtrl;
 import javafx.application.Application;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
+import static com.google.inject.Guice.createInjector;
 
 public class Main extends Application {
 
     private static final Injector INJECTOR = createInjector(new MyModule());
     private static final MyFXML FXML = new MyFXML(INJECTOR);
 
-    public static void main(String[] args) throws URISyntaxException, IOException {
-        launch();
-    }
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        var mainCtrl = INJECTOR.getInstance(Splash.class);
-        mainCtrl.initialize(primaryStage, Color.BLACK);
+        //gets Splash.fxml file, which has the scene/parent set up via Scene Builder
+        var overview = FXML.load(Splash.class, "client", "scenes", "Splash.fxml");
+
+        //gets the mainCtrl class
+        var mainCtrl = INJECTOR.getInstance(TestMainCtrl.class);
+        //passes the parameters to the mainCtrl class
+        mainCtrl.initialize(primaryStage, overview);
+
+    }
+
+    public static void main(String[] args) throws URISyntaxException, IOException {
+        launch();
     }
 }
