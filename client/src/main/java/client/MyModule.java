@@ -21,6 +21,7 @@ import com.google.inject.Scopes;
 
 import client.scenes.Splash;
 import client.scenes.TestMainCtrl;
+import client.scenes.HowToPlay;
 
 public class MyModule implements Module {
 
@@ -29,5 +30,6 @@ public class MyModule implements Module {
     public void configure(Binder binder) {
         binder.bind(TestMainCtrl.class).in(Scopes.SINGLETON);
         binder.bind(Splash.class).in(Scopes.SINGLETON);
+        binder.bind(HowToPlay.class).in(Scopes.SINGLETON);
     }
 }
