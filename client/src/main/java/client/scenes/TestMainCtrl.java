@@ -56,4 +56,20 @@ public class TestMainCtrl {
         stage.show();
     }
 
+    public void switchToPastGames(ActionEvent event) throws IOException{
+        var overview = FXML.load(HowToPlay.class, "client", "scenes", "PastGames.fxml");
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(overview.getValue());
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void switchToUsername(ActionEvent event) throws IOException{
+        var overview = FXML.load(HowToPlay.class, "client", "scenes", "Username.fxml");
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(overview.getValue());
+        stage.setScene(scene);
+        stage.show();
+    }
+
 }
