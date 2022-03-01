@@ -10,7 +10,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="783.0" prefWidth="1119.0" style="-fx-background-color: linear-gradient(#02274f, #101b25);" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.TestMainCtrl">
    <children>
-      <Button layoutX="894.0" layoutY="687.0" mnemonicParsing="false" onAction="#switchToPastGames" prefHeight="54.0" prefWidth="176.0" style="-fx-background-color: #032254;"  text="Past games" textFill="WHITE">
+      <Button layoutX="894.0" layoutY="687.0" mnemonicParsing="false" onAction="#switchToPastGames" prefHeight="54.0" prefWidth="176.0" style="-fx-background-color: #032254;" styleClass="buttons" text="Past games" textFill="WHITE">
          <font>
             <Font size="18.0" />
          </font>
@@ -22,7 +22,7 @@
             <Font name="Arial Bold" size="72.0" />
          </font>
       </Text>
-      <Button layoutX="466.0" layoutY="533.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="224.0" style="-fx-background-color: #0249bd;" text="Play Singleplayer" textAlignment="CENTER" textFill="WHITE">
+      <Button layoutX="466.0" layoutY="533.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="224.0" style="-fx-background-color: #0249bd;" styleClass="buttons" text="Play Singleplayer" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="24.0" />
          </font>
@@ -30,7 +30,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button layoutX="466.0" layoutY="640.0" mnemonicParsing="false" onAction="#switchToUsername" prefHeight="74.0" prefWidth="224.0" style="-fx-background-color: #0249bd;" text="Play Multiplayer" textAlignment="CENTER" textFill="WHITE">
+      <Button layoutX="466.0" layoutY="640.0" mnemonicParsing="false" onAction="#switchToUsername" prefHeight="74.0" prefWidth="224.0" style="-fx-background-color: #0249bd;" styleClass="buttons" text="Play Multiplayer" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="24.0" />
          </font>
@@ -38,7 +38,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button layoutX="894.0" layoutY="613.0" mnemonicParsing="false" onAction="#switchToHowToPlay" prefHeight="54.0" prefWidth="176.0" style="-fx-background-color: #032254;" text="How to play" textFill="WHITE">
+      <Button layoutX="894.0" layoutY="613.0" mnemonicParsing="false" onAction="#switchToHowToPlay" prefHeight="54.0" prefWidth="176.0" style="-fx-background-color: #032254;" styleClass="buttons" text="How to play" textFill="WHITE">
          <font>
             <Font size="18.0" />
          </font>

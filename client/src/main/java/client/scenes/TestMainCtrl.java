@@ -22,7 +22,6 @@ public class TestMainCtrl {
     private Stage primaryStage;
     private Stage stage;
     private Scene scene;
-    private Parent parent;
 
     //initializes the stage and gets the scene from Splash.fxml
     //Opens/Shows the stage.
@@ -30,46 +29,49 @@ public class TestMainCtrl {
         this.primaryStage = primaryStage;
         this.scene = new Scene(overview.getValue());
 
-        showOverview();
+        showPrimaryStage();
+    }
+
+    //Sets the title and scene for the Startingstage.
+    public void showPrimaryStage() {
+        primaryStage.setTitle("QUIZZ");
+        primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    //Sets the title and scene for the stage.
-    public void showOverview() {
-        primaryStage.setTitle("QUIZZ");
-        primaryStage.setScene(scene);
+    //Sets and shows the scene.
+    public void setAndShowScenes(ActionEvent event){
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
     }
 
+    //If the event is executed then the scene switches to Splash.fxml
     public void switchToSplash(ActionEvent event) throws IOException{
         var overview = FXML.load(Splash.class, "client", "scenes", "Splash.fxml");
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(overview.getValue());
-        stage.setScene(scene);
-        stage.show();
+        setAndShowScenes(event);
     }
 
+    //Switches to HowToPlay.fxml
     public void switchToHowToPlay(ActionEvent event) throws IOException{
         var overview = FXML.load(HowToPlay.class, "client", "scenes", "HowToPlay.fxml");
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(overview.getValue());
-        stage.setScene(scene);
-        stage.show();
+        setAndShowScenes(event);
     }
 
+    //Switches to PastGames.fxml
     public void switchToPastGames(ActionEvent event) throws IOException{
         var overview = FXML.load(HowToPlay.class, "client", "scenes", "PastGames.fxml");
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(overview.getValue());
-        stage.setScene(scene);
-        stage.show();
+        setAndShowScenes(event);
     }
 
+    //Switches to Username.fxml
     public void switchToUsername(ActionEvent event) throws IOException{
         var overview = FXML.load(HowToPlay.class, "client", "scenes", "Username.fxml");
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(overview.getValue());
-        stage.setScene(scene);
-        stage.show();
+        setAndShowScenes(event);
     }
 
 }
