@@ -15,20 +15,20 @@
  */
 package client;
 
+import client.scenes.*;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
 
-import client.scenes.AddQuoteCtrl;
-import client.scenes.MainCtrl;
-import client.scenes.QuoteOverviewCtrl;
-
 public class MyModule implements Module {
 
+    //basically configures the TestMainCtrl and Splash classes, so it can be used by Main
     @Override
     public void configure(Binder binder) {
-        binder.bind(MainCtrl.class).in(Scopes.SINGLETON);
-        binder.bind(AddQuoteCtrl.class).in(Scopes.SINGLETON);
-        binder.bind(QuoteOverviewCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(TestMainCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(Splash.class).in(Scopes.SINGLETON);
+        binder.bind(HowToPlay.class).in(Scopes.SINGLETON);
+        binder.bind(Username.class).in(Scopes.SINGLETON);
+        binder.bind(PastGames.class).in(Scopes.SINGLETON);
     }
 }
