@@ -8,11 +8,11 @@ import javax.persistence.*;
 
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 
-@Entity
+//@Entity
 public class Activity {
 
-    @Id
-    @GeneratedValue
+    //@Id
+    //@GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
 
     public String title;
@@ -29,18 +29,18 @@ public class Activity {
         this.source = source;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        return EqualsBuilder.reflectionEquals(this, obj);
-    }
-
-    @Override
-    public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
-    }
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, MULTI_LINE_STYLE);
-    }
+//    @Override
+//    public boolean equals(Object obj) {
+//        return EqualsBuilder.reflectionEquals(this, obj);
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return HashCodeBuilder.reflectionHashCode(this);
+//    }
+//
+//    @Override
+//    public String toString() {
+//        return ToStringBuilder.reflectionToString(this, MULTI_LINE_STYLE);
+//    }
 }
