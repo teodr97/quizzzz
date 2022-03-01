@@ -9,7 +9,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 
-public class Splash implements Initializable {
+public class HowToPlay implements Initializable {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
@@ -19,7 +19,7 @@ public class Splash implements Initializable {
     private Scene overview;
 
     @Inject
-    public Splash(ServerUtils server, MainCtrl mainCtrl) {
+    public HowToPlay(ServerUtils server, MainCtrl mainCtrl) {
         this.server = server;
         this.mainCtrl = mainCtrl;
     }
