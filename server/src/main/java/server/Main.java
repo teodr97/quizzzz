@@ -23,6 +23,8 @@ import org.springframework.context.annotation.Bean;
 import server.api.Question;
 import server.database.QuestionRepository;
 
+import java.util.List;
+
 @SpringBootApplication
 @EntityScan(basePackages = { "commons", "server" })
 public class Main {
@@ -40,7 +42,18 @@ public class Main {
     }
 
     private void insertJavaAdvocates(QuestionRepository repository){
-        //repository.save(new Question("Why are you running?"));
-        //repository.save(new Question("I like it, Picasso?"));
+        List<Question> questions = (List<Question>) repository.findAll();
+        boolean contains = false;
+        for(Question q : questions){
+            if(q.getQuestion().equals("Why are you running?")) {
+                contains = true;
+                break;
+            }
+        }
+
+        if(!contains){
+            repository.save(new Question("Why are you running?"));
+        }
+
     }
 }
