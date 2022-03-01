@@ -3,11 +3,14 @@ package client.scenes;
 import client.MyFXML;
 import client.MyModule;
 import com.google.inject.Injector;
+import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import javafx.scene.control.Button;
 
 import javafx.event.ActionEvent;
 import java.io.IOException;
@@ -22,6 +25,20 @@ public class TestMainCtrl {
     private Stage primaryStage;
     private Stage stage;
     private Scene scene;
+
+    @FXML
+    private Button answerA;
+
+    @FXML
+    private Button answerB;
+
+    @FXML
+    private Button answerC;
+
+//    @FXML
+//    private TextField prompt;
+
+
 
     //initializes the stage and gets the scene from Splash.fxml
     //Opens/Shows the stage.
@@ -67,11 +84,39 @@ public class TestMainCtrl {
         setAndShowScenes(event);
     }
 
+
     //Switches to Username.fxml
     public void switchToUsername(ActionEvent event) throws IOException{
         var overview = FXML.load(HowToPlay.class, "client", "scenes", "Username.fxml");
         scene = new Scene(overview.getValue());
         setAndShowScenes(event);
     }
+
+    //Start single player game(for now only goes to singleplayer game screen
+    public void switchToSinglePlayer(ActionEvent event) throws IOException{
+        var overview = FXML.load(SinglePlayer.class, "client", "scenes", "SinglePlayer.fxml");
+        scene = new Scene(overview.getValue());
+        setAndShowScenes(event);
+    }
+
+
+    //check answers in singleplayer this needs can be more profesional
+    //by putting it in the singleplayer class
+    public void checkAnswer(ActionEvent event) throws IOException {
+        //check answer will also have to call a function:
+        //disableAnswers so the uses can't click the answers after already choosing one
+        Button useranswer = (Button) event.getTarget();
+
+//        if(useranswer == answerA){
+//            prompt.setText("Correct Bitch!");
+//        }else{
+//            prompt.setText("Incorrect Bitch!");
+//        }
+
+        System.out.println("user choose answer");
+
+        return;
+    }
+
 
 }

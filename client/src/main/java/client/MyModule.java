@@ -30,5 +30,6 @@ public class MyModule implements Module {
         binder.bind(HowToPlay.class).in(Scopes.SINGLETON);
         binder.bind(Username.class).in(Scopes.SINGLETON);
         binder.bind(PastGames.class).in(Scopes.SINGLETON);
+        binder.bind(SinglePlayer.class).in(Scopes.SINGLETON);
     }
 }
