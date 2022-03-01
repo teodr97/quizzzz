@@ -4,20 +4,25 @@ import client.MyFXML;
 import client.MyModule;
 import com.google.inject.Injector;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import javafx.scene.control.Button;
 
 import javafx.event.ActionEvent;
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 import static com.google.inject.Guice.createInjector;
 
-public class TestMainCtrl {
+public class TestMainCtrl{
 
     private static final Injector INJECTOR = createInjector(new MyModule());
     private static final MyFXML FXML = new MyFXML(INJECTOR);
@@ -35,8 +40,11 @@ public class TestMainCtrl {
     @FXML
     private Button answerC;
 
-//    @FXML
-//    private TextField prompt;
+    @FXML
+    private Text prompt;
+    @FXML
+    private ProgressBar timerBar;
+
 
 
 
@@ -45,6 +53,7 @@ public class TestMainCtrl {
     public void initialize(Stage primaryStage, Pair<Splash, Parent> overview) {
         this.primaryStage = primaryStage;
         this.scene = new Scene(overview.getValue());
+        this.prompt = new Text();
 
         showPrimaryStage();
     }
@@ -107,16 +116,50 @@ public class TestMainCtrl {
         //disableAnswers so the uses can't click the answers after already choosing one
         Button useranswer = (Button) event.getTarget();
 
-//        if(useranswer == answerA){
-//            prompt.setText("Correct Bitch!");
-//        }else{
-//            prompt.setText("Incorrect Bitch!");
-//        }
+        if(useranswer == answerA){
+            prompt.setText("Correct");
+            answerA.setStyle("-fx-background-color: #309500; -fx-border-color: black; -fx-border-width: 3px;");
+
+        }else{
+            prompt.setText("Incorrect");
+        }
+
+        if(useranswer == answerB){
+            answerB.setStyle("-fx-background-color: #BD0000;-fx-border-color: black; -fx-border-width: 3px;");
+
+        }else if(useranswer == answerC){
+            answerC.setStyle("-fx-background-color: #BD0000; -fx-border-color: black; -fx-border-width: 3px;");
+        }
+
+        //change scene sate to the one where someone has answererd the question
+        //in which case the buttons hould bedisabled and change collors
+        answerA.setDisable(true);
+        answerB.setDisable(true);
+        answerB.setStyle("-fx-background-color: #BD0000;");
+        answerC.setDisable(true);
+        answerC.setStyle("-fx-background-color: #BD0000;");
+
+
+
 
         System.out.println("user choose answer");
 
         return;
     }
+    public void showCorrect() throws IOException {
+
+
+        answerA.setDisable(true);
+        answerA.setStyle("-fx-background-color: #309500");
+        answerA.setDisable(true);
+        answerB.setStyle("-fx-background-color: #BD0000");
+
+        answerC.setDisable(true);
+        answerC.setStyle("-fx-background-color: #BD0000");
+        return;
+    }
+
+
 
 
 }
