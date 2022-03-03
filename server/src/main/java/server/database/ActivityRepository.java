@@ -1,7 +1,6 @@
 package server.database;
 
-import org.springframework.data.repository.CrudRepository;
+import commons.game.Activity;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ActivityRepository extends CrudRepository<Activity, Integer> {
-
-}
+public interface ActivityRepository extends JpaRepository<Activity, Long> {}
