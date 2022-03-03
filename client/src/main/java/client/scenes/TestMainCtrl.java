@@ -4,12 +4,12 @@ import client.MyFXML;
 import client.MyModule;
 import com.google.inject.Injector;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TextField;
+
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -17,8 +17,7 @@ import javafx.scene.control.Button;
 
 import javafx.event.ActionEvent;
 import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
+
 
 import static com.google.inject.Guice.createInjector;
 
