@@ -1,7 +1,5 @@
 package server.database;
 
-import org.apache.catalina.realm.JAASCallbackHandler;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
