@@ -45,6 +45,9 @@ public class TestMainCtrl{
     @FXML
     private ProgressBar timerBar;
 
+    @FXML
+    private Text questionField;
+
 
 
 
@@ -105,7 +108,11 @@ public class TestMainCtrl{
     public void switchToSinglePlayer(ActionEvent event) throws IOException{
         var overview = FXML.load(SinglePlayer.class, "client", "scenes", "SinglePlayer.fxml");
         scene = new Scene(overview.getValue());
+        //questionField.setText("What what what is this world?");
+
         setAndShowScenes(event);
+
+        //questionField.setText("What what what is this world?");
     }
 
 
