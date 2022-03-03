@@ -1,4 +1,4 @@
-package commons.game;
+package server.game;
 
 //@Entity
 public class Activity {

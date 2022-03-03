@@ -1,4 +1,4 @@
-package commons.game;
+package server.game.jokers;
 
 public abstract class Joker {
 
@@ -8,12 +8,15 @@ public abstract class Joker {
     private String name;
     //picture
 
+    private JokerState state;
+
     /**
      * Joker Constructor.
      * @param name The name of the joker.
      */
     public Joker(String name) {
         this.name = name;
+        this.state = JokerState.Available;
     }
 
     public String getName() {

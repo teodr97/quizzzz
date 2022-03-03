@@ -1,6 +1,6 @@
 package server.api;
 
-import commons.game.Activity;
+import server.game.Activity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
