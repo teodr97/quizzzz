@@ -5,6 +5,7 @@ import client.MyModule;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,9 +16,12 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.Timer;
 
 import static com.google.inject.Guice.createInjector;
 
@@ -51,10 +55,14 @@ public class SinglePlayer implements Initializable {
     @FXML
     private Text prompt;
 
-    double progress;
+    private double progress;
 
     @FXML
     private Text questionField;
+
+    double EPSILON = 0.00001;
+
+
 
     @Inject
     public SinglePlayer(ServerUtils server, MainCtrl mainCtrl) {
@@ -66,6 +74,15 @@ public class SinglePlayer implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources){
         questionField.setText("Question goes here");
+        Timer timerobj = new Timer();
+        progress = 0;
+
+        //declare an animation timer
+        AnimationTimer tm = new TimerMethod();
+        //start the timer
+        tm.start();
+
+
 
 
     }
@@ -115,22 +132,18 @@ public class SinglePlayer implements Initializable {
         return;
     }
 
-    public void increaseProgress(){
 
-        timerBar.setStyle("-fx-accent: red");
-
-    }
-
-    public void showCorrect() throws IOException {
+    //Diables all the answer buttons
+    public void Disableanswers(){
 
 
         answerA.setDisable(true);
-        answerA.setStyle("-fx-background-color: #309500");
-        answerA.setDisable(true);
-        answerB.setStyle("-fx-background-color: #BD0000");
+
+        answerB.setDisable(true);
+
 
         answerC.setDisable(true);
-        answerC.setStyle("-fx-background-color: #BD0000");
+
         return;
     }
 
@@ -139,6 +152,29 @@ public class SinglePlayer implements Initializable {
         var overview = FXML.load(Splash.class, "client", "scenes", "Splash.fxml");
         scene = new Scene(overview.getValue());
         setAndShowScenes(event);
+    }
+
+    //HANDLES   the timebar
+    private class TimerMethod extends AnimationTimer {
+        //define the handle method
+        @Override
+        public void handle(long now) {
+        //call the method
+            handlee();
+        }
+        //method handlee
+        private void handlee() {
+            //making this smaller will slow down the times
+            progress += 0.0001;
+            //set the new progress
+            timerBar.setProgress(progress);
+            //checks if the progress is 1 and will display prompt accordingly
+            // will also diable the buttons if the timer ends
+            if((timerBar.getProgress() + EPSILON > 1 && timerBar.getProgress() - EPSILON <1)){
+                prompt.setText("Timer over");
+                Disableanswers();
+            }
+        }
     }
 
 
