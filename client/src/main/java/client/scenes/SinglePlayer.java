@@ -20,6 +20,8 @@ import javafx.stage.Stage;
 import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.ResourceBundle;
 import java.util.Timer;
 
@@ -63,6 +65,13 @@ public class SinglePlayer implements Initializable {
     double EPSILON = 0.00001;
 
 
+    //
+    String[] questions = new String[2];
+    Iterator<String> questionIterator= Arrays.stream(questions).iterator();
+
+    // amount of question asked;
+    int qnumber;
+
 
     @Inject
     public SinglePlayer(ServerUtils server, MainCtrl mainCtrl) {
@@ -73,8 +82,14 @@ public class SinglePlayer implements Initializable {
     //no real functionality yet
     @Override
     public void initialize(URL location, ResourceBundle resources){
-        questionField.setText("Question goes here");
+        // we will probably retrieve the questions from the this.server variable but
+        //for now we hardcode the questions to figure out functionalityu first
+        //the questions can also become objects in the future for now we use strings tho
+        questions[0] = "Question 1";
+        questions[1] = "Question 2";
+        questionField.setText(questionIterator.next());
         Timer timerobj = new Timer();
+        qnumber = 0;
         progress = 0;
 
         //declare an animation timer
@@ -117,11 +132,12 @@ public class SinglePlayer implements Initializable {
         }
 
         //change scene sate to the one where someone has answererd the question
-        //in which case the buttons hould bedisabled and change collors
-        answerA.setDisable(true);
-        answerB.setDisable(true);
+        //in which case the buttons should be disabled and change colors
+
+        //now answer is hardcoded to be A that's why A becomes green and the rest red
+        Disableanswers();
         answerB.setStyle("-fx-background-color: #BD0000;");
-        answerC.setDisable(true);
+
         answerC.setStyle("-fx-background-color: #BD0000;");
 
 
@@ -133,7 +149,7 @@ public class SinglePlayer implements Initializable {
     }
 
 
-    //Diables all the answer buttons
+    //Disables all the answer buttons
     public void Disableanswers(){
 
 
@@ -146,6 +162,34 @@ public class SinglePlayer implements Initializable {
 
         return;
     }
+    //Enables all the answer buttons
+    public void Enableanswers(){
+
+
+        answerA.setDisable(false);
+
+        answerB.setDisable(false);
+
+
+        answerC.setDisable(false);
+
+        return;
+    }
+    //Enables all the answer buttons
+    public void resetGamescreen(){
+        //mainly resetting the answer buttons
+        //color and clickability
+        answerA.setStyle("-fx-background-color: #0249bd;");
+        answerB.setStyle("-fx-background-color: #0249bd;");
+
+        answerC.setStyle("-fx-background-color: #0249bd;");
+
+        Enableanswers();
+
+
+        return;
+    }
+
 
     //If the event is executed then the scene switches to Splash.fxml
     public void switchToSplash(ActionEvent event) throws IOException{
@@ -165,15 +209,34 @@ public class SinglePlayer implements Initializable {
         //method handlee
         private void handlee() {
             //making this smaller will slow down the times
-            progress += 0.0001;
+            progress += 0.01;
             //set the new progress
             timerBar.setProgress(progress);
             //checks if the progress is 1 and will display prompt accordingly
             // will also diable the buttons if the timer ends
             if((timerBar.getProgress() + EPSILON > 1 && timerBar.getProgress() - EPSILON <1)){
+                qnumber += 1;
                 prompt.setText("Timer over");
+                //when timer ends and game hasn't ended we want to display the next question
                 Disableanswers();
+
+
+
             }
+
+            if((timerBar.getProgress() + EPSILON > 1.5 && timerBar.getProgress() - EPSILON <1.5)){
+
+                //when timer ends and game hasn't ended we want to display the next question;
+                while(questionIterator.hasNext()){
+                    questionField.setText(questionIterator.next());
+                    resetGamescreen();
+
+                }
+                //when timer ends and game hasn't ended we want to display the next question;
+
+
+            }
+
         }
     }
 
