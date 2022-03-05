@@ -20,10 +20,9 @@ import javafx.stage.Stage;
 import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.Timer;
+import java.util.concurrent.TimeUnit;
 
 import static com.google.inject.Guice.createInjector;
 
@@ -63,11 +62,22 @@ public class SinglePlayer implements Initializable {
     private Text questionField;
 
     double EPSILON = 0.00001;
+    Button[] answerbuttons = new Button[3];
 
 
-    //
-    String[] questions = new String[2];
+    //in the fields below we hardocde the answers and questoins array
+    //I think in the future it would be handy if we had a queston objects which had the actual questoin as a string
+    // and then asllo it's corresponding answer. This answer should be exactly equal to the text on the button so that
+    // we can check for equality between what the user pressed and what the answer is.
+
+    //harcoded questions array this information will need to be retrieved from the database
+    //I think this is done with the server field
+    String[] questions = new String[4];
     Iterator<String> questionIterator= Arrays.stream(questions).iterator();
+
+    ////harcoded answers array this information will need to be retrieved from the database
+    String[] answers = new String[4];
+    Iterator<String> answersIterator= Arrays.stream(answers).iterator();
 
     // amount of question asked;
     int qnumber;
@@ -83,10 +93,31 @@ public class SinglePlayer implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources){
         // we will probably retrieve the questions from the this.server variable but
-        //for now we hardcode the questions to figure out functionalityu first
         //the questions can also become objects in the future for now we use strings tho
         questions[0] = "Question 1";
         questions[1] = "Question 2";
+        questions[2] = "Question 3";
+        questions[3] = "Question 4";
+
+        //when we create objects for the questoins each questoin will have the question string field and it's answer
+        //for now tho we simulate the arbiotrary order of questions by shuffling answers
+        // we want the checkanswer function to check the validity of these answers
+        //to make sure this is done in a general way we shuflle these answers:
+        //each corresponding to a questions see above
+        answers[0] = "answerA";
+        answers[1] = "answerB";
+        answers[2] = "answerC";
+        answers[3] = "answerA";
+        List<String> list =Arrays.asList(answers);
+
+
+        //makes an array with references to the asnwer buttons
+        answerbuttons[0]= answerA;
+        answerbuttons[1] = answerB;
+        answerbuttons[2] = answerC;
+
+        Collections.shuffle(list);
+        answersIterator = list.iterator();
         questionField.setText(questionIterator.next());
         Timer timerobj = new Timer();
         qnumber = 0;
@@ -109,41 +140,61 @@ public class SinglePlayer implements Initializable {
         stage.show();
     }
 
-    //check answers in singleplayer this needs can be more profesional
-    //by putting it in the singleplayer class
-    public void checkAnswer(ActionEvent event) throws IOException {
+    //check answers in singleplayer
+    public void checkAnswer(ActionEvent event) throws IOException, InterruptedException {
         //check answer will also have to call a function:
         //disableAnswers so the uses can't click the answers after already choosing one
+
+        //get the button clicked from the event paramater
         Button useranswer = (Button) event.getTarget();
 
-        if(useranswer == answerA){
-            prompt.setText("Correct");
-            answerA.setStyle("-fx-background-color: #309500; -fx-border-color: black; -fx-border-width: 3px;");
+        //
+        String correctanswer = answersIterator.next();
+        System.out.println("correct answer:"+ correctanswer);
+        System.out.println("your answer:"+ useranswer.getText());
 
-        }else{
+
+
+        //since we made an iteroator of the asnwers the program checks if  the users button clicked is the right corresponding click
+        //this function should defintely be tested
+
+        //make the buttons there "corerct collors" green for right answer red for the wrong answers
+        for(Button answerbutton: answerbuttons){
+            //the one corersponding witht he next asnwers entry is the correct answer and  becomes green
+            if(answerbutton.getText().equals(correctanswer)){
+                answerbutton.setStyle("-fx-background-color: #309500;");
+            }else{ //we make it red
+                answerbutton.setStyle("-fx-background-color: #BD0000;");
+
+            }
+        }
+
+        //after accordingly change the buttons collors we
+        //we retriieve the current style of all the buttons and add a border to the user chosen button
+        for(Button answerbutton: answerbuttons){
+
+            String currentstyle = answerbutton.getStyle();
+            StringBuilder currentstylebuilder = new StringBuilder(currentstyle);
+            //adding the border style
+            currentstylebuilder.append("-fx-border-color: black; -fx-border-width: 3px;");
+            String newstyle = currentstylebuilder.toString();
+
+            if(answerbutton == useranswer){
+                answerbutton.setStyle(newstyle);
+            }
+        }
+        //after that we have to proompt of if the user was correct or not
+        if(correctanswer.equals(useranswer.getText())){
+            prompt.setText("Correct");
+        } else{
             prompt.setText("Incorrect");
         }
 
-        if(useranswer == answerB){
-            answerB.setStyle("-fx-background-color: #BD0000;-fx-border-color: black; -fx-border-width: 3px;");
-
-        }else if(useranswer == answerC){
-            answerC.setStyle("-fx-background-color: #BD0000; -fx-border-color: black; -fx-border-width: 3px;");
-        }
-
-        //change scene sate to the one where someone has answererd the question
+        //change scene state to the one where someone has answererd the question
         //in which case the buttons should be disabled and change colors
 
-        //now answer is hardcoded to be A that's why A becomes green and the rest red
+
         Disableanswers();
-        answerB.setStyle("-fx-background-color: #BD0000;");
-
-        answerC.setStyle("-fx-background-color: #BD0000;");
-
-
-
-
-        System.out.println("user choose answer");
 
         return;
     }
@@ -177,18 +228,38 @@ public class SinglePlayer implements Initializable {
     }
     //Enables all the answer buttons
     public void resetGamescreen(){
-        //mainly resetting the answer buttons
-        //color and clickability
+        //resetting the answer buttons
+        //color and clickability, the timer bar and the text prompt
+
+        //buttons
         answerA.setStyle("-fx-background-color: #0249bd;");
         answerB.setStyle("-fx-background-color: #0249bd;");
-
         answerC.setStyle("-fx-background-color: #0249bd;");
-
         Enableanswers();
+
+        //timerbar
+        //we don't have to set the progress of the timer bar
+        //because the animation timer continually does that
+        progress = 0;
+
+        //prompt
+        prompt.setText("");
+
 
 
         return;
     }
+
+    //goes to the next question screen
+    public void nextQuestion(){
+        questionField.setText(questionIterator.next());
+        resetGamescreen();
+
+
+        return;
+    }
+
+
 
 
     //If the event is executed then the scene switches to Splash.fxml
@@ -227,9 +298,9 @@ public class SinglePlayer implements Initializable {
             if((timerBar.getProgress() + EPSILON > 1.5 && timerBar.getProgress() - EPSILON <1.5)){
 
                 //when timer ends and game hasn't ended we want to display the next question;
-                while(questionIterator.hasNext()){
-                    questionField.setText(questionIterator.next());
-                    resetGamescreen();
+                if(questionIterator.hasNext()){
+                    nextQuestion();
+
 
                 }
                 //when timer ends and game hasn't ended we want to display the next question;

@@ -40,7 +40,7 @@
             <Font name="Arial Bold" size="30.0" />
          </font>
       </Text>
-      <Button fx:id="answerA" layoutX="345.0" layoutY="392.0" mnemonicParsing="false" onAction="#checkAnswer" prefHeight="28.0" prefWidth="408.0" style="-fx-background-color: #0249bd;" styleClass="buttons" text="10 kwh" textAlignment="CENTER" textFill="WHITE">
+      <Button fx:id="answerA" layoutX="345.0" layoutY="392.0" mnemonicParsing="false" onAction="#checkAnswer" prefHeight="28.0" prefWidth="408.0" style="-fx-background-color: #0249bd;" styleClass="buttons" text="answerA" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="24.0" />
          </font>
@@ -48,7 +48,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button fx:id="answerB" layoutX="345.0" layoutY="457.0" mnemonicParsing="false" onAction="#checkAnswer" prefHeight="28.0" prefWidth="408.0" style="-fx-background-color: #0249bd;" styleClass="buttons" text="20 kwh" textAlignment="CENTER" textFill="WHITE">
+      <Button fx:id="answerB" layoutX="345.0" layoutY="457.0" mnemonicParsing="false" onAction="#checkAnswer" prefHeight="28.0" prefWidth="408.0" style="-fx-background-color: #0249bd;" styleClass="buttons" text="answerB" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="24.0" />
          </font>
@@ -56,7 +56,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button fx:id="answerC" layoutX="345.0" layoutY="525.0" mnemonicParsing="false" onAction="#checkAnswer" prefHeight="28.0" prefWidth="408.0" style="-fx-background-color: #0249bd;" styleClass="buttons" text="30 kwh" textAlignment="CENTER" textFill="WHITE">
+      <Button fx:id="answerC" layoutX="345.0" layoutY="525.0" mnemonicParsing="false" onAction="#checkAnswer" prefHeight="28.0" prefWidth="408.0" style="-fx-background-color: #0249bd;" styleClass="buttons" text="answerC" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="24.0" />
          </font>
