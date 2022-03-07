@@ -1,43 +1,51 @@
 package commons.game;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity
 public class Question {
+    @Id
+    @GeneratedValue
+    private int id;
+    private String question;
 
     /**
-     * The activity options of the question.
+     * Constructor method.
+     * @param question the question that should be created as a new entity
      */
-    private Activity[] activities;
+    public Question(String question) { this.question = question; }
 
     /**
-     * The index of the correct activity, should within [0, activities.size).
+     * Empty constructor; should not be used for anything, but the compiler whines if
+     * it's missing from here.
      */
-    private int answer;
+    public Question() { }
 
-    /**
-     * The prompt of the question, telling the user what the question is.
-     */
-    private String prompt;
+    //SETTERS==========================================================
+    public void setId(int id) { this.id = id; }
 
-    /**
-     * Question Constructor.
-     * @param activities The activities of the question.
-     * @param answer The index of the correct activity.
-     * @param prompt The type of question.
-     */
-    public Question(Activity[] activities, int answer, String prompt) {
-        this.activities = activities;
-        this.answer = answer;
-        this.prompt = prompt;
+    public void setQuestion(String question) { this.question = question; }
+
+    //GETTERS==========================================================
+    public int getId(){
+        return this.id;
     }
 
-    public Activity[] getActivities() {
-        return activities;
+    public String getQuestion(){
+        return this.question;
     }
 
-    public int getAnswer() {
-        return answer;
-    }
-
-    public String getPrompt() {
-        return prompt;
+    /**
+     * This function should be used for debugging purposes only
+     * @return String containing the question and its ID
+     */
+    @Override
+    public String toString() {
+        return "Question{" +
+                "id=" + id +
+                ", question='" + question + '\'' +
+                '}';
     }
 }
