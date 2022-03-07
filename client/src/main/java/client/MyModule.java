@@ -22,7 +22,7 @@ import com.google.inject.Scopes;
 
 public class MyModule implements Module {
 
-    //basically configures the TestMainCtrl and Splash classes, so it can be used by Main
+    //basically configures the TestMainCtrl and other frontend classes so it can be used
     @Override
     public void configure(Binder binder) {
         binder.bind(TestMainCtrl.class).in(Scopes.SINGLETON);
@@ -30,5 +30,6 @@ public class MyModule implements Module {
         binder.bind(HowToPlay.class).in(Scopes.SINGLETON);
         binder.bind(Username.class).in(Scopes.SINGLETON);
         binder.bind(PastGames.class).in(Scopes.SINGLETON);
+        binder.bind(SinglePlayer.class).in(Scopes.SINGLETON);
     }
 }
