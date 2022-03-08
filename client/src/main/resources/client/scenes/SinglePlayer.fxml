@@ -9,6 +9,7 @@
 <?import javafx.scene.text.Text?>
 
 <!-- following line connects the fxml file to it's controller -->
+
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="783.0" prefWidth="1119.0" style="-fx-background-color: linear-gradient(#02274f, #101b25);" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.SinglePlayer">
     <children>
         <Button layoutX="897.0" layoutY="685.0" mnemonicParsing="false" onAction="#switchToSplash" prefHeight="55.0" prefWidth="174.0" style="-fx-background-color: #f73444;" text="Back to menu" textAlignment="CENTER" textFill="WHITE">
@@ -70,5 +71,10 @@
          </font>
       </Text>
       <ProgressBar fx:id="timerBar" layoutX="-3.0" layoutY="168.0" prefHeight="18.0" prefWidth="1125.0" progress="0.0" />
+      <Text fx:id="userpoint" fill="WHITE" layoutX="853.0" layoutY="147.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="238.0">
+         <font>
+            <Font name="Arial Bold" size="36.0" />
+         </font>
+      </Text>
     </children>
 </AnchorPane>
