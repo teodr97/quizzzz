@@ -48,4 +48,24 @@ public class Game {
     public List<Player> getPlayers() {
         return players;
     }
+
+    public void setCurRound(int curRound) {
+        this.curRound = curRound;
+    }
+
+    /** TEMPORARY METHOD (REPLACE WITH DATABASE QUERY)
+     * creates a question instance for the game
+     * @return a question containing a question prompt and answers
+     */
+    public Question createQuestion(){
+
+        //TEMPORARY: this whole part needs to be replaced with a database query
+        Activity a = new Activity("Running a mile",1,"");
+        Activity b = new Activity("Swimming a mile", 1, "");
+        Activity c = new Activity("Biking a mile",1,"");
+        Activity[] activityList = new Activity[]{a,b,c};
+
+        return new Question(activityList,2,"What uses more energy?");
+    }
+
 }

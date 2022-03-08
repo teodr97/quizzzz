@@ -21,7 +21,11 @@ public class Activity {
         this.source = source;
     }
 
-//    @Override
+    public String getTitle() {
+        return title;
+    }
+
+    //    @Override
 //    public boolean equals(Object obj) {
 //        return EqualsBuilder.reflectionEquals(this, obj);
 //    }
