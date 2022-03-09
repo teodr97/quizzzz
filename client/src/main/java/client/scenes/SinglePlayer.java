@@ -55,10 +55,16 @@ public class SinglePlayer implements Initializable {
     @FXML
     private Text prompt;
 
-    private double progress;
+    @FXML
+    private Text userpoint;
+
+
+
 
     @FXML
     private Text questionField;
+
+    private double progress;
 
     double EPSILON = 0.00001;
     Button[] answerbuttons = new Button[3];
@@ -77,6 +83,10 @@ public class SinglePlayer implements Initializable {
     ////harcoded answers array this information will need to be retrieved from the database
     String[] answers = new String[4];
     Iterator<String> answersIterator= Arrays.stream(answers).iterator();
+
+    //hardcoded points array for each question so 4 entries array
+    int[] points = new int[4];
+    Iterator<Integer> pointsIterator= Arrays.stream(points).iterator();
 
     // amount of question asked;
     int qnumber;
@@ -109,6 +119,21 @@ public class SinglePlayer implements Initializable {
         answers[3] = "answerA";
         List<String> list =Arrays.asList(answers);
 
+        //Again witht he hardcoding
+        // this time for each question we assign an amount of points
+
+        // for now the workflow I (Jordano) think the workflow of the project will look like this:
+        // we retrieve 20 activities from the database these activities get transformed into question objects.
+        // in this transformation to question objects we also assign points to the question.
+        //so like the answers the points will be attributes of the questions object
+        // but for now hardcode
+        points[0] =  100;
+        points[1] = 150;
+        points[2] = 200;
+        points[3] = 250;
+
+
+
 
         //makes an array with references to the asnwer buttons
         answerbuttons[0]= answerA;
@@ -140,6 +165,7 @@ public class SinglePlayer implements Initializable {
     }
 
     //check answers in singleplayer
+    // check answer also make sures the lpayers points get updated
     public void checkAnswer(ActionEvent event) throws IOException, InterruptedException {
         //check answer will also have to call a function:
         //disableAnswers so the uses can't click the answers after already choosing one
@@ -148,6 +174,7 @@ public class SinglePlayer implements Initializable {
         Button useranswer = (Button) event.getTarget();
 
         //
+        int questionpoints = pointsIterator.next();
         String correctanswer = answersIterator.next();
         System.out.println("correct answer:"+ correctanswer);
         System.out.println("your answer:"+ useranswer.getText());
@@ -183,7 +210,11 @@ public class SinglePlayer implements Initializable {
             }
         }
         //after that we have to proompt of if the user was correct or not
+        //user got the answer correct
         if(correctanswer.equals(useranswer.getText())){
+            int currentpoints = Integer.parseInt(userpoint.getText());
+            int newpoints = currentpoints + questionpoints;
+            userpoint.setText(String.valueOf(newpoints));
             prompt.setText("Correct");
         } else{
             prompt.setText("Incorrect");
