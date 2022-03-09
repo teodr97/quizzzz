@@ -72,19 +72,13 @@ public class SinglePlayer implements Initializable {
     double EPSILON = 0.00001;
     Button[] answerbuttons = new Button[3];
 
+    //game object to generate all questions and answers
     private Game game;
 
-
-    //in the fields below we hardocde the answers and questoins array
-    //I think in the future it would be handy if we had a queston objects which had the actual questoin as a string
-    // and then asllo it's corresponding answer. This answer should be exactly equal to the text on the button so that
-    // we can check for equality between what the user pressed and what the answer is.
-
-    //harcoded questions array this information will need to be retrieved from the database
-    //I think this is done with the server field
+    //questionIterator to get the next question
     private Iterator<Question> questionIterator;
 
-    ////harcoded answers array this information will need to be retrieved from the database
+    //answersIterator to get the next correct answer
     private Iterator<Activity> answersIterator;
 
     //hardcoded points array for each question so 4 entries array
@@ -110,6 +104,7 @@ public class SinglePlayer implements Initializable {
         this.game = new Game();
         game.createQuestionList();
 
+        //assigns the game questions and answers list to the questionIterator
         this.questionIterator = Arrays.stream(game.questions).iterator();
         this.answersIterator = Arrays.stream(game.answers).iterator();
 
@@ -161,7 +156,7 @@ public class SinglePlayer implements Initializable {
         stage.show();
     }
 
-    //check answers in singleplayer
+    // check answers in singleplayer
     // check answer also make sures the lpayers points get updated
     public void checkAnswer(ActionEvent event) throws IOException, InterruptedException {
         //check answer will also have to call a function:
@@ -170,7 +165,7 @@ public class SinglePlayer implements Initializable {
         //get the button clicked from the event paramater
         Button useranswer = (Button) event.getTarget();
 
-        //
+        //gets the amount of points to be handed, and assigns the correct answer to a variable
         int questionpoints = pointsIterator.next();
         String correctanswer = answersIterator.next().toString();
         System.out.println("correct answer:"+ correctanswer);
@@ -275,18 +270,6 @@ public class SinglePlayer implements Initializable {
         return;
     }
 
-    //goes to the next question screen
-    public void nextQuestion(){
-        questionField.setText(this.questionIterator.next().toString());
-        resetGamescreen();
-
-
-        return;
-    }
-
-
-
-
     //If the event is executed then the scene switches to Splash.fxml
     public void switchToSplash(ActionEvent event) throws IOException{
         var overview = FXML.load(Splash.class, "client", "scenes", "Splash.fxml");
@@ -337,7 +320,7 @@ public class SinglePlayer implements Initializable {
 
 
     /**
-     * displays the question and answers on the window
+     * displays the question and answers on the window and resets the game
      * @param question: a Question entity to display
      */
     public void displayQuestion(Question question){
