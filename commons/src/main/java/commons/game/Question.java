@@ -1,6 +1,5 @@
 package commons.game;
 
-import java.util.Arrays;
 
 public class Question {
 
