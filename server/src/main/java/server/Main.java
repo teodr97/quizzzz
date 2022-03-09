@@ -54,6 +54,5 @@ public class Main {
         if(!contains){
             repository.save(new Question("Why are you running?"));
         }
-
     }
 }

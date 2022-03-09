@@ -1,11 +1,13 @@
 package commons.game;
 
-public class Question {
+import org.apache.commons.lang3.NotImplementedException;
+
+public class Question<OptionsType> {
 
     /**
      * The activity options of the question.
      */
-    private Activity[] activities;
+    private OptionsType[] options;
 
     /**
      * The index of the correct activity, should within [0, activities.size).
@@ -19,18 +21,18 @@ public class Question {
 
     /**
      * Question Constructor.
-     * @param activities The activities of the question.
+     * @param options The activities of the question.
      * @param answer The index of the correct activity.
      * @param prompt The type of question.
      */
-    public Question(Activity[] activities, int answer, String prompt) {
-        this.activities = activities;
+    public Question(OptionsType[] options, int answer, String prompt) {
+        this.options = options;
         this.answer = answer;
         this.prompt = prompt;
     }
 
-    public Activity[] getActivities() {
-        return activities;
+    public OptionsType[] getOptions() {
+        return options;
     }
 
     public int getAnswer() {
@@ -39,5 +41,9 @@ public class Question {
 
     public String getPrompt() {
         return prompt;
+    }
+
+    public static Question generateQuestion() {
+        throw new NotImplementedException("Creating Questions Not Implemented.");
     }
 }
