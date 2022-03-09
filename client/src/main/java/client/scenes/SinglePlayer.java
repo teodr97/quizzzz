@@ -82,7 +82,7 @@ public class SinglePlayer implements Initializable {
     private Iterator<Activity> answersIterator;
 
     //hardcoded points array for each question so 4 entries array
-    private int[] points = new int[9];
+    private int[] points = new int[20];
     private Iterator<Integer> pointsIterator;
 
     // amount of question asked;
@@ -129,6 +129,17 @@ public class SinglePlayer implements Initializable {
         points[6] = 200;
         points[7] = 250;
         points[8] = 250;
+        points[9] =  100;
+        points[10] = 150;
+        points[11] = 200;
+        points[12] = 250;
+        points[13] =  100;
+        points[14] = 150;
+        points[15] = 200;
+        points[16] = 250;
+        points[17] = 250;
+        points[18] = 150;
+        points[19] = 200;
 
         //makes an array with references to the answer buttons
         answerbuttons[0]= answerA;
