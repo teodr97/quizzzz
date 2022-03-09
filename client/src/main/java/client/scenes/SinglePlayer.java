@@ -63,7 +63,6 @@ public class SinglePlayer implements Initializable {
     @FXML
     private Text userpoint;
 
-
     @FXML
     private Text questionField;
 
@@ -74,25 +73,27 @@ public class SinglePlayer implements Initializable {
 
     private Game game;
 
-
-    //in the fields below we hardocde the answers and questoins array
-    //I think in the future it would be handy if we had a queston objects which had the actual questoin as a string
-    // and then asllo it's corresponding answer. This answer should be exactly equal to the text on the button so that
+    //in the fields below we hardcode the answers and questions array
+    //I think in the future it would be handy if we had a question objects which had the actual question as a string
+    // and then also it's corresponding answer. This answer should be exactly equal to the text on the button so that
     // we can check for equality between what the user pressed and what the answer is.
 
-    //harcoded questions array this information will need to be retrieved from the database
+    //hardcoded questions array this information will need to be retrieved from the database
     //I think this is done with the server field
     private Iterator<Question> questionIterator;
 
-    ////harcoded answers array this information will need to be retrieved from the database
+    ////hardcoded answers array this information will need to be retrieved from the database
     private Iterator<Activity> answersIterator;
 
     //hardcoded points array for each question so 4 entries array
-    int[] points = new int[9];
-    Iterator<Integer> pointsIterator= Arrays.stream(points).iterator();
+    private int[] points = new int[9];
+    private Iterator<Integer> pointsIterator;
 
     // amount of question asked;
-    int qnumber;
+    private int qnumber;
+
+    //declare an animation timer
+    private AnimationTimer tm = new TimerMethod();
 
 
     @Inject
@@ -112,10 +113,10 @@ public class SinglePlayer implements Initializable {
 
         this.questionIterator = Arrays.stream(game.questions).iterator();
         this.answersIterator = Arrays.stream(game.answers).iterator();
+        this.pointsIterator = Arrays.stream(points).iterator();
 
 
-
-        //Again witht he hardcoding
+        //Again with he hardcoding
         // this time for each question we assign an amount of points
 
         // for now the workflow I (Jordano) think the workflow of the project will look like this:
@@ -133,25 +134,20 @@ public class SinglePlayer implements Initializable {
         points[7] = 250;
         points[8] = 250;
 
-
-        //makes an array with references to the asnwer buttons
+        //makes an array with references to the answer buttons
         answerbuttons[0]= answerA;
         answerbuttons[1] = answerB;
         answerbuttons[2] = answerC;
 
         displayQuestion(this.questionIterator.next());
 
-
         //starts the timer
         Timer timerobj = new Timer();
         qnumber = 0;
         progress = 0;
 
-        //declare an animation timer
-        AnimationTimer tm = new TimerMethod();
         //start the timer
         tm.start();
-
     }
 
     //Sets and shows the scene.
@@ -162,38 +158,34 @@ public class SinglePlayer implements Initializable {
     }
 
     //check answers in singleplayer
-    // check answer also make sures the lpayers points get updated
+    // check answer also make sures the layers points get updated
     public void checkAnswer(ActionEvent event) throws IOException, InterruptedException {
         //check answer will also have to call a function:
         //disableAnswers so the uses can't click the answers after already choosing one
 
-        //get the button clicked from the event paramater
+        //get the button clicked from the event parameter
         Button useranswer = (Button) event.getTarget();
 
-        //
         int questionpoints = pointsIterator.next();
         String correctanswer = answersIterator.next().toString();
         System.out.println("correct answer:"+ correctanswer);
         System.out.println("your answer:"+ useranswer.getText());
 
+        //since we made an iterator of the answers the program checks if  the users button clicked is the right corresponding click
+        //this function should definitely be tested
 
-
-        //since we made an iteroator of the asnwers the program checks if  the users button clicked is the right corresponding click
-        //this function should defintely be tested
-
-        //make the buttons there "corerct collors" green for right answer red for the wrong answers
+        //make the buttons there "correct colors" green for right answer red for the wrong answers
         for(Button answerbutton: answerbuttons){
-            //the one corersponding witht he next asnwers entry is the correct answer and  becomes green
+            //the one corresponding with he next answers entry is the correct answer and  becomes green
             if(answerbutton.getText().equals(correctanswer)){
                 answerbutton.setStyle("-fx-background-color: #309500;");
             }else{ //we make it red
                 answerbutton.setStyle("-fx-background-color: #BD0000;");
-
             }
         }
 
-        //after accordingly change the buttons collors we
-        //we retriieve the current style of all the buttons and add a border to the user chosen button
+        //after accordingly change the buttons colors
+        //we retrieve the current style of all the buttons and add a border to the user chosen button
         for(Button answerbutton: answerbuttons){
 
             String currentstyle = answerbutton.getStyle();
@@ -217,36 +209,25 @@ public class SinglePlayer implements Initializable {
             prompt.setText("Incorrect");
         }
 
-        //change scene state to the one where someone has answererd the question
+        //change scene state to the one where someone has answered the question
         //in which case the buttons should be disabled and change colors
-
-
         Disableanswers();
 
         return;
     }
 
-
     //Disables all the answer buttons
     public void Disableanswers(){
-
-
         answerA.setDisable(true);
-
         answerB.setDisable(true);
-
         answerC.setDisable(true);
 
         return;
     }
     //Enables all the answer buttons
     public void Enableanswers(){
-
-
         answerA.setDisable(false);
-
         answerB.setDisable(false);
-
         answerC.setDisable(false);
 
         return;
@@ -270,8 +251,6 @@ public class SinglePlayer implements Initializable {
         //prompt
         prompt.setText("");
 
-
-
         return;
     }
 
@@ -280,15 +259,12 @@ public class SinglePlayer implements Initializable {
         questionField.setText(this.questionIterator.next().toString());
         resetGamescreen();
 
-
         return;
     }
 
-
-
-
     //If the event is executed then the scene switches to Splash.fxml
     public void switchToSplash(ActionEvent event) throws IOException{
+        tm.stop();
         var overview = FXML.load(Splash.class, "client", "scenes", "Splash.fxml");
         scene = new Scene(overview.getValue());
         setAndShowScenes(event);
@@ -299,7 +275,7 @@ public class SinglePlayer implements Initializable {
         //define the handle method
         @Override
         public void handle(long now) {
-        //call the method
+            //call the method
             handlee();
         }
         //method handlee
@@ -309,32 +285,26 @@ public class SinglePlayer implements Initializable {
             //set the new progress
             timerBar.setProgress(progress);
             //checks if the progress is 1 and will display prompt accordingly
-            // will also diable the buttons if the timer ends
+            // will also disable the buttons if the timer ends
             if((timerBar.getProgress() + EPSILON > 1 && timerBar.getProgress() - EPSILON <1)){
                 qnumber += 1;
-                prompt.setText("Timer over");
+                if(prompt != null){
+                    if(prompt.getText().equals("")){
+                        prompt.setText("Timer over");
+                    }
+                }
                 //when timer ends and game hasn't ended we want to display the next question
                 Disableanswers();
-
-
-
             }
-
             if((timerBar.getProgress() + EPSILON > 1.5 && timerBar.getProgress() - EPSILON <1.5)){
-
                 //when timer ends and game hasn't ended we want to display the next question;
                 if(questionIterator.hasNext()){
                     displayQuestion(questionIterator.next());
-
                 }
                 //when timer ends and game hasn't ended we want to display the next question;
-
-
             }
-
         }
     }
-
 
     /**
      * displays the question and answers on the window
@@ -347,6 +317,4 @@ public class SinglePlayer implements Initializable {
         answerC.setText(question.getActivities()[2].toString());
         resetGamescreen();
     }
-
-
 }
