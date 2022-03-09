@@ -30,7 +30,7 @@ public class Question {
         this.prompt = prompt;
     }
 
-    /** TEMPORARY METHOD (REPLACE WITH DATABASE QUERY)
+    /** TEMPORARY METHOD (REPLACE WITH DATABASE QUERIES)
      * creates a question instance for the game
      * @return a question containing a question prompt and answers
      */

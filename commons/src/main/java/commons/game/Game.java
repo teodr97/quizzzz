@@ -26,8 +26,14 @@ public class Game {
      */
     private List<Player> players;
 
+    /**
+     * The list of questions of the game
+     */
     public Question[] questions;
 
+    /**
+     * The list of activities that are the answers to the questions
+     */
     public Activity[] answers;
 
     public Game() {
@@ -58,7 +64,9 @@ public class Game {
     }
 
 
-
+    /**
+     * creates a list of 20 questions and a list of 20 answers, assigning them to the game class variables
+     */
     public void createQuestionList(){
         Question[] questions = new Question[20];
         Activity[] answers = new Activity[20];
