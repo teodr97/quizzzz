@@ -138,8 +138,6 @@ public class SinglePlayer implements Initializable {
 
         displayQuestion(this.questionIterator.next());
 
-        //starts the timer
-        Timer timerobj = new Timer();
         qnumber = 0;
         progress = 0;
 
@@ -278,7 +276,7 @@ public class SinglePlayer implements Initializable {
         //method handlee
         private void handlee(){
             //making this smaller will slow down the times
-            progress += 0.1;
+            progress += 0.01;
             //set the new progress
             timerBar.setProgress(progress);
             //checks if the progress is 1 and will display prompt accordingly
