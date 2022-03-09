@@ -5,6 +5,7 @@ import client.MyModule;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import commons.game.Activity;
 import commons.game.Game;
 import commons.game.Question;
 import javafx.animation.AnimationTimer;
@@ -21,7 +22,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 
-
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -63,8 +64,6 @@ public class SinglePlayer implements Initializable {
     private Text userpoint;
 
 
-
-
     @FXML
     private Text questionField;
 
@@ -75,6 +74,7 @@ public class SinglePlayer implements Initializable {
 
     private Game game;
 
+
     //in the fields below we hardocde the answers and questoins array
     //I think in the future it would be handy if we had a queston objects which had the actual questoin as a string
     // and then asllo it's corresponding answer. This answer should be exactly equal to the text on the button so that
@@ -82,15 +82,13 @@ public class SinglePlayer implements Initializable {
 
     //harcoded questions array this information will need to be retrieved from the database
     //I think this is done with the server field
-    String[] questions = new String[4];
-    Iterator<String> questionIterator= Arrays.stream(questions).iterator();
+    private Iterator<Question> questionIterator;
 
     ////harcoded answers array this information will need to be retrieved from the database
-    String[] answers = new String[4];
-    Iterator<String> answersIterator= Arrays.stream(answers).iterator();
+    private Iterator<Activity> answersIterator;
 
     //hardcoded points array for each question so 4 entries array
-    int[] points = new int[4];
+    int[] points = new int[9];
     Iterator<Integer> pointsIterator= Arrays.stream(points).iterator();
 
     // amount of question asked;
@@ -108,23 +106,14 @@ public class SinglePlayer implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources){
-        // we will probably retrieve the questions from the this.server variable but
-        //the questions can also become objects in the future for now we use strings tho
-        questions[0] = "Question 1";
-        questions[1] = "Question 2";
-        questions[2] = "Question 3";
-        questions[3] = "Question 4";
+        //When this screen starts, it will create a new game entity and fetch a question
+        this.game = new Game();
+        game.createQuestionList();
 
-        //when we create objects for the questoins each questoin will have the question string field and it's answer
-        //for now tho we simulate the arbiotrary order of questions by shuffling answers
-        // we want the checkanswer function to check the validity of these answers
-        //to make sure this is done in a general way we shuflle these answers:
-        //each corresponding to a questions see above
-        answers[0] = "answerA";
-        answers[1] = "answerB";
-        answers[2] = "answerC";
-        answers[3] = "answerA";
-        List<String> list =Arrays.asList(answers);
+        this.questionIterator = Arrays.stream(game.questions).iterator();
+        this.answersIterator = Arrays.stream(game.answers).iterator();
+
+
 
         //Again witht he hardcoding
         // this time for each question we assign an amount of points
@@ -138,8 +127,11 @@ public class SinglePlayer implements Initializable {
         points[1] = 150;
         points[2] = 200;
         points[3] = 250;
-
-
+        points[4] =  100;
+        points[5] = 150;
+        points[6] = 200;
+        points[7] = 250;
+        points[8] = 250;
 
 
         //makes an array with references to the asnwer buttons
@@ -147,12 +139,8 @@ public class SinglePlayer implements Initializable {
         answerbuttons[1] = answerB;
         answerbuttons[2] = answerC;
 
-        Collections.shuffle(list);
-        answersIterator = list.iterator();
-        questionField.setText(questionIterator.next());
-        //When this screen starts, it will create a new game entity and fetch a question
-        this.game = new Game();
-        nextQuestion();
+        displayQuestion(this.questionIterator.next());
+
 
         //starts the timer
         Timer timerobj = new Timer();
@@ -163,9 +151,6 @@ public class SinglePlayer implements Initializable {
         AnimationTimer tm = new TimerMethod();
         //start the timer
         tm.start();
-
-
-
 
     }
 
@@ -187,7 +172,7 @@ public class SinglePlayer implements Initializable {
 
         //
         int questionpoints = pointsIterator.next();
-        String correctanswer = answersIterator.next();
+        String correctanswer = answersIterator.next().toString();
         System.out.println("correct answer:"+ correctanswer);
         System.out.println("your answer:"+ useranswer.getText());
 
@@ -221,7 +206,7 @@ public class SinglePlayer implements Initializable {
                 answerbutton.setStyle(newstyle);
             }
         }
-        //after that we have to proompt of if the user was correct or not
+        //after that we have to prompt of if the user was correct or not
         //user got the answer correct
         if(correctanswer.equals(useranswer.getText())){
             int currentpoints = Integer.parseInt(userpoint.getText());
@@ -262,7 +247,6 @@ public class SinglePlayer implements Initializable {
 
         answerB.setDisable(false);
 
-
         answerC.setDisable(false);
 
         return;
@@ -293,7 +277,7 @@ public class SinglePlayer implements Initializable {
 
     //goes to the next question screen
     public void nextQuestion(){
-        questionField.setText(questionIterator.next());
+        questionField.setText(this.questionIterator.next().toString());
         resetGamescreen();
 
 
@@ -340,8 +324,7 @@ public class SinglePlayer implements Initializable {
 
                 //when timer ends and game hasn't ended we want to display the next question;
                 if(questionIterator.hasNext()){
-                    nextQuestion();
-
+                    displayQuestion(questionIterator.next());
 
                 }
                 //when timer ends and game hasn't ended we want to display the next question;
@@ -352,52 +335,17 @@ public class SinglePlayer implements Initializable {
         }
     }
 
-    /**
-     * generates a new question to display, and resets answers
-     */
-    public void nextQuestion(){
-        //increments the current round
-        this.game.setCurRound(this.game.getCurRound() + 1);
-
-        Question q = this.game.createQuestion();
-
-        //takes each activity's title and puts it in a String[]
-        String[] ans = new String[3];
-        for(int i = 0; i < 3; i++){
-            ans[i] = q.getActivities()[i].getTitle();
-        }
-
-        //displays the question
-        displayQuestion(q.getPrompt(), ans);
-
-        //resets the previous question's elements
-        resetQuestion();
-    }
-
-
-
-    /** WORK IN PROGRESS
-     *  resets timer, answer boxes, and hides the corner text indicator
-     */
-    private void resetQuestion() {
-        //need a way to reset the timebar aswell
-        answerA.setDisable(false);
-        answerB.setDisable(false);
-        answerC.setDisable(false);
-        prompt.setText("");
-
-    }
 
     /**
      * displays the question and answers on the window
-     * @param question: string of the question
-     * @param answers: a list of strings, expected array length = 3
+     * @param question: a Question entity to display
      */
-    public void displayQuestion(String question, String[] answers){
-        questionField.setText(question);
-        answerA.setText(answers[0]);
-        answerB.setText(answers[1]);
-        answerC.setText(answers[2]);
+    public void displayQuestion(Question question){
+        questionField.setText(question.toString());
+        answerA.setText(question.getActivities()[0].toString());
+        answerB.setText(question.getActivities()[1].toString());
+        answerC.setText(question.getActivities()[2].toString());
+        resetGamescreen();
     }
 
 

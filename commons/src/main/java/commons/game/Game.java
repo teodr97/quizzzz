@@ -26,6 +26,10 @@ public class Game {
      */
     private List<Player> players;
 
+    public Question[] questions;
+
+    public Activity[] answers;
+
     public Game() {
         this.curRound = 0;
         this.totalRounds = 20;
@@ -53,19 +57,17 @@ public class Game {
         this.curRound = curRound;
     }
 
-    /** TEMPORARY METHOD (REPLACE WITH DATABASE QUERY)
-     * creates a question instance for the game
-     * @return a question containing a question prompt and answers
-     */
-    public Question createQuestion(){
 
-        //TEMPORARY: this whole part needs to be replaced with a database query
-        Activity a = new Activity("Running a mile",1,"");
-        Activity b = new Activity("Swimming a mile", 1, "");
-        Activity c = new Activity("Biking a mile",1,"");
-        Activity[] activityList = new Activity[]{a,b,c};
 
-        return new Question(activityList,2,"What uses more energy?");
+    public void createQuestionList(){
+        Question[] questions = new Question[20];
+        Activity[] answers = new Activity[20];
+        for(int i = 0; i < 20; i++){
+            questions[i] = Question.createQuestion();
+            answers[i] = questions[i].getAnswer();
+        }
+        this.answers = answers;
+        this.questions = questions;
     }
 
 }
