@@ -47,9 +47,6 @@ public class TestMainCtrl{
     @FXML
     private Text questionField;
 
-
-
-
     //initializes the stage and gets the scene from Splash.fxml
     //Opens/Shows the stage.
     public void initialize(Stage primaryStage, Pair<Splash, Parent> overview) {
@@ -113,59 +110,5 @@ public class TestMainCtrl{
 
         //questionField.setText("What what what is this world?");
     }
-
-
-    //check answers in singleplayer this needs can be more profesional
-    //by putting it in the singleplayer class
-    public void checkAnswer(ActionEvent event) throws IOException {
-        //check answer will also have to call a function:
-        //disableAnswers so the uses can't click the answers after already choosing one
-        Button useranswer = (Button) event.getTarget();
-
-        if(useranswer == answerA){
-            prompt.setText("Correct");
-            answerA.setStyle("-fx-background-color: #309500; -fx-border-color: black; -fx-border-width: 3px;");
-
-        }else{
-            prompt.setText("Incorrect");
-        }
-
-        if(useranswer == answerB){
-            answerB.setStyle("-fx-background-color: #BD0000;-fx-border-color: black; -fx-border-width: 3px;");
-
-        }else if(useranswer == answerC){
-            answerC.setStyle("-fx-background-color: #BD0000; -fx-border-color: black; -fx-border-width: 3px;");
-        }
-
-        //change scene sate to the one where someone has answererd the question
-        //in which case the buttons hould bedisabled and change collors
-        answerA.setDisable(true);
-        answerB.setDisable(true);
-        answerB.setStyle("-fx-background-color: #BD0000;");
-        answerC.setDisable(true);
-        answerC.setStyle("-fx-background-color: #BD0000;");
-
-
-
-
-        System.out.println("user choose answer");
-
-        return;
-    }
-    public void showCorrect() throws IOException {
-
-
-        answerA.setDisable(true);
-        answerA.setStyle("-fx-background-color: #309500");
-        answerA.setDisable(true);
-        answerB.setStyle("-fx-background-color: #BD0000");
-
-        answerC.setDisable(true);
-        answerC.setStyle("-fx-background-color: #BD0000");
-        return;
-    }
-
-
-
 
 }
