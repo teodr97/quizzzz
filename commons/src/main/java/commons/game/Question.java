@@ -1,6 +1,7 @@
 package commons.game;
 
 
+>>>>>>> DisplayQuestions
 public class Question {
 
     /**
