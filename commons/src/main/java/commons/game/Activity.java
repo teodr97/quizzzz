@@ -1,38 +1,55 @@
 package commons.game;
 
-//@Entity
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class Activity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id; // PRIMARY KEY
+    private String activity;
+    private int power; // The energy this activity draws
 
-    //@Id
-    //@GeneratedValue(strategy = GenerationType.AUTO)
-    public long id;
+    /**
+     * Constructor method.
+     * @param activity the activity that should be associated to the new entity
+     * @param power the power that this activity draws
+     */
+    public Activity(String activity, int power) { this.activity = activity; this.power = power; }
 
-    public String title;
-    public int consumption_in_wh;
-    public String source;
+    /**
+     * Empty constructor; should not be used for anything, but the compiler whines if
+     * it's missing from here.
+     */
+    public Activity() { }
 
-    private Activity() {
+    //SETTERS==========================================================
+    public void setId(int id) { this.id = id; }
 
+    public void setActivity(String activity) { this.activity = activity; }
+
+    public void setPower (int power) { this.power = power; }
+
+    //GETTERS==========================================================
+    public int getId() { return this.id; }
+
+    public String getActivity() { return this.activity; }
+
+    public int getPower() { return this.power; }
+
+    /**
+     * This function should be used for debugging purposes only
+     * @return String containing the question and its ID
+     */
+    @Override
+    public String toString() {
+        return "Activity{" +
+                "id=" + id +
+                ", activity='" + activity + '\'' +
+                ", power=" + power +
+                '}';
     }
-
-    public Activity(String title, int consumption_in_wh, String source) {
-        this.title = title;
-        this.consumption_in_wh = consumption_in_wh;
-        this.source = source;
-    }
-
-//    @Override
-//    public boolean equals(Object obj) {
-//        return EqualsBuilder.reflectionEquals(this, obj);
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        return HashCodeBuilder.reflectionHashCode(this);
-//    }
-//
-//    @Override
-//    public String toString() {
-//        return ToStringBuilder.reflectionToString(this, MULTI_LINE_STYLE);
-//    }
 }
