@@ -102,40 +102,9 @@ public class SinglePlayer implements Initializable {
         this.game = new Game();
         game.createQuestionList();
 
-        //assigns the game questions and answers list to the questionIterator
+        //assigns the game questions, answers, and points list to the questionIterator
         this.questionIterator = Arrays.stream(game.questions).iterator();
         this.answersIterator = Arrays.stream(game.answers).iterator();
-        this.pointsIterator = Arrays.stream(points).iterator();
-
-
-        //Again with he hardcoding
-        // this time for each question we assign an amount of points
-
-        // for now the workflow I (Jordano) think the workflow of the project will look like this:
-        // we retrieve 20 activities from the database these activities get transformed into question objects.
-        // in this transformation to question objects we also assign points to the question.
-        //so like the answers the points will be attributes of the questions object
-        // but for now hardcode
-        points[0] =  100;
-        points[1] = 150;
-        points[2] = 200;
-        points[3] = 250;
-        points[4] =  100;
-        points[5] = 150;
-        points[6] = 200;
-        points[7] = 250;
-        points[8] = 250;
-        points[9] =  100;
-        points[10] = 150;
-        points[11] = 200;
-        points[12] = 250;
-        points[13] =  100;
-        points[14] = 150;
-        points[15] = 200;
-        points[16] = 250;
-        points[17] = 250;
-        points[18] = 150;
-        points[19] = 200;
 
         //makes an array with references to the answer buttons
         answerbuttons[0]= answerA;
@@ -168,7 +137,7 @@ public class SinglePlayer implements Initializable {
         Button useranswer = (Button) event.getTarget();
 
         //gets the amount of points to be handed, and assigns the correct answer to a variable
-        int questionpoints = pointsIterator.next();
+        int questionpoints = (int)(500 - 250*progress);
         String correctanswer = answersIterator.next().toString();
         System.out.println("correct answer:"+ correctanswer);
         System.out.println("your answer:"+ useranswer.getText());
