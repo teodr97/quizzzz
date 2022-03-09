@@ -10,7 +10,6 @@ import commons.game.Game;
 import commons.game.Question;
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -19,10 +18,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 
-import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -281,7 +278,7 @@ public class SinglePlayer implements Initializable {
         //method handlee
         private void handlee(){
             //making this smaller will slow down the times
-            progress += 0.01;
+            progress += 0.1;
             //set the new progress
             timerBar.setProgress(progress);
             //checks if the progress is 1 and will display prompt accordingly
@@ -300,6 +297,8 @@ public class SinglePlayer implements Initializable {
                 //when timer ends and game hasn't ended we want to display the next question;
                 if(questionIterator.hasNext()){
                     displayQuestion(questionIterator.next());
+                }else{
+                    tm.stop();
                 }
                 //when timer ends and game hasn't ended we want to display the next question;
             }
