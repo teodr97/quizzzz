@@ -1,13 +1,14 @@
-package server.database;
+package commons.game;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public class Activity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id; // PRIMARY KEY
     private String activity;
     private int power; // The energy this activity draws

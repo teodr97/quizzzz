@@ -1,4 +1,4 @@
-package server.game.jokers;
+package commons.game.jokers;
 
 public enum JokerState {
     /**

@@ -1,4 +1,4 @@
-package server.game;
+package commons.game;
 
 import org.apache.commons.lang3.NotImplementedException;
 

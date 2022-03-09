@@ -1,4 +1,4 @@
-package server.game;
+package commons.game;
 
 public class Emote {
 
