@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
 
+import commons.game.Question;
 import org.glassfish.jersey.client.ClientConfig;
 
 import commons.Quote;
@@ -58,5 +59,18 @@ public class ServerUtils {
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .post(Entity.entity(quote, APPLICATION_JSON), Quote.class);
+    }
+
+    /**
+     * Retrieves the question + answer set that are currently on-server in the form of
+     * a ClientQuestion object.
+     * @return the current question, together with a set of three answers
+     */
+    public Question.ClientQuestion retrieveQuestionFromServer() {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/retrieveQuestion")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<Question.ClientQuestion>() {});
     }
 }
