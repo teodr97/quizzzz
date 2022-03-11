@@ -1,8 +1,8 @@
 package server.api;
 
-import server.models.Game;
-import server.models.GamePlay;
-import server.models.Player;
+import commons.Game;
+import commons.GamePlay;
+import commons.Player;
 import commons.game.exceptions.InvalidGameException;
 import commons.game.exceptions.NotFoundException;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package server.models;
+package commons;
 
 import lombok.Data;
 

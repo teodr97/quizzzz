@@ -1,4 +1,4 @@
-package server.models;
+package commons;
 
 import commons.game.Question;
 import lombok.Data;

@@ -4,15 +4,15 @@ import commons.game.exceptions.InvalidGameException;
 import commons.game.exceptions.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import server.models.Game;
-import server.models.GamePlay;
-import server.models.GameStorage;
-import server.models.Player;
+import commons.Game;
+import commons.GamePlay;
+import commons.GameStorage;
+import commons.Player;
 
 import java.util.List;
 import java.util.UUID;
 
-import static server.models.GameStatus.*;
+import static commons.GameStatus.*;
 
 @Service
 @AllArgsConstructor
