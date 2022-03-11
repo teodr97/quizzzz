@@ -1,8 +1,5 @@
 package commons.game;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,7 +20,7 @@ public class Question {
     private int points; // Are we using this anymore?
 
     /**
-     * Use this class for sending the data to the client side. It hides unrelevant data
+     * Use this class for sending the data to the client side. It hides irrelevant data
      * (such as the correct answer) from the clients in order to prevent abuse from the
      * players.
      */
@@ -55,7 +52,7 @@ public class Question {
      * @return True or false, depending on whether the answer is correct or not
      */
     public static boolean hasCorrectAnswer(Question question, Activity answer) {
-        return answer.getActivity().equals(question.getCorrectAnswer());
+        return answer.getActivity().equals(question.getCorrectAnswer().getActivity());
     }
 
     /**
@@ -68,7 +65,7 @@ public class Question {
         // Generate a new random integer to determine the type of question that will be used.
         // Not a good solution for a greater amount of questions, they should be stored in a
         // database instead.
-        int randomFactor = (int) Math.random() * 4;
+        int randomFactor = (int) (Math.random() * 4);
         switch (randomFactor) {
             case 1:
                 this.question = "Which activity uses the most amount of power?";
@@ -94,7 +91,7 @@ public class Question {
                 break;
             default:
                 // Generate a random integer from 0 to 3 for getting an index for the correct answer
-                int correctAnswerIndex = (int) Math.random() * 4;
+                int correctAnswerIndex = (int) (Math.random() * 4);
                 // Retrieve a random activity that will serve as the correct answer using indexes 0-3
                 this.correctAnswer = activityList.get(correctAnswerIndex);
                 this.question = "How much power does " + correctAnswer.getActivity() + "require?";
