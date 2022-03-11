@@ -1,9 +1,40 @@
-package commons.game;
+package server.models;
+
+import commons.game.Question;
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
 public class Game {
+
+    /**
+     * We need a gameId for each game.
+     */
+    private String gameID;
+
+    public String getGameID() {
+        return gameID;
+    }
+
+    public void setGameID(String gameID) {
+        this.gameID = gameID;
+    }
+
+    /**
+     * Status of the game. (Started, ended)
+     */
+    private GameStatus status;
+
+
+    public GameStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(GameStatus status) {
+        this.status = status;
+    }
 
     /**
      * The round the game is currently on.
@@ -25,6 +56,10 @@ public class Game {
      * The list of players currently playing.
      */
     private List<Player> players;
+
+    public void setPlayers(List<Player> players) {
+        this.players = players;
+    }
 
     public Game() {
         this.curRound = 0;

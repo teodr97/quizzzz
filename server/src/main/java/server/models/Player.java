@@ -1,5 +1,8 @@
-package commons.game;
+package server.models;
 
+import lombok.Data;
+
+@Data
 public class Player {
     /**
      * The nickname of the player.

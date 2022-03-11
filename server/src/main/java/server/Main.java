@@ -15,15 +15,15 @@
  */
 package server;
 
-import org.springframework.boot.CommandLineRunner;
+//import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.context.annotation.Bean;
+/*import org.springframework.context.annotation.Bean;
 import server.database.Question;
 import server.database.QuestionRepository;
 
-import java.util.List;
+import java.util.List;*/
 
 @SpringBootApplication
 @EntityScan(basePackages = { "commons", "server" })
@@ -33,7 +33,9 @@ public class Main {
         SpringApplication.run(Main.class, args);
     }
 
-    @Bean
+
+
+    /*@Bean
     public CommandLineRunner run(QuestionRepository repository){
         return (args -> {
             insertJavaAdvocates(repository);
@@ -54,5 +56,5 @@ public class Main {
         if(!contains){
             repository.save(new Question("Why are you running?"));
         }
-    }
+    }*/
 }
