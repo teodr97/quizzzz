@@ -26,6 +26,16 @@ public class Game {
      */
     private List<Player> players;
 
+    /**
+     * The list of questions of the game
+     */
+    public Question[] questions;
+
+    /**
+     * The list of activities that are the answers to the questions
+     */
+    public Activity[] answers;
+
     public Game() {
         this.curRound = 0;
         this.totalRounds = 20;
@@ -49,13 +59,31 @@ public class Game {
         return players;
     }
 
+    public void setCurRound(int curRound) {
+        this.curRound = curRound;
+    }
+
+
+    /**
+     * creates a list of 20 questions and a list of 20 answers, assigning them to the game class variables
+     */
+    public void createQuestionList(){
+        Question<Activity>[] questions = new Question[20];
+        Activity[] answers = new Activity[20];
+        for(int i = 0; i < 20; i++){
+            questions[i] = Question.createQuestion();
+            answers[i] = questions[i].getAnswer();
+        }
+        this.answers = answers;
+        this.questions = questions;
+    }
+
     /**
      * Locks in an answer chosen by the player.
      * @param player The player making a choice.
      * @param choice The choice the player made. Should be in the range
      *               [0, options) or -1 representing nothing chosen.
      * @throws IllegalChoiceException Thrown if passed a choice out of bands.
-     */
     public void pickAnswer(Player player, int choice) throws IllegalChoiceException {
         if (choice >= this.curQuestion.getOptions().length || choice < -1) throw new IllegalChoiceException();
         player.setChosenAnswer(choice);
@@ -63,10 +91,11 @@ public class Game {
         // calculate remaining time for player.setTimeLeft();
         // depends on how we handle the timer
     }
+    */
 
-    /**
+    /** TEMPORARILY COMMENTED OUT BECAUSE WE HAVE TO CHANGE THE TYPE OF PLAYER ACTIVITY
      * Ends the question after the timer has ran out. Gives points to the correct players.
-     */
+
     public void endQuestion() {
         for (var player : this.players) {
             if (player.getChosenAnswer() == this.curQuestion.getAnswer()) {
@@ -77,6 +106,7 @@ public class Game {
             }
         }
     }
+    */
 
     /**
      * Starts a new round of the game. Increments the curRound counter.
