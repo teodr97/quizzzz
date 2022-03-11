@@ -84,7 +84,6 @@ public class Game {
      * @param choice The choice the player made. Should be in the range
      *               [0, options) or -1 representing nothing chosen.
      * @throws IllegalChoiceException Thrown if passed a choice out of bands.
-     */
     public void pickAnswer(Player player, int choice) throws IllegalChoiceException {
         if (choice >= this.curQuestion.getOptions().length || choice < -1) throw new IllegalChoiceException();
         player.setChosenAnswer(choice);
@@ -92,10 +91,11 @@ public class Game {
         // calculate remaining time for player.setTimeLeft();
         // depends on how we handle the timer
     }
+    */
 
-    /**
+    /** TEMPORARILY COMMENTED OUT BECAUSE WE HAVE TO CHANGE THE TYPE OF PLAYER ACTIVITY
      * Ends the question after the timer has ran out. Gives points to the correct players.
-     */
+
     public void endQuestion() {
         for (var player : this.players) {
             if (player.getChosenAnswer() == this.curQuestion.getAnswer()) {
@@ -106,6 +106,7 @@ public class Game {
             }
         }
     }
+    */
 
     /**
      * Starts a new round of the game. Increments the curRound counter.

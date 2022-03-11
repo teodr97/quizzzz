@@ -4,6 +4,9 @@ package commons.game;
 import javax.swing.text.html.Option;
 import org.apache.commons.lang3.NotImplementedException;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 public class Question<OptionsType> {
 
     /**
@@ -41,14 +44,18 @@ public class Question<OptionsType> {
     public static Question createQuestion(){
 
         //TEMPORARY: this whole part needs to be replaced with a database query
-        Activity a = new Activity("Running a mile",1,"");
-        Activity b = new Activity("Swimming a mile", 1, "");
-        Activity c = new Activity("Biking a mile",1,"");
+        Activity a = new Activity("Running a mile",1);
+        Activity b = new Activity("Swimming a mile", 1);
+        Activity c = new Activity("Biking a mile",1);
         Activity[] activityList = new Activity[]{a,b,c};
         //NEEDS TO BE CHANGED TO A GET RIGHT ANSWER METHOD
         Activity answer = b;
 
         return new Question<>(activityList, answer,"What uses more energy?");
+    }
+
+    public static Question generateQuestion() {
+        return null;
     }
 
     public OptionsType[] getOptions() { return options; }
@@ -65,4 +72,13 @@ public class Question<OptionsType> {
     public String toString() {
         return prompt;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Question<?> question = (Question<?>) o;
+        return Arrays.equals(options, question.options) && Objects.equals(answer, question.answer) && Objects.equals(prompt, question.prompt);
+    }
+
 }

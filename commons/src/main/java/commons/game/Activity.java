@@ -37,7 +37,7 @@ public class Activity {
     public int getId() { return this.id; }
 
     public String getTitle() {
-        return title;
+        return activity;
     }
 
     public String getActivity() { return this.activity; }
@@ -46,7 +46,7 @@ public class Activity {
 
     @Override
     public String toString() {
-        return title;
+        return activity;
     }
 
 }
