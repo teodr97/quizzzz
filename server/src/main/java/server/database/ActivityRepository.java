@@ -5,4 +5,6 @@ package server.database;
 
 import org.springframework.data.repository.CrudRepository;
 
-public interface ActivityRepository extends CrudRepository<commons.game.Activity, Integer> {}
+public interface ActivityRepository extends CrudRepository<commons.game.Activity, Integer> {
+
+}

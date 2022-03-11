@@ -20,12 +20,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import commons.game.Question;
 import commons.game.Activity;
-import server.database.QuestionRepository;
+import server.database.ActivityRepository;
 
 import java.util.List;
 
@@ -38,25 +34,25 @@ public class Main {
     }
 
     @Bean
-    public CommandLineRunner run(QuestionRepository repository){
+    public CommandLineRunner run(ActivityRepository repository){
         return (args -> {
             insertJavaAdvocates(repository);
             System.out.println(repository.findAll());
         });
     }
 
-    private void insertJavaAdvocates(QuestionRepository repository){
-        List<Question> questions = (List<Question>) repository.findAll();
+    private void insertJavaAdvocates(ActivityRepository repository){
+        List<Activity> activities = (List<Activity>) repository.findAll();
         boolean contains = false;
-        for(Question q : questions){
-            if(q.getQuestion().equals("Why are you running?")) {
+        for(Activity a : activities){
+            if(a.getActivity().equals("Why are you running?")) {
                 contains = true;
                 break;
             }
         }
 
         if(!contains){
-            repository.save(new Question("Why are you running?"));
+            repository.save(new Activity("Why are you running?", 2345));
         }
 
     }

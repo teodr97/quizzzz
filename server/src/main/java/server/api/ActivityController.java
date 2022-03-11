@@ -1,12 +1,10 @@
 package server.api;
 
 import commons.game.Activity;
-import commons.game.Question;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.database.ActivityRepository;
-import server.database.QuestionRepository;
 
 import javax.websocket.server.PathParam;
 import java.util.List;
