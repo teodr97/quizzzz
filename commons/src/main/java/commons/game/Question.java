@@ -2,6 +2,7 @@ package commons.game;
 
 
 import javax.swing.text.html.Option;
+import org.apache.commons.lang3.NotImplementedException;
 
 public class Question<OptionsType> {
 
@@ -27,6 +28,7 @@ public class Question<OptionsType> {
      * @param prompt The type of question.
      */
     public Question(OptionsType[] options, OptionsType answer, String prompt) {
+
         this.options = options;
         this.answer = answer;
         this.prompt = prompt;
