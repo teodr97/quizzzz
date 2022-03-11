@@ -1,17 +1,19 @@
 package commons.game;
 
 
-public class Question {
+import javax.swing.text.html.Option;
+
+public class Question<OptionsType> {
 
     /**
      * The activity options of the question.
      */
-    private Activity[] activities;
+    private OptionsType[] options;
 
     /**
      * The index of the correct activity, should within [0, activities.size).
      */
-    private Activity answer;
+    private OptionsType answer;
 
     /**
      * The prompt of the question, telling the user what the question is.
@@ -20,12 +22,12 @@ public class Question {
 
     /**
      * Question Constructor.
-     * @param activities The activities of the question.
+     * @param options The activities of the question.
      * @param answer The correct activity
      * @param prompt The type of question.
      */
-    public Question(Activity[] activities, Activity answer, String prompt) {
-        this.activities = activities;
+    public Question(OptionsType[] options, OptionsType answer, String prompt) {
+        this.options = options;
         this.answer = answer;
         this.prompt = prompt;
     }
@@ -44,14 +46,12 @@ public class Question {
         //NEEDS TO BE CHANGED TO A GET RIGHT ANSWER METHOD
         Activity answer = b;
 
-        return new Question(activityList, answer,"What uses more energy?");
+        return new Question<>(activityList, answer,"What uses more energy?");
     }
 
-    public Activity[] getActivities() {
-        return activities;
-    }
+    public OptionsType[] getOptions() { return options; }
 
-    public Activity getAnswer() {
+    public OptionsType getAnswer() {
         return answer;
     }
 

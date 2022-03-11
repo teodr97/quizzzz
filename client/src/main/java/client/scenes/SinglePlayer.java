@@ -277,9 +277,9 @@ public class SinglePlayer implements Initializable {
      */
     public void displayQuestion(Question question){
         questionField.setText(question.toString());
-        answerA.setText(question.getActivities()[0].toString());
-        answerB.setText(question.getActivities()[1].toString());
-        answerC.setText(question.getActivities()[2].toString());
+        answerA.setText(question.getOptions()[0].toString());
+        answerB.setText(question.getOptions()[1].toString());
+        answerC.setText(question.getOptions()[2].toString());
         resetGamescreen();
     }
 }
