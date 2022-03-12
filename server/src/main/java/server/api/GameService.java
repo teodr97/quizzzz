@@ -1,6 +1,5 @@
 package server.api;
 
-import commons.game.exceptions.GameAlreadyExistsException;
 import commons.game.exceptions.InvalidGameException;
 import commons.game.exceptions.NicknameTakenException;
 import commons.game.exceptions.NotFoundException;
@@ -10,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static commons.models.GameStatus.*;
@@ -19,7 +19,7 @@ import static commons.models.GameStatus.*;
 public class GameService {
 
     //creates a game and sets its status, id, players, etc.
-    public Game createGame(Player player) throws GameAlreadyExistsException, NotFoundException {
+    public Game createGame(Player player){
         Game game = new Game();
         List<Player> players = new ArrayList<>();
         players.add(player);
@@ -30,7 +30,13 @@ public class GameService {
         return game;
     }
 
-    public Game connectToWaitingRoom(Player player) throws NicknameTakenException, NotFoundException, GameAlreadyExistsException {
+    public Game connectToWaitingRoom(Player player) throws NicknameTakenException{
+        Map<String, Game> games = GameStorage.getGames();
+        for(Game g : games.values()){
+            if(g.contains(player.getNickname())){
+                throw new NicknameTakenException("Nickname already taken!");
+            }
+        }
         Game game = GameStorage.getInstance().getGames().values().stream()
                 .filter(it -> it.getStatus().equals(WAITING))
                 .findFirst().orElse(createGame(player));

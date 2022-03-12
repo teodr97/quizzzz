@@ -4,16 +4,16 @@ import commons.game.exceptions.GameAlreadyExistsException;
 import commons.game.exceptions.NicknameTakenException;
 import commons.models.Game;
 import commons.models.GamePlay;
+import commons.models.GameStorage;
 import commons.models.Player;
 import commons.game.exceptions.InvalidGameException;
 import commons.game.exceptions.NotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @Slf4j
@@ -27,6 +27,11 @@ public class GameController {
     public ResponseEntity<Game> create(@RequestBody Player player) throws NotFoundException, GameAlreadyExistsException {
         //log.info("started game with players: {}", players);
         return ResponseEntity.ok(gameService.createGame(player));
+    }
+
+    @GetMapping
+    public ResponseEntity<Map<String, Game>> getAllGames(){
+        return ResponseEntity.ok(GameStorage.getGames());
     }
 
     //connects player to waiting room

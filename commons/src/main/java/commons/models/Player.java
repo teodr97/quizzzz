@@ -28,6 +28,12 @@ public class Player {
      */
     private double timeLeft = 1;
 
+
+
+    public Player(){
+
+    }
+
     /**
      * Player Constructor.
      * @param nickname The nickname of the player.

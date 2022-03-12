@@ -3,6 +3,9 @@ package client.scenes;
 import client.MyFXML;
 import client.MyModule;
 import com.google.inject.Injector;
+import commons.models.Player;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
 import javafx.fxml.FXML;
 
 import javafx.scene.Node;
@@ -10,21 +13,25 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ProgressBar;
 
+import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import javafx.scene.control.Button;
 
 import javafx.event.ActionEvent;
+import org.glassfish.jersey.client.ClientConfig;
+
 import java.io.IOException;
 
-
 import static com.google.inject.Guice.createInjector;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 public class TestMainCtrl{
 
     private static final Injector INJECTOR = createInjector(new MyModule());
     private static final MyFXML FXML = new MyFXML(INJECTOR);
+    private static final String SERVER = "http://localhost:8080/";
 
     private Stage primaryStage;
     private Stage stage;
@@ -47,6 +54,11 @@ public class TestMainCtrl{
     @FXML
     private Text questionField;
 
+    @FXML
+    private TextField username;
+
+    @FXML
+    private Button startGame;
 
 
 
@@ -99,6 +111,19 @@ public class TestMainCtrl{
     //Switches to Username.fxml
     public void switchToUsername(ActionEvent event) throws IOException{
         var overview = FXML.load(HowToPlay.class, "client", "scenes", "Username.fxml");
+        scene = new Scene(overview.getValue());
+        setAndShowScenes(event);
+    }
+
+    //Switches to WaitingRoom.fxml
+    public void switchToWaitingRoom(ActionEvent event) throws IOException{
+        var overview = FXML.load(HowToPlay.class, "client", "scenes", "WaitingRoom.fxml");
+        Player player = new Player(username.getText());
+        ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("/game/connect") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .post(Entity.entity(player, APPLICATION_JSON));
         scene = new Scene(overview.getValue());
         setAndShowScenes(event);
     }
