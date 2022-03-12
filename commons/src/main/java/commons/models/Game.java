@@ -1,6 +1,7 @@
-package commons;
+package commons.models;
 
 import commons.game.Question;
+import commons.game.exceptions.NicknameTakenException;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -82,6 +83,21 @@ public class Game {
 
     public List<Player> getPlayers() {
         return players;
+    }
+
+    public void addPlayer(Player player) throws NicknameTakenException {
+        if(!contains(player.getNickname())){
+            players.add(player);
+        } else throw new NicknameTakenException("Username is already used by another player!");
+    }
+
+    public Boolean contains(String nickname){
+        for(int i = 0; i < players.size(); i++){
+            if(players.get(i).getNickname().equals(nickname)){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

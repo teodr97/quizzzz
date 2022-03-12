@@ -1,29 +1,49 @@
 package server.api;
 
+import commons.game.exceptions.GameAlreadyExistsException;
 import commons.game.exceptions.InvalidGameException;
+import commons.game.exceptions.NicknameTakenException;
 import commons.game.exceptions.NotFoundException;
+import commons.models.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import commons.Game;
-import commons.GamePlay;
-import commons.GameStorage;
-import commons.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static commons.GameStatus.*;
+import static commons.models.GameStatus.*;
 
 @Service
 @AllArgsConstructor
 public class GameService {
 
     //creates a game and sets its status, id, players, etc.
-    public Game createGame(List<Player> players){
+    public Game createGame(Player player) throws GameAlreadyExistsException, NotFoundException {
         Game game = new Game();
+        List<Player> players = new ArrayList<>();
+        players.add(player);
         game.setGameID(UUID.randomUUID().toString());
-        game.setStatus(ONGOING);
+        game.setStatus(WAITING);
         game.setPlayers(players);
+        GameStorage.getInstance().setGame(game);
+        return game;
+    }
+
+    public Game connectToWaitingRoom(Player player) throws NicknameTakenException, NotFoundException, GameAlreadyExistsException {
+        Game game = GameStorage.getInstance().getGames().values().stream()
+                .filter(it -> it.getStatus().equals(WAITING))
+                .findFirst().orElse(createGame(player));
+        game.addPlayer(player);
+        GameStorage.getInstance().setGame(game);
+        return game;
+    }
+
+    public Game startGame() throws NotFoundException{
+        Game game = GameStorage.getInstance().getGames().values().stream()
+                .filter(it -> it.getStatus().equals(WAITING))
+                .findFirst().orElseThrow(() -> new NotFoundException("No waiting room found!"));
+        game.setStatus(ONGOING);
         GameStorage.getInstance().setGame(game);
         return game;
     }
@@ -31,12 +51,16 @@ public class GameService {
     //checks the gameState of the game
     public Game gamePlay(GamePlay gamePlay) throws NotFoundException, InvalidGameException {
         if(!GameStorage.getInstance().getGames().containsKey(gamePlay.getGameId())){
-            throw new NotFoundException("Game not found");
+            throw new NotFoundException("Game not found!");
         }
 
         Game game = GameStorage.getInstance().getGames().get(gamePlay.getGameId());
         if(game.getStatus().equals(FINISHED)){
-            throw new InvalidGameException("Game is already finished");
+            throw new InvalidGameException("Game is already finished!");
+        }
+
+        if(game.getStatus().equals(WAITING)){
+            throw new InvalidGameException("Game has not started yet!");
         }
 
         //if no questions are left, the game is over then we need to show the leaderboard

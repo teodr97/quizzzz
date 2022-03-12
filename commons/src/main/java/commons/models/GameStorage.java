@@ -1,4 +1,4 @@
-package commons;
+package commons.models;
 
 import java.util.HashMap;
 import java.util.Map;
