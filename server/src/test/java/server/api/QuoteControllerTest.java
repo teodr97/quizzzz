@@ -24,8 +24,8 @@ import java.util.Random;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import commons.Person;
-import commons.Quote;
+import commons.models.Person;
+import commons.models.Quote;
 
 public class QuoteControllerTest {
 
