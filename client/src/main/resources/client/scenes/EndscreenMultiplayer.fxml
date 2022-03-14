@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="783.0" prefWidth="1119.0" style="-fx-background-color: linear-gradient(#02274f, #101b25);" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.TestMainCtrl">
+   <children>
+      <Button layoutX="795.0" layoutY="609.0" mnemonicParsing="false" onAction="#switchToSplash" prefHeight="74.0" prefWidth="224.0" style="-fx-background-color: #0249bd;" styleClass="buttons" text="Back to Menu" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font size="24.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Text fill="WHITE" layoutX="325.0" layoutY="114.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Game Over" textAlignment="CENTER" wrappingWidth="467.26251220703125">
+         <font>
+            <Font name="Arial" size="72.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" layoutX="264.0" layoutY="553.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Questions Answered: X/20" textAlignment="CENTER" wrappingWidth="592.4860229492188">
+         <font>
+            <Font size="27.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" layoutX="405.0" layoutY="517.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Points: XXXX" textAlignment="CENTER" wrappingWidth="306.417236328125">
+         <font>
+            <Font size="27.0" />
+         </font>
+      </Text>
+      <Button layoutX="100.0" layoutY="609.0" mnemonicParsing="false" onAction="#switchToSinglePlayer" prefHeight="74.0" prefWidth="224.0" style="-fx-background-color: #0249bd;" styleClass="buttons" text="New Game" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font size="24.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Text fill="WHITE" layoutX="406.0" layoutY="481.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your Placing: XX" textAlignment="CENTER" wrappingWidth="306.417236328125">
+         <font>
+            <Font size="27.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" layoutX="407.0" layoutY="186.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Top 3" textAlignment="CENTER" wrappingWidth="306.417236328125">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" layoutX="406.0" layoutY="258.0" strokeType="OUTSIDE" strokeWidth="0.0" text="First Place" textAlignment="CENTER" wrappingWidth="306.417236328125">
+         <font>
+            <Font size="54.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" layoutX="407.0" layoutY="324.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Second Place" textAlignment="CENTER" wrappingWidth="306.417236328125">
+         <font>
+            <Font size="42.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" layoutX="407.0" layoutY="374.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Third Place" textAlignment="CENTER" wrappingWidth="306.417236328125">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Text>
+   </children>
+</AnchorPane>

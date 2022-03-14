@@ -48,8 +48,6 @@ public class TestMainCtrl{
     private Text questionField;
 
 
-
-
     //initializes the stage and gets the scene from Splash.fxml
     //Opens/Shows the stage.
     public void initialize(Stage primaryStage, Pair<Splash, Parent> overview) {
@@ -114,6 +112,30 @@ public class TestMainCtrl{
         //questionField.setText("What what what is this world?");
     }
 
+
+    /**
+     * Switches the scene to the end-screen for singleplayer.
+     * @param event
+     * @throws IOException
+     */
+    public void switchToEndscreenSingleplayer(ActionEvent event) throws IOException {
+        var overview = FXML.load(EndgameSingleplayer.class, "client", "scenes", "EndgameSingleplayer.fxml");
+        scene = new Scene(overview.getValue());
+
+        setAndShowScenes(event);
+    }
+
+    /**
+     * Switches the scene to the end-screen for multiplayer.
+     * @param event
+     * @throws IOException
+     */
+    public void switchToEndscreenMultiplayer(ActionEvent event) throws IOException {
+        var overview = FXML.load(EndgameMultiplayer.class, "client", "scenes", "EndgameMultiplayer.fxml");
+        scene = new Scene(overview.getValue());
+
+        setAndShowScenes(event);
+    }
 
     //check answers in singleplayer this needs can be more profesional
     //by putting it in the singleplayer class
