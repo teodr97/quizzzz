@@ -144,4 +144,18 @@ public class Question {
     public int hashCode() {
         return Objects.hash(question, activityList);
     }
+
+    @Override
+    public String toString() {
+        return prompt;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Question<?> question = (Question<?>) o;
+        return Arrays.equals(options, question.options) && Objects.equals(answer, question.answer) && Objects.equals(prompt, question.prompt);
+    }
+
 }

@@ -2,12 +2,13 @@ package commons.game;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public class Activity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id; // PRIMARY KEY
     private String activity;
     private int power; // The energy this activity draws
@@ -35,20 +36,17 @@ public class Activity {
     //GETTERS==========================================================
     public int getId() { return this.id; }
 
+    public String getTitle() {
+        return activity;
+    }
+
     public String getActivity() { return this.activity; }
 
     public int getPower() { return this.power; }
 
-    /**
-     * This function should be used for debugging purposes only
-     * @return String containing the question and its ID
-     */
     @Override
     public String toString() {
-        return "Activity{" +
-                "id=" + id +
-                ", activity='" + activity + '\'' +
-                ", power=" + power +
-                '}';
+        return activity;
     }
+
 }
