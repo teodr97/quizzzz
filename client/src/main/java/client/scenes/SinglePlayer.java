@@ -106,6 +106,7 @@ public class SinglePlayer implements Initializable {
         answerbuttons[1] = answerB;
         answerbuttons[2] = answerC;
 
+        //sets the current round to 1
         this.game.setCurRound(1);
         displayQuestion(this.questionIterator.next());
 
@@ -245,6 +246,7 @@ public class SinglePlayer implements Initializable {
             //checks if the progress is 1 and will display prompt accordingly
             // will also disable the buttons if the timer ends
             if((timerBar.getProgress() + EPSILON > 1 && timerBar.getProgress() - EPSILON <1)){
+                //update the current round + 1
                 game.setCurRound(game.getCurRound()+1);
                 if(prompt != null){
                     if(prompt.getText().equals("")){
