@@ -62,6 +62,9 @@ public class SinglePlayer implements Initializable {
     @FXML
     private Text questionField;
 
+    @FXML
+    private Text qNumber;
+
     private double progress;
 
     double EPSILON = 0.00001;
@@ -76,16 +79,8 @@ public class SinglePlayer implements Initializable {
     //answersIterator to get the next correct answer
     private Iterator<Activity> answersIterator;
 
-    //hardcoded points array for each question so 4 entries array
-    private int[] points = new int[20];
-    private Iterator<Integer> pointsIterator;
-
-    // amount of question asked;
-    private int qnumber;
-
     //declare an animation timer
     private AnimationTimer tm = new TimerMethod();
-
 
     @Inject
     public SinglePlayer(ServerUtils server, MainCtrl mainCtrl) {
@@ -111,9 +106,9 @@ public class SinglePlayer implements Initializable {
         answerbuttons[1] = answerB;
         answerbuttons[2] = answerC;
 
+        this.game.setCurRound(1);
         displayQuestion(this.questionIterator.next());
 
-        qnumber = 0;
         progress = 0;
 
         //start the timer
@@ -250,7 +245,7 @@ public class SinglePlayer implements Initializable {
             //checks if the progress is 1 and will display prompt accordingly
             // will also disable the buttons if the timer ends
             if((timerBar.getProgress() + EPSILON > 1 && timerBar.getProgress() - EPSILON <1)){
-                qnumber += 1;
+                game.setCurRound(game.getCurRound()+1);
                 if(prompt != null){
                     if(prompt.getText().equals("")){
                         prompt.setText("Timer over");
@@ -277,6 +272,7 @@ public class SinglePlayer implements Initializable {
      */
     public void displayQuestion(Question question){
         questionField.setText(question.toString());
+        qNumber.setText(game.getCurRound() + " / 20");
         answerA.setText(question.getOptions()[0].toString());
         answerB.setText(question.getOptions()[1].toString());
         answerC.setText(question.getOptions()[2].toString());
