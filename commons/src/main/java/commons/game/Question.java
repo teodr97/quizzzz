@@ -113,32 +113,11 @@ public class Question {
     public void setQuestion(String question) { this.question = question; }
 
     //GETTERS==========================================================
-    public String getQuestion(){
-        return this.question;
-    }
+    public String getQuestion() { return this.question; }
+
+    public List<Activity> getActivityList() { return activityList; }
 
     public Activity getCorrectAnswer() { return this.correctAnswer; }
-
-    /**
-     * This function should be used for debugging purposes only
-     *
-     * @return String containing the question and its ID
-     */
-    @Override
-    public String toString() {
-        return "Question{" +
-                "question='" + question + '\'' +
-                ", activityList=" + activityList +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Question question1 = (Question) o;
-        return Objects.equals(question, question1.question) && Objects.equals(activityList, question1.activityList);
-    }
 
     @Override
     public int hashCode() {
@@ -147,15 +126,16 @@ public class Question {
 
     @Override
     public String toString() {
-        return prompt;
+        return question;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Question<?> question = (Question<?>) o;
-        return Arrays.equals(options, question.options) && Objects.equals(answer, question.answer) && Objects.equals(prompt, question.prompt);
+        Question other = (Question) o;
+        return activityList.equals(other.getActivityList()) && question.equals(other.getQuestion()) &&
+                correctAnswer.equals(other.getCorrectAnswer());
     }
 
 }

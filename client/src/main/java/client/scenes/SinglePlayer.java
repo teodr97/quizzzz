@@ -5,8 +5,8 @@ import client.MyModule;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import commons.game.Activity;
 import commons.game.Game;
+import commons.game.Activity;
 import commons.game.Question;
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
@@ -19,10 +19,11 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.ResourceBundle;
 
 import static com.google.inject.Guice.createInjector;
 
@@ -277,9 +278,9 @@ public class SinglePlayer implements Initializable {
      */
     public void displayQuestion(Question question){
         questionField.setText(question.toString());
-        answerA.setText(question.getOptions()[0].toString());
-        answerB.setText(question.getOptions()[1].toString());
-        answerC.setText(question.getOptions()[2].toString());
+        answerA.setText(question.getActivityList().get(0).toString());
+        answerB.setText(question.getActivityList().get(1).toString());
+        answerC.setText(question.getActivityList().get(2).toString());
         resetGamescreen();
     }
 }

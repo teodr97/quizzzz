@@ -19,7 +19,7 @@ public class ActivityController {
     /**
      * A reference to the object used for querying the database.
      */
-    private final ActivityRepository repo;
+    private final ActivityRepository repository;
 
     public ActivityController(ActivityRepository repo) {
         this.repository = repo;
@@ -30,7 +30,7 @@ public class ActivityController {
      * @return list of activities in DB
      */
     @GetMapping
-    public List<Activity> getAllActivities() {
+    public ResponseEntity<List<Activity>> getAllActivities() {
         return ResponseEntity.ok((List<Activity>) repository.findAll());
     }
 

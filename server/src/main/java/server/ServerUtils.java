@@ -2,6 +2,7 @@ package server;
 
 import commons.game.Activity;
 import org.springframework.beans.factory.annotation.Autowired;
+import server.api.ActivityController;
 import server.database.ActivityRepository;
 
 import java.util.ArrayList;
@@ -12,20 +13,20 @@ public class ServerUtils {
     /**
      * The list containing every activity;
      */
-    private List<Activity> activityList;
+    private static List<Activity> activityList;
 
-    @Autowired
-    private ActivityRepository repository;
+    private static ActivityController repository;
 
-    private List<Activity> getAllActivities() {
-        return (List<Activity>) repository.findAll();
+    private static List<Activity> getAllActivities() {
+        return repository.getAllActivities().getBody();
     }
 
     /**
      * Get the amount of activities in the database
      * @return the amount of activities in the database
      */
-    public int getActivitiesSize() {
+    private static int getActivitiesSize() {
+        activityList = getAllActivities();
         return activityList.size();
     }
 
@@ -34,7 +35,7 @@ public class ServerUtils {
      * The method ensures that the activities retrieved are non-repeating.
      * @return List containing three random non-repeating activities
      */
-    public List<Activity> retrieveRandomActivities() {
+    public static List<Activity> retrieveRandomActivities() {
         List<Activity> activitySet = new LinkedList<>();
         List<Integer> alreadyChosenIndexes = new ArrayList<>();
 
