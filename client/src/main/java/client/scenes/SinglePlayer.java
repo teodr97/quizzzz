@@ -5,7 +5,6 @@ import client.MyModule;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import commons.game.Activity;
 import commons.game.Game;
 import commons.game.Question;
 import javafx.animation.AnimationTimer;
