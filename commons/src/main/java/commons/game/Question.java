@@ -13,7 +13,7 @@ public class Question<OptionsType> {
     /**
      * The index of the correct activity, should within [0, activities.size).
      */
-    private OptionsType answer;
+    private int answer;
 
     /**
      * The prompt of the question, telling the user what the question is.
@@ -26,7 +26,7 @@ public class Question<OptionsType> {
      * @param answer The correct activity
      * @param prompt The type of question.
      */
-    public Question(OptionsType[] options, OptionsType answer, String prompt) {
+    public Question(OptionsType[] options, int answer, String prompt) {
 
         this.options = options;
         this.answer = answer;
@@ -45,7 +45,7 @@ public class Question<OptionsType> {
         Activity c = new Activity("Biking a mile",1);
         Activity[] activityList = new Activity[]{a,b,c};
         //NEEDS TO BE CHANGED TO A GET RIGHT ANSWER METHOD
-        Activity answer = b;
+        int answer = 2;
 
         return new Question<>(activityList, answer,"What uses more energy?");
     }
@@ -56,7 +56,7 @@ public class Question<OptionsType> {
 
     public OptionsType[] getOptions() { return options; }
 
-    public OptionsType getAnswer() {
+    public int getAnswer() {
         return answer;
     }
 

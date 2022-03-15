@@ -34,7 +34,7 @@ public class Game {
     /**
      * The list of activities that are the answers to the questions
      */
-    public Activity[] answers;
+    public int[] answers;
 
     public Game() {
         this.curRound = 0;
@@ -69,7 +69,7 @@ public class Game {
      */
     public void createQuestionList(){
         Question<Activity>[] questions = new Question[20];
-        Activity[] answers = new Activity[20];
+        int[] answers = new int[20];
         for(int i = 0; i < 20; i++){
             questions[i] = Question.createQuestion();
             answers[i] = questions[i].getAnswer();
@@ -93,9 +93,9 @@ public class Game {
     }
     */
 
-    /** TEMPORARILY COMMENTED OUT BECAUSE WE HAVE TO CHANGE THE TYPE OF PLAYER ACTIVITY
+    /**
      * Ends the question after the timer has ran out. Gives points to the correct players.
-
+    */
     public void endQuestion() {
         for (var player : this.players) {
             if (player.getChosenAnswer() == this.curQuestion.getAnswer()) {
@@ -106,7 +106,7 @@ public class Game {
             }
         }
     }
-    */
+
 
     /**
      * Starts a new round of the game. Increments the curRound counter.

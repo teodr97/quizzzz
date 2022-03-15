@@ -74,7 +74,7 @@ public class SinglePlayer implements Initializable {
     private Iterator<Question> questionIterator;
 
     //answersIterator to get the next correct answer
-    private Iterator<Activity> answersIterator;
+    private Iterator<Integer> answersIterator;
 
     //hardcoded points array for each question so 4 entries array
     private int[] points = new int[20];
@@ -129,18 +129,27 @@ public class SinglePlayer implements Initializable {
 
     // check answers in singleplayer
     // check answer also make sures the lpayers points get updated
-    public void checkAnswer(ActionEvent event) throws IOException, InterruptedException {
+    public void checkAnswer(ActionEvent event){
         //check answer will also have to call a function:
         //disableAnswers so the uses can't click the answers after already choosing one
 
-        //get the button clicked from the event parameter
-        Button useranswer = (Button) event.getTarget();
+        //get the button clicked from the event parameter, finds which button it is and then
+        //converts it to an int which is the answer chosen.
+        Button userButton = (Button) event.getTarget();
+        int userAnswer;
+        if(userButton.equals(answerA)){
+            userAnswer = 1;
+        } else if(userButton.equals(answerB)){
+            userAnswer = 2;
+        } else{
+            userAnswer = 3;
+        }
 
-        //gets the amount of points to be handed, and assigns the correct answer to a variable
+        //calculates points to be handed, and assigns the correct answer to a variable
         int questionpoints = (int)(500 - 250*progress);
-        String correctanswer = answersIterator.next().toString();
-        System.out.println("correct answer:"+ correctanswer);
-        System.out.println("your answer:"+ useranswer.getText());
+        int correctAnswer = answersIterator.next();
+        System.out.println("correct answer:"+ correctAnswer);
+        System.out.println("your answer:"+ userAnswer);
 
         //since we made an iterator of the answers the program checks if  the users button clicked is the right corresponding click
         //this function should definitely be tested
@@ -148,7 +157,7 @@ public class SinglePlayer implements Initializable {
         //make the buttons there "correct colors" green for right answer red for the wrong answers
         for(Button answerbutton: answerbuttons){
             //the one corresponding with he next answers entry is the correct answer and  becomes green
-            if(answerbutton.getText().equals(correctanswer)){
+            if(answerbutton.equals(userButton)){
                 answerbutton.setStyle("-fx-background-color: #309500;");
             }else{ //we make it red
                 answerbutton.setStyle("-fx-background-color: #BD0000;");
@@ -165,13 +174,13 @@ public class SinglePlayer implements Initializable {
             currentstylebuilder.append("-fx-border-color: black; -fx-border-width: 3px;");
             String newstyle = currentstylebuilder.toString();
 
-            if(answerbutton == useranswer){
+            if(answerbutton == userButton){
                 answerbutton.setStyle(newstyle);
             }
         }
         //after that we have to prompt of if the user was correct or not
         //user got the answer correct
-        if(correctanswer.equals(useranswer.getText())){
+        if(correctAnswer == userAnswer){
             int currentpoints = Integer.parseInt(userpoint.getText());
             int newpoints = currentpoints + questionpoints;
             userpoint.setText(String.valueOf(newpoints));
