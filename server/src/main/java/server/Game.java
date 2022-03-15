@@ -1,5 +1,8 @@
-package commons.game;
+package server;
 
+import commons.game.Activity;
+import commons.game.Player;
+import commons.game.Question;
 import server.ServerUtils;
 
 import java.util.ArrayList;
