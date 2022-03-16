@@ -1,57 +1,105 @@
-/*
- * Copyright 2021 Delft University of Technology
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package client.scenes;
 
+import client.MyFXML;
+import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
+import java.io.IOException;
+
 public class MainCtrl {
+
+    private static MyFXML FXML;
 
     private Stage primaryStage;
 
-    private QuoteOverviewCtrl overviewCtrl;
-    private Scene overview;
+    @FXML
+    private Button answerA;
 
-    private AddQuoteCtrl addCtrl;
-    private Scene add;
+    @FXML
+    private Button answerB;
 
-    public void initialize(Stage primaryStage, Pair<QuoteOverviewCtrl, Parent> overview,
-            Pair<AddQuoteCtrl, Parent> add) {
+    @FXML
+    private Button answerC;
+
+    @FXML
+    private Text prompt;
+    @FXML
+    private ProgressBar timerBar;
+
+    @FXML
+    private Text questionField;
+
+
+    //initializes the stage and gets the scene from Splash.fxml
+    //Opens/Shows the stage.
+    public void initialize(Stage primaryStage, Pair<Splash, Parent> overview, MyFXML FXML) {
         this.primaryStage = primaryStage;
-        this.overviewCtrl = overview.getKey();
-        this.overview = new Scene(overview.getValue());
+        this.prompt = new Text();
+        MainCtrl.FXML = FXML;
 
-        this.addCtrl = add.getKey();
-        this.add = new Scene(add.getValue());
-
-        showOverview();
+        primaryStage.setTitle("QUIZZ");
+        primaryStage.setScene(new Scene(overview.getValue()));
         primaryStage.show();
     }
 
-    public void showOverview() {
-        primaryStage.setTitle("Quotes: Overview");
-        primaryStage.setScene(overview);
-        overviewCtrl.refresh();
+    //Sets and shows the scene.
+    public void setAndShowScenes(Scene scene){
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 
-    public void showAdd() {
-        primaryStage.setTitle("Quotes: Adding Quote");
-        primaryStage.setScene(add);
-        add.setOnKeyPressed(e -> addCtrl.keyPressed(e));
+    //If the event is executed then the scene switches to Splash.fxml
+    public void switchToSplash() {
+        var overview = FXML.load(Splash.class, "client", "scenes", "Splash.fxml");
+        setAndShowScenes(new Scene(overview.getValue()));
+    }
+
+    //Switches to HowToPlay.fxml
+    public void switchToHowToPlay() {
+        var overview = FXML.load(HowToPlay.class, "client", "scenes", "HowToPlay.fxml");
+        setAndShowScenes(new Scene(overview.getValue()));
+    }
+
+    //Switches to PastGames.fxml
+    public void switchToPastGames() {
+        var overview = FXML.load(PastGames.class, "client", "scenes", "PastGames.fxml");
+        setAndShowScenes(new Scene(overview.getValue()));
+    }
+
+    //Switches to Username.fxml
+    public void switchToUsername() {
+        var overview = FXML.load(Username.class, "client", "scenes", "Username.fxml");
+        setAndShowScenes(new Scene(overview.getValue()));
+    }
+
+    //Start single player game(for now only goes to singleplayer game screen
+    public void switchToSinglePlayer() {
+        var overview = FXML.load(SinglePlayer.class, "client", "scenes", "SinglePlayer.fxml");
+        setAndShowScenes(new Scene(overview.getValue()));
+    }
+
+
+    /**
+     * Switches the scene to the end-screen for singleplayer.
+     * @throws IOException
+     */
+    public void switchToEndscreenSingleplayer() {
+        var overview = FXML.load(EndscreenSingleplayer.class, "client", "scenes", "EndscreenSingleplayer.fxml");
+        setAndShowScenes(new Scene(overview.getValue()));
+    }
+
+    /**
+     * Switches the scene to the end-screen for multiplayer.
+     * @throws IOException
+     */
+    public void switchToEndscreenMultiplayer() {
+        var overview = FXML.load(EndscreenMultiplayer.class, "client", "scenes", "EndscreenSingleplayer.fxml");
+        setAndShowScenes(new Scene(overview.getValue()));
     }
 }

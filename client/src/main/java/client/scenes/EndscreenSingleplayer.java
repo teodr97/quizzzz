@@ -14,7 +14,7 @@ import java.util.ResourceBundle;
 
 public class EndscreenSingleplayer implements Initializable {
 
-    private final TestMainCtrl mainCtrl;
+    private final MainCtrl mainCtrl;
 
     /**
      * Used to share information between the game and the end-screen.
@@ -25,7 +25,7 @@ public class EndscreenSingleplayer implements Initializable {
     @FXML private Text finalScoreTextBox;
 
     @Inject
-    public EndscreenSingleplayer(StatSharerSingleplayer statSharer, TestMainCtrl mainCtrl) {
+    public EndscreenSingleplayer(StatSharerSingleplayer statSharer, MainCtrl mainCtrl) {
         this.statSharer = statSharer;
         this.mainCtrl = mainCtrl;
     }

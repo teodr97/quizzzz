@@ -13,14 +13,14 @@ import java.util.ResourceBundle;
 public class EndscreenMultiplayer implements Initializable {
 
     private final ServerUtils server;
-    private final MainCtrl mainCtrl;
+    private final MainCtrlQuotes mainCtrl;
 
     private Stage primaryStage;
 
     private Scene overview;
 
     @Inject
-    public EndscreenMultiplayer(ServerUtils server, MainCtrl mainCtrl) {
+    public EndscreenMultiplayer(ServerUtils server, MainCtrlQuotes mainCtrl) {
         this.server = server;
         this.mainCtrl = mainCtrl;
     }

@@ -12,14 +12,14 @@ import java.util.ResourceBundle;
 public class PastGames implements Initializable {
 
     private final ServerUtils server;
-    private final MainCtrl mainCtrl;
+    private final MainCtrlQuotes mainCtrl;
 
     private Stage primaryStage;
 
     private Scene overview;
 
     @Inject
-    public PastGames(ServerUtils server, MainCtrl mainCtrl) {
+    public PastGames(ServerUtils server, MainCtrlQuotes mainCtrl) {
         this.server = server;
         this.mainCtrl = mainCtrl;
     }

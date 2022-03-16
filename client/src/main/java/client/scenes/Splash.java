@@ -13,14 +13,14 @@ import java.util.ResourceBundle;
 
 public class Splash implements Initializable {
 
-    private final TestMainCtrl mainCtrl;
+    private final MainCtrl mainCtrl;
 
     private Stage primaryStage;
 
     private Scene overview;
 
     @Inject
-    public Splash(TestMainCtrl mainCtrl) {
+    public Splash(MainCtrl mainCtrl) {
         this.mainCtrl = mainCtrl;
     }
 

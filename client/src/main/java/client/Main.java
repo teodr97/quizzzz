@@ -15,8 +15,8 @@
  */
 package client;
 
+import client.scenes.MainCtrl;
 import client.scenes.Splash;
-import client.scenes.TestMainCtrl;
 import com.google.inject.Injector;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -37,7 +37,7 @@ public class Main extends Application {
         var overview = FXML.load(Splash.class, "client", "scenes", "Splash.fxml");
 
         //gets the mainCtrl class
-        var mainCtrl = INJECTOR.getInstance(TestMainCtrl.class);
+        var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
         //passes the parameters to the mainCtrl class
         mainCtrl.initialize(primaryStage, overview, FXML);
     }

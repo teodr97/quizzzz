@@ -12,14 +12,14 @@ import java.util.ResourceBundle;
 public class Username implements Initializable {
 
     private final ServerUtils server;
-    private final MainCtrl mainCtrl;
+    private final MainCtrlQuotes mainCtrl;
 
     private Stage primaryStage;
 
     private Scene overview;
 
     @Inject
-    public Username(ServerUtils server, MainCtrl mainCtrl) {
+    public Username(ServerUtils server, MainCtrlQuotes mainCtrl) {
         this.server = server;
         this.mainCtrl = mainCtrl;
     }

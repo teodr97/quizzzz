@@ -30,7 +30,7 @@ public class SinglePlayer implements Initializable {
      */
     private StatSharerSingleplayer statSharer;
 
-    private TestMainCtrl mainCtrl;
+    private MainCtrl mainCtrl;
 
     private Stage primaryStage;
 
@@ -84,7 +84,7 @@ public class SinglePlayer implements Initializable {
     private AnimationTimer tm = new TimerMethod();
 
     @Inject
-    public SinglePlayer(StatSharerSingleplayer statSharer, TestMainCtrl mainCtrl) {
+    public SinglePlayer(StatSharerSingleplayer statSharer, MainCtrl mainCtrl) {
         this.mainCtrl = mainCtrl;
         this.statSharer = statSharer;
     }
