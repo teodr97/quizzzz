@@ -1,10 +1,7 @@
 package client.scenes;
 
-import client.MyFXML;
-import client.MyModule;
-import client.utils.ServerUtils;
+import client.utils.StatSharerSingleplayer;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import commons.game.Activity;
 import commons.game.Game;
 import commons.game.Question;
@@ -12,34 +9,26 @@ import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
-
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
-
-import static com.google.inject.Guice.createInjector;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.ResourceBundle;
 
 
 public class SinglePlayer implements Initializable {
 
-    private static final Injector INJECTOR = createInjector(new MyModule());
-    private static final MyFXML FXML = new MyFXML(INJECTOR);
+    /**
+     * Used to share information between the game and the end-screen.
+     * Here it is used to set the information.
+     */
+    private StatSharerSingleplayer statSharer;
 
-    private final ServerUtils server;
-    private final MainCtrl mainCtrl;
-
-    private Stage primaryStage;
-
-
-    private Stage stage;
-    private Scene scene;
+    private MainCtrl mainCtrl;
 
     @FXML
     private ProgressBar timerBar;
@@ -58,6 +47,7 @@ public class SinglePlayer implements Initializable {
 
     @FXML
     private Text userpoint;
+    private int pointsInt = 0;
 
     @FXML
     private Text questionField;
@@ -83,9 +73,9 @@ public class SinglePlayer implements Initializable {
     private AnimationTimer tm = new TimerMethod();
 
     @Inject
-    public SinglePlayer(ServerUtils server, MainCtrl mainCtrl) {
-        this.server = server;
+    public SinglePlayer(StatSharerSingleplayer statSharer, MainCtrl mainCtrl) {
         this.mainCtrl = mainCtrl;
+        this.statSharer = statSharer;
     }
 
     /**
@@ -114,13 +104,6 @@ public class SinglePlayer implements Initializable {
 
         //start the timer
         tm.start();
-    }
-
-    //Sets and shows the scene.
-    public void setAndShowScenes(ActionEvent event){
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
     }
 
     // check answers in singleplayer
@@ -170,6 +153,7 @@ public class SinglePlayer implements Initializable {
         if(correctanswer.equals(useranswer.getText())){
             int currentpoints = Integer.parseInt(userpoint.getText());
             int newpoints = currentpoints + questionpoints;
+            this.pointsInt = newpoints;
             userpoint.setText(String.valueOf(newpoints));
             prompt.setText("Correct");
         } else{
@@ -224,12 +208,10 @@ public class SinglePlayer implements Initializable {
     //If the event is executed then the scene switches to Splash.fxml
     public void switchToSplash(ActionEvent event) throws IOException{
         tm.stop();
-        var overview = FXML.load(Splash.class, "client", "scenes", "Splash.fxml");
-        scene = new Scene(overview.getValue());
-        setAndShowScenes(event);
+        mainCtrl.switchToSplash();
     }
 
-    //HANDLES   the timebar
+    //HANDLES the timebar
     private class TimerMethod extends AnimationTimer {
         //define the handle method
         @Override
@@ -261,7 +243,7 @@ public class SinglePlayer implements Initializable {
                 if(questionIterator.hasNext()){
                     displayQuestion(questionIterator.next());
                 }else{
-                    tm.stop();
+                    loadEndscreen();
                 }
                 //when timer ends and game hasn't ended we want to display the next question;
             }
@@ -279,5 +261,18 @@ public class SinglePlayer implements Initializable {
         answerB.setText(question.getOptions()[1].toString());
         answerC.setText(question.getOptions()[2].toString());
         resetGamescreen();
+    }
+
+    /**
+     * Switches to the end-screen after the game has finished.
+     */
+    private void loadEndscreen()  {
+        tm.stop();
+        this.statSharer.points = this.pointsInt;
+        mainCtrl.switchToEndscreenSingleplayer();
+    }
+
+    public int getPoints() {
+        return this.pointsInt;
     }
 }
