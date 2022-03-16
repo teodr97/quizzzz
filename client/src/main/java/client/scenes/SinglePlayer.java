@@ -9,11 +9,9 @@ import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
@@ -31,11 +29,6 @@ public class SinglePlayer implements Initializable {
     private StatSharerSingleplayer statSharer;
 
     private MainCtrl mainCtrl;
-
-    private Stage primaryStage;
-
-    private Stage stage;
-    private Scene scene;
 
     @FXML
     private ProgressBar timerBar;

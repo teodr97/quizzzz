@@ -1,12 +1,8 @@
 package client.scenes;
 
 import client.MyFXML;
-import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
@@ -18,29 +14,10 @@ public class MainCtrl {
 
     private Stage primaryStage;
 
-    @FXML
-    private Button answerA;
-
-    @FXML
-    private Button answerB;
-
-    @FXML
-    private Button answerC;
-
-    @FXML
-    private Text prompt;
-    @FXML
-    private ProgressBar timerBar;
-
-    @FXML
-    private Text questionField;
-
-
     //initializes the stage and gets the scene from Splash.fxml
     //Opens/Shows the stage.
     public void initialize(Stage primaryStage, Pair<Splash, Parent> overview, MyFXML FXML) {
         this.primaryStage = primaryStage;
-        this.prompt = new Text();
         MainCtrl.FXML = FXML;
 
         primaryStage.setTitle("QUIZZ");

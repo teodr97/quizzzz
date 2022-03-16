@@ -3,8 +3,6 @@ package client.scenes;
 import com.google.inject.Inject;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
@@ -14,10 +12,6 @@ import java.util.ResourceBundle;
 public class Splash implements Initializable {
 
     private final MainCtrl mainCtrl;
-
-    private Stage primaryStage;
-
-    private Scene overview;
 
     @Inject
     public Splash(MainCtrl mainCtrl) {
