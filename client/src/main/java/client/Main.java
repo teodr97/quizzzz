@@ -39,7 +39,7 @@ public class Main extends Application {
         //gets the mainCtrl class
         var mainCtrl = INJECTOR.getInstance(TestMainCtrl.class);
         //passes the parameters to the mainCtrl class
-        mainCtrl.initialize(primaryStage, overview);
+        mainCtrl.initialize(primaryStage, overview, FXML);
     }
 
     public static void main(String[] args) throws URISyntaxException, IOException {

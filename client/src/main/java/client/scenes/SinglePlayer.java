@@ -1,11 +1,7 @@
 package client.scenes;
 
-import client.Main;
-import client.MyFXML;
-import client.MyModule;
 import client.utils.StatSharerSingleplayer;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import commons.game.Activity;
 import commons.game.Game;
 import commons.game.Question;
@@ -13,7 +9,6 @@ import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
@@ -26,19 +21,16 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.ResourceBundle;
 
-import static com.google.inject.Guice.createInjector;
-
 
 public class SinglePlayer implements Initializable {
-
-    private static final Injector INJECTOR = createInjector(new MyModule());
-    private static final MyFXML FXML = new MyFXML(INJECTOR);
 
     /**
      * Used to share information between the game and the end-screen.
      * Here it is used to set the information.
      */
     private StatSharerSingleplayer statSharer;
+
+    private TestMainCtrl mainCtrl;
 
     private Stage primaryStage;
 
@@ -91,9 +83,9 @@ public class SinglePlayer implements Initializable {
     //declare an animation timer
     private AnimationTimer tm = new TimerMethod();
 
-
     @Inject
-    public SinglePlayer(StatSharerSingleplayer statSharer) {
+    public SinglePlayer(StatSharerSingleplayer statSharer, TestMainCtrl mainCtrl) {
+        this.mainCtrl = mainCtrl;
         this.statSharer = statSharer;
     }
 
@@ -122,13 +114,6 @@ public class SinglePlayer implements Initializable {
 
         //start the timer
         tm.start();
-    }
-
-    //Sets and shows the scene.
-    public void setAndShowScenes(ActionEvent event){
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
     }
 
     // check answers in singleplayer
@@ -233,12 +218,10 @@ public class SinglePlayer implements Initializable {
     //If the event is executed then the scene switches to Splash.fxml
     public void switchToSplash(ActionEvent event) throws IOException{
         tm.stop();
-        var overview = FXML.load(Splash.class, "client", "scenes", "Splash.fxml");
-        scene = new Scene(overview.getValue());
-        setAndShowScenes(event);
+        mainCtrl.switchToSplash();
     }
 
-    //HANDLES   the timebar
+    //HANDLES the timebar
     private class TimerMethod extends AnimationTimer {
         //define the handle method
         @Override
@@ -294,12 +277,7 @@ public class SinglePlayer implements Initializable {
     private void loadEndscreen()  {
         tm.stop();
         this.statSharer.points = this.pointsInt;
-        stage = (Stage)timerBar.getScene().getWindow();
-        stage.setUserData(this.pointsInt);
-        var overview = Main.FXML.load(EndscreenSingleplayer.class, "client", "scenes", "EndscreenSingleplayer.fxml");
-        scene = new Scene(overview.getValue());
-        stage.setScene(scene);
-        stage.show();
+        mainCtrl.switchToEndscreenSingleplayer();
     }
 
     public int getPoints() {

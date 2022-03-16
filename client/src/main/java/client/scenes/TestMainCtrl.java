@@ -1,35 +1,23 @@
 package client.scenes;
 
-import client.Main;
 import client.MyFXML;
-import client.MyModule;
-import com.google.inject.Injector;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
-
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-import javafx.scene.control.Button;
 
-import javafx.event.ActionEvent;
 import java.io.IOException;
-
-
-import static com.google.inject.Guice.createInjector;
 
 public class TestMainCtrl{
 
-    private static final Injector INJECTOR = createInjector(new MyModule());
-    private static final MyFXML FXML = new MyFXML(INJECTOR);
+    private static MyFXML FXML;
 
     private Stage primaryStage;
-    private Stage stage;
-    private Scene scene;
 
     @FXML
     private Button answerA;
@@ -51,91 +39,69 @@ public class TestMainCtrl{
 
     //initializes the stage and gets the scene from Splash.fxml
     //Opens/Shows the stage.
-    public void initialize(Stage primaryStage, Pair<Splash, Parent> overview) {
+    public void initialize(Stage primaryStage, Pair<Splash, Parent> overview, MyFXML FXML) {
         this.primaryStage = primaryStage;
-        this.scene = new Scene(overview.getValue());
         this.prompt = new Text();
+        TestMainCtrl.FXML = FXML;
 
-        showPrimaryStage();
-    }
-
-    //Sets the title and scene for the Starting stage.
-    public void showPrimaryStage() {
         primaryStage.setTitle("QUIZZ");
-        primaryStage.setScene(scene);
+        primaryStage.setScene(new Scene(overview.getValue()));
         primaryStage.show();
     }
 
     //Sets and shows the scene.
-    public void setAndShowScenes(ActionEvent event){
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
+    public void setAndShowScenes(Scene scene){
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 
     //If the event is executed then the scene switches to Splash.fxml
-    public void switchToSplash(ActionEvent event) throws IOException{
+    public void switchToSplash() {
         var overview = FXML.load(Splash.class, "client", "scenes", "Splash.fxml");
-        scene = new Scene(overview.getValue());
-        setAndShowScenes(event);
+        setAndShowScenes(new Scene(overview.getValue()));
     }
 
     //Switches to HowToPlay.fxml
-    public void switchToHowToPlay(ActionEvent event) throws IOException{
+    public void switchToHowToPlay() {
         var overview = FXML.load(HowToPlay.class, "client", "scenes", "HowToPlay.fxml");
-        scene = new Scene(overview.getValue());
-        setAndShowScenes(event);
+        setAndShowScenes(new Scene(overview.getValue()));
     }
 
     //Switches to PastGames.fxml
-    public void switchToPastGames(ActionEvent event) throws IOException{
+    public void switchToPastGames() {
         var overview = FXML.load(PastGames.class, "client", "scenes", "PastGames.fxml");
-        scene = new Scene(overview.getValue());
-        setAndShowScenes(event);
+        setAndShowScenes(new Scene(overview.getValue()));
     }
 
-
     //Switches to Username.fxml
-    public void switchToUsername(ActionEvent event) throws IOException{
+    public void switchToUsername() {
         var overview = FXML.load(Username.class, "client", "scenes", "Username.fxml");
-        scene = new Scene(overview.getValue());
-        setAndShowScenes(event);
+        setAndShowScenes(new Scene(overview.getValue()));
     }
 
     //Start single player game(for now only goes to singleplayer game screen
-    public void switchToSinglePlayer(ActionEvent event) throws IOException{
-        var overview = Main.FXML.load(SinglePlayer.class, "client", "scenes", "SinglePlayer.fxml");
-        scene = new Scene(overview.getValue());
-        //questionField.setText("What what what is this world?");
-
-        setAndShowScenes(event);
-
-        //questionField.setText("What what what is this world?");
+    public void switchToSinglePlayer() {
+        var overview = FXML.load(SinglePlayer.class, "client", "scenes", "SinglePlayer.fxml");
+        setAndShowScenes(new Scene(overview.getValue()));
     }
 
 
     /**
      * Switches the scene to the end-screen for singleplayer.
-     * @param event
      * @throws IOException
      */
-    public void switchToEndscreenSingleplayer(ActionEvent event) throws IOException {
+    public void switchToEndscreenSingleplayer() {
         var overview = FXML.load(EndscreenSingleplayer.class, "client", "scenes", "EndscreenSingleplayer.fxml");
-        scene = new Scene(overview.getValue());
-
-        setAndShowScenes(event);
+        setAndShowScenes(new Scene(overview.getValue()));
     }
 
     /**
      * Switches the scene to the end-screen for multiplayer.
-     * @param event
      * @throws IOException
      */
-    public void switchToEndscreenMultiplayer(ActionEvent event) throws IOException {
+    public void switchToEndscreenMultiplayer() {
         var overview = FXML.load(EndscreenMultiplayer.class, "client", "scenes", "EndscreenSingleplayer.fxml");
-        scene = new Scene(overview.getValue());
-        stage.setScene(scene);
-        stage.show();
+        setAndShowScenes(new Scene(overview.getValue()));
     }
 
     //check answers in singleplayer this needs can be more profesional
