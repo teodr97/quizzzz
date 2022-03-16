@@ -1,5 +1,7 @@
 package commons.game;
 
+import commons.game.utils.Utils;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -65,46 +67,23 @@ public class Question {
         // Generate a new random integer to determine the type of question that will be used.
         // Not a good solution for a greater amount of questions, they should be stored in a
         // database instead.
-        int randomFactor = (int) (Math.random() * 4);
+        int randomFactor = Utils.generateRandomIntSmallerThan(4);
         switch (randomFactor) {
             case 1:
                 this.question = "Which activity uses the most amount of power?";
-                int maxPower = activityList.get(0).getPower();
-                this.correctAnswer = activityList.get(0);
-
-                if (maxPower < activityList.get(1).getPower()) {
-                    this.correctAnswer = activityList.get(1);
-                    maxPower = this.correctAnswer.getPower();
-                }
-                if (maxPower < activityList.get(2).getPower()) this.correctAnswer = activityList.get(2);
+                this.correctAnswer = Utils.retrieveActivityMostEnergy(activityList);
                 break;
             case 2:
                 this.question = "Which activity uses the least amount of power?";
-                int minPower = activityList.get(0).getPower();
-                this.correctAnswer = activityList.get(0);
-
-                if (minPower > activityList.get(1).getPower()) {
-                    this.correctAnswer = activityList.get(1);
-                    minPower = this.correctAnswer.getPower();
-                }
-                if (minPower > activityList.get(2).getPower()) this.correctAnswer = activityList.get(2);
+                this.correctAnswer = Utils.retrieveActivityLeastEnergy(activityList);
                 break;
             default:
                 // Generate a random integer from 0 to 3 for getting an index for the correct answer
-                int correctAnswerIndex = (int) (Math.random() * 4);
+                int correctAnswerIndex = Utils.generateRandomIntSmallerThan(4);
                 // Retrieve a random activity that will serve as the correct answer using indexes 0-3
                 this.correctAnswer = activityList.get(correctAnswerIndex);
                 this.question = "How much power does " + correctAnswer.getActivity() + "require?";
-                // We replace every string containing the activity by the power it draws,
-                // as that is what we need to show for the answers the player will choose from.
-                for (int i = 0; i < 3; i++) {
-                    this.activityList.get(i).setActivity(Integer.toString(this.activityList.get(i).getPower()));
-                    // We change the power amounts used within other answers to amounts that
-                    // are different to the amount in the correct answer.
-                    if (i != correctAnswerIndex) this.activityList.get(i).setActivity(Integer.toString(
-                            this.activityList.get(correctAnswerIndex).getPower() + (int) (Math.random() * 100)
-                    ));
-                }
+                this.activityList = Utils.replaceActivitiesWithPowerDraws(activityList, correctAnswerIndex);
                 break;
         }
     }
