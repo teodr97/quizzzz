@@ -15,22 +15,21 @@
  */
 package client;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-
 import client.scenes.Splash;
 import client.scenes.TestMainCtrl;
 import com.google.inject.Injector;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+
 import static com.google.inject.Guice.createInjector;
 
 public class Main extends Application {
 
-    private static final Injector INJECTOR = createInjector(new MyModule());
-    private static final MyFXML FXML = new MyFXML(INJECTOR);
-
+    public static final Injector INJECTOR = createInjector(new MyModule());
+    public static final MyFXML FXML = new MyFXML(INJECTOR);
 
     @Override
     public void start(Stage primaryStage) throws IOException {
@@ -41,7 +40,6 @@ public class Main extends Application {
         var mainCtrl = INJECTOR.getInstance(TestMainCtrl.class);
         //passes the parameters to the mainCtrl class
         mainCtrl.initialize(primaryStage, overview);
-
     }
 
     public static void main(String[] args) throws URISyntaxException, IOException {

@@ -16,6 +16,7 @@
 package client;
 
 import client.scenes.*;
+import client.utils.StatSharerSingleplayer;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
@@ -31,5 +32,8 @@ public class MyModule implements Module {
         binder.bind(Username.class).in(Scopes.SINGLETON);
         binder.bind(PastGames.class).in(Scopes.SINGLETON);
         binder.bind(SinglePlayer.class).in(Scopes.SINGLETON);
+        binder.bind(EndscreenSingleplayer.class).in(Scopes.SINGLETON);
+        binder.bind(EndscreenMultiplayer.class).in(Scopes.SINGLETON);
+        binder.bind(StatSharerSingleplayer.class).in(Scopes.SINGLETON);
     }
 }

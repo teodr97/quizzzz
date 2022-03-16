@@ -1,8 +1,9 @@
 package client.scenes;
 
+import client.Main;
 import client.MyFXML;
 import client.MyModule;
-import client.utils.ServerUtils;
+import client.utils.StatSharerSingleplayer;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import commons.game.Activity;
@@ -19,10 +20,11 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.ResourceBundle;
 
 import static com.google.inject.Guice.createInjector;
 
@@ -32,11 +34,13 @@ public class SinglePlayer implements Initializable {
     private static final Injector INJECTOR = createInjector(new MyModule());
     private static final MyFXML FXML = new MyFXML(INJECTOR);
 
-    private final ServerUtils server;
-    private final MainCtrl mainCtrl;
+    /**
+     * Used to share information between the game and the end-screen.
+     * Here it is used to set the information.
+     */
+    private StatSharerSingleplayer statSharer;
 
     private Stage primaryStage;
-
 
     private Stage stage;
     private Scene scene;
@@ -58,6 +62,7 @@ public class SinglePlayer implements Initializable {
 
     @FXML
     private Text userpoint;
+    private int pointsInt = 0;
 
     @FXML
     private Text questionField;
@@ -88,9 +93,8 @@ public class SinglePlayer implements Initializable {
 
 
     @Inject
-    public SinglePlayer(ServerUtils server, MainCtrl mainCtrl) {
-        this.server = server;
-        this.mainCtrl = mainCtrl;
+    public SinglePlayer(StatSharerSingleplayer statSharer) {
+        this.statSharer = statSharer;
     }
 
     /**
@@ -174,6 +178,7 @@ public class SinglePlayer implements Initializable {
         if(correctanswer.equals(useranswer.getText())){
             int currentpoints = Integer.parseInt(userpoint.getText());
             int newpoints = currentpoints + questionpoints;
+            this.pointsInt = newpoints;
             userpoint.setText(String.valueOf(newpoints));
             prompt.setText("Correct");
         } else{
@@ -264,7 +269,7 @@ public class SinglePlayer implements Initializable {
                 if(questionIterator.hasNext()){
                     displayQuestion(questionIterator.next());
                 }else{
-                    tm.stop();
+                    loadEndscreen();
                 }
                 //when timer ends and game hasn't ended we want to display the next question;
             }
@@ -281,5 +286,23 @@ public class SinglePlayer implements Initializable {
         answerB.setText(question.getOptions()[1].toString());
         answerC.setText(question.getOptions()[2].toString());
         resetGamescreen();
+    }
+
+    /**
+     * Switches to the end-screen after the game has finished.
+     */
+    private void loadEndscreen()  {
+        tm.stop();
+        this.statSharer.points = this.pointsInt;
+        stage = (Stage)timerBar.getScene().getWindow();
+        stage.setUserData(this.pointsInt);
+        var overview = Main.FXML.load(EndscreenSingleplayer.class, "client", "scenes", "EndscreenSingleplayer.fxml");
+        scene = new Scene(overview.getValue());
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public int getPoints() {
+        return this.pointsInt;
     }
 }

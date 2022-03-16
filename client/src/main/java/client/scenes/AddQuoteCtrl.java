@@ -27,7 +27,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Modality;
 
-public class    AddQuoteCtrl {
+public class AddQuoteCtrl {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;

@@ -10,7 +10,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 
-public class EndgameMultiplayer implements Initializable {
+public class EndscreenMultiplayer implements Initializable {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
@@ -20,7 +20,7 @@ public class EndgameMultiplayer implements Initializable {
     private Scene overview;
 
     @Inject
-    public EndgameMultiplayer(ServerUtils server, MainCtrl mainCtrl) {
+    public EndscreenMultiplayer(ServerUtils server, MainCtrl mainCtrl) {
         this.server = server;
         this.mainCtrl = mainCtrl;
     }

@@ -38,7 +38,7 @@ public class Game {
 
     public Game() {
         this.curRound = 0;
-        this.totalRounds = 20;
+        this.totalRounds = 2;
         this.players = new ArrayList<>();
         this.curQuestion = null;
     }
@@ -68,9 +68,9 @@ public class Game {
      * creates a list of 20 questions and a list of 20 answers, assigning them to the game class variables
      */
     public void createQuestionList(){
-        Question<Activity>[] questions = new Question[20];
-        Activity[] answers = new Activity[20];
-        for(int i = 0; i < 20; i++){
+        Question<Activity>[] questions = new Question[this.totalRounds];
+        Activity[] answers = new Activity[this.totalRounds];
+        for(int i = 0; i < this.totalRounds; i++){
             questions[i] = Question.createQuestion();
             answers[i] = questions[i].getAnswer();
         }

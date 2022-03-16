@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.Main;
 import client.MyFXML;
 import client.MyModule;
 import com.google.inject.Injector;
@@ -58,7 +59,7 @@ public class TestMainCtrl{
         showPrimaryStage();
     }
 
-    //Sets the title and scene for the Startingstage.
+    //Sets the title and scene for the Starting stage.
     public void showPrimaryStage() {
         primaryStage.setTitle("QUIZZ");
         primaryStage.setScene(scene);
@@ -88,7 +89,7 @@ public class TestMainCtrl{
 
     //Switches to PastGames.fxml
     public void switchToPastGames(ActionEvent event) throws IOException{
-        var overview = FXML.load(HowToPlay.class, "client", "scenes", "PastGames.fxml");
+        var overview = FXML.load(PastGames.class, "client", "scenes", "PastGames.fxml");
         scene = new Scene(overview.getValue());
         setAndShowScenes(event);
     }
@@ -96,14 +97,14 @@ public class TestMainCtrl{
 
     //Switches to Username.fxml
     public void switchToUsername(ActionEvent event) throws IOException{
-        var overview = FXML.load(HowToPlay.class, "client", "scenes", "Username.fxml");
+        var overview = FXML.load(Username.class, "client", "scenes", "Username.fxml");
         scene = new Scene(overview.getValue());
         setAndShowScenes(event);
     }
 
     //Start single player game(for now only goes to singleplayer game screen
     public void switchToSinglePlayer(ActionEvent event) throws IOException{
-        var overview = FXML.load(SinglePlayer.class, "client", "scenes", "SinglePlayer.fxml");
+        var overview = Main.FXML.load(SinglePlayer.class, "client", "scenes", "SinglePlayer.fxml");
         scene = new Scene(overview.getValue());
         //questionField.setText("What what what is this world?");
 
@@ -119,7 +120,7 @@ public class TestMainCtrl{
      * @throws IOException
      */
     public void switchToEndscreenSingleplayer(ActionEvent event) throws IOException {
-        var overview = FXML.load(EndgameSingleplayer.class, "client", "scenes", "EndgameSingleplayer.fxml");
+        var overview = FXML.load(EndscreenSingleplayer.class, "client", "scenes", "EndscreenSingleplayer.fxml");
         scene = new Scene(overview.getValue());
 
         setAndShowScenes(event);
@@ -131,10 +132,10 @@ public class TestMainCtrl{
      * @throws IOException
      */
     public void switchToEndscreenMultiplayer(ActionEvent event) throws IOException {
-        var overview = FXML.load(EndgameMultiplayer.class, "client", "scenes", "EndgameMultiplayer.fxml");
+        var overview = FXML.load(EndscreenMultiplayer.class, "client", "scenes", "EndscreenSingleplayer.fxml");
         scene = new Scene(overview.getValue());
-
-        setAndShowScenes(event);
+        stage.setScene(scene);
+        stage.show();
     }
 
     //check answers in singleplayer this needs can be more profesional
