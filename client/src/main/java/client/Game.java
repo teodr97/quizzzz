@@ -1,9 +1,9 @@
-package server;
+package client;
 
+import client.utils.ServerUtils;
 import commons.game.Activity;
 import commons.game.Player;
 import commons.game.Question;
-import server.ServerUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +76,7 @@ public class Game {
         Question[] questions = new Question[20];
         Activity[] answers = new Activity[20];
         for(int i = 0; i < 20; i++){
-            questions[i] = new Question(ServerUtils.retrieveRandomActivities());
+            questions[i] = new Question(ServerUtils.retrieveActivitySetFromServer());
             answers[i] = questions[i].getCorrectAnswer();
         }
         this.answers = answers;
@@ -128,7 +128,7 @@ public class Game {
             player.setChosenAnswer(-1);
             player.setTimeLeft(1);
         }
-        this.curQuestion = new Question(ServerUtils.retrieveRandomActivities());
+        this.curQuestion = new Question(ServerUtils.retrieveActivitySetFromServer());
         //reset time
 
         this.curRound++;

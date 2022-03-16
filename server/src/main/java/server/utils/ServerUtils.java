@@ -1,13 +1,11 @@
-package server;
+package server.utils;
 
 import commons.game.Activity;
-import org.springframework.beans.factory.annotation.Autowired;
 import server.api.ActivityController;
-import server.database.ActivityRepository;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 
 public class ServerUtils {
     /**
