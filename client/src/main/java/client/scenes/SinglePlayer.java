@@ -2,7 +2,6 @@ package client.scenes;
 
 import client.utils.StatSharerSingleplayer;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import client.Game;
 import commons.game.Activity;
 import commons.game.Question;
