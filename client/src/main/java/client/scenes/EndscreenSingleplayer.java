@@ -22,20 +22,23 @@ public class EndscreenSingleplayer implements Initializable {
      */
     private StatSharerSingleplayer statSharer;
 
+    private SinglePlayer singlePlayerCtrl;
+
     @FXML private Text finalScoreTextBox;
+    @FXML private Text correctAnswersTextBox;
 
     @Inject
-    public EndscreenSingleplayer(StatSharerSingleplayer statSharer, MainCtrl mainCtrl) {
+    public EndscreenSingleplayer(StatSharerSingleplayer statSharer, MainCtrl mainCtrl, SinglePlayer singlePlayerCtrl) {
         this.statSharer = statSharer;
         this.mainCtrl = mainCtrl;
+        this.singlePlayerCtrl = singlePlayerCtrl;
     }
 
     //no real functionality yet
     @Override
     public void initialize(URL location, ResourceBundle resources){
-        int text = statSharer.points;
-        //int text = (int)finalScoreTextBox.getScene().getUserData();
-        this.finalScoreTextBox.setText(Integer.toString(text));
+        this.finalScoreTextBox.setText("Points: " + statSharer.points);
+        this.correctAnswersTextBox.setText("Questions Answered: " + statSharer.correctAnswers + "/" + statSharer.totalQuestions);
     }
 
     public void switchToSinglePlayer(ActionEvent event) throws IOException {

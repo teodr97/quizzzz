@@ -21,7 +21,7 @@
             <Font name="Arial" size="72.0" />
          </font>
       </Text>
-      <Text fill="WHITE" layoutX="263.0" layoutY="430.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Questions Answered: X/20" textAlignment="CENTER" wrappingWidth="592.4860229492188">
+      <Text fx:id="correctAnswersTextBox" fill="WHITE" layoutX="263.0" layoutY="430.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Questions Answered: X/20" textAlignment="CENTER" wrappingWidth="592.4860229492188">
          <font>
             <Font size="36.0" />
          </font>
