@@ -18,7 +18,7 @@ public class MainCtrl {
      * Initialises the starting stage of the application.
      * @param primaryStage The primary stage used throughout the lifespan of the app.
      * @param overview Overview of the Splash scene.
-     * @param FXML The FXML injector used throughout the lifespan of the app.
+     * @param myFXML The FXML injector used throughout the lifespan of the app.
      */
     public void initialize(Stage primaryStage, Pair<Splash, Parent> overview, MyFXML myFXML) {
         this.primaryStage = primaryStage;
