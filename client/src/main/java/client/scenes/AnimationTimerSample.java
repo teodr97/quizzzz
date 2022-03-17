@@ -1,3 +1,5 @@
+package client.scenes;
+
 //import all the necessary packages
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
