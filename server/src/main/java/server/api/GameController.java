@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.lang.Integer.parseInt;
+
 @RestController
 @Slf4j
 @AllArgsConstructor
@@ -59,10 +61,11 @@ public class GameController {
     //we keep the request open untill a new player connects in which case we
     //send the new array of all players
     @GetMapping("/getPlayers/{id}")
-    public ResponseEntity<List<String>> getPlayers(@PathVariable("id") int playerid) throws InterruptedException {
-        if (lastStoredPlayer().isPresent() && lastStoredPlayer().get().getWaitingRoomId() > playerid) {
+    public ResponseEntity<List<String>> getPlayers(@PathVariable("id") String playerid) throws InterruptedException {
+        int playeridint = parseInt(playerid);
+        if (lastStoredPlayer().isPresent() && lastStoredPlayer().get().getWaitingRoomId() > playeridint) {
             List<String> output = new ArrayList<>();
-            for (int index = playerid; index < playerStore.size(); index++) {
+            for (int index = playeridint; index < playerStore.size(); index++) {
                 output.add(playerStore.get(index).getNickname());
             }
             return ResponseEntity.ok(output);
@@ -72,11 +75,10 @@ public class GameController {
     }
 
     //keeppolling code
-    private ResponseEntity<List<String>> keepPolling(int playerid) throws InterruptedException {
+    private ResponseEntity<List<String>> keepPolling(String playerid) throws InterruptedException {
         Thread.sleep(5000);
-        String idstring = Integer.toString(playerid);
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create("/getPlayers/"+idstring));
+        headers.setLocation(URI.create("/getPlayers/"+playerid));
         return new ResponseEntity<>(headers, HttpStatus.TEMPORARY_REDIRECT);
     }
 

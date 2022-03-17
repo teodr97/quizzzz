@@ -23,6 +23,7 @@ import javafx.scene.control.Button;
 
 import javafx.event.ActionEvent;
 import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientProperties;
 
 import java.io.IOException;
 
@@ -119,18 +120,41 @@ public class TestMainCtrl{
     }
 
     //Switches to WaitingRoom.fxml
-    public void switchToWaitingRoom(ActionEvent event) throws IOException{
+    public void switchToWaitingRoom(ActionEvent event) throws IOException, InterruptedException{
         var overview = FXML.load(HowToPlay.class, "client", "scenes", "WaitingRoom.fxml");
         this.player = new Player(username.getText());
+
+        //this request sends the player info to the server
         Response response = ClientBuilder.newClient(new ClientConfig()) //
                 .target(SERVER).path("/game/connect") //
+                .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.TRUE)//
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .post(Entity.entity(player, APPLICATION_JSON));
         String responsestring = response.readEntity(String.class);
         System.out.println(responsestring);
+
+        longpollUpdateLobby();
+
         scene = new Scene(overview.getValue());
         setAndShowScenes(event);
+    }
+
+    //recursive function that keeps requesting the server for new data
+    //in a longpolling fashion
+    public void longpollUpdateLobby() throws InterruptedException{
+        //this get requests gets all the players that are connected/connecting to the server
+        Response playersResponse = ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("/game/getPlayers/0") //
+                .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.TRUE)//
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get();
+        String playersstring = playersResponse.readEntity(String.class);
+        System.out.println(playersstring);
+        Thread.sleep(5000);
+        longpollUpdateLobby();
+
     }
 
     //If the event is executed then the scene switches to Splash.fxml
