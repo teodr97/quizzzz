@@ -22,7 +22,6 @@ public class GameService {
     public Game createGame(){
         Game game = new Game();
         List<Player> players = new ArrayList<>();
-        //players.add(player);
         game.setGameID(UUID.randomUUID().toString());
         game.setStatus(WAITING);
         game.setPlayers(players);
@@ -48,14 +47,12 @@ public class GameService {
     }
 
     public Player leaveGame(Player player) throws NotFoundException{
-        Map<String, Game> games = GameStorage.getGames();
-        for(Game g : games.values()){
-            if(g.contains(player.getNickname())){
-                g.removePlayer(player);
-                return player;
-            }
-        }
-        throw new NotFoundException("No player with username, " + player.getNickname() + " in the game");
+        Game game = GameStorage.getInstance().getGames().values().stream()
+                .filter(it -> it.contains(player.getNickname()))
+                .findFirst().orElseThrow(() -> new NotFoundException("No player with username, " + player.getNickname() + " in the game"));
+        game.removePlayer(player);
+        System.out.println("Player deleted: " + player.getNickname());
+        return player;
     }
 
     public Game startGame() throws NotFoundException{

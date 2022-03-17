@@ -139,7 +139,7 @@ public class TestMainCtrl{
                 .target(SERVER).path("/game/leave") //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
-                .delete().close();
+                .post(Entity.entity(player, APPLICATION_JSON));
         var overview = FXML.load(Splash.class, "client", "scenes", "Splash.fxml");
         scene = new Scene(overview.getValue());
         setAndShowScenes(event);
