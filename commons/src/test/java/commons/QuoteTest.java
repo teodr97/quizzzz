@@ -15,16 +15,17 @@
  */
 package commons;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class QuoteTest {
 
 	private static final Person SOME_PERSON = new Person("a", "b");
 
+	/**
+	 *
+	 */
 	@Test
 	public void checkConstructor() {
 		var q = new Quote(SOME_PERSON, "q");
@@ -32,6 +33,9 @@ public class QuoteTest {
 		assertEquals("q", q.quote);
 	}
 
+	/**
+	 *
+	 */
 	@Test
 	public void equalsHashCode() {
 		var a = new Quote(new Person("a", "b"), "c");
@@ -40,6 +44,9 @@ public class QuoteTest {
 		assertEquals(a.hashCode(), b.hashCode());
 	}
 
+	/**
+	 *
+	 */
 	@Test
 	public void notEqualsHashCode() {
 		var a = new Quote(new Person("a", "b"), "c");
@@ -48,6 +55,9 @@ public class QuoteTest {
 		assertNotEquals(a.hashCode(), b.hashCode());
 	}
 
+	/**
+	 *
+	 */
 	@Test
 	public void hasToString() {
 		var actual = new Quote(new Person("a", "b"), "c").toString();

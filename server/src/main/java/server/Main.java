@@ -29,10 +29,19 @@ import java.util.List;
 @EntityScan(basePackages = { "commons", "server" })
 public class Main {
 
+    /**
+     * Main method.
+     * @param args
+     */
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
     }
 
+    /**
+     *
+     * @param repository
+     * @return
+     */
     @Bean
     public CommandLineRunner run(ActivityRepository repository){
         return (args -> {
