@@ -4,7 +4,6 @@ import client.MyFXML;
 import client.MyModule;
 import com.google.inject.Injector;
 import commons.models.Player;
-import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.Response;
