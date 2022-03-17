@@ -1,4 +1,9 @@
-package commons.game;
+package client;
+
+import client.utils.ServerUtils;
+import commons.game.Activity;
+import commons.game.Player;
+import commons.game.Question;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +43,7 @@ public class Game {
 
     public Game() {
         this.curRound = 0;
-        this.totalRounds = 2;
+        this.totalRounds = 20;
         this.players = new ArrayList<>();
         this.curQuestion = null;
     }
@@ -68,11 +73,11 @@ public class Game {
      * creates a list of 20 questions and a list of 20 answers, assigning them to the game class variables
      */
     public void createQuestionList(){
-        Question<Activity>[] questions = new Question[this.totalRounds];
+        Question[] questions = new Question[this.totalRounds];
         Activity[] answers = new Activity[this.totalRounds];
-        for(int i = 0; i < this.totalRounds; i++){
-            questions[i] = Question.createQuestion();
-            answers[i] = questions[i].getAnswer();
+        for(int i = 0; i < totalRounds; i++){
+            questions[i] = new Question(ServerUtils.retrieveActivitySetFromServer());
+            answers[i] = questions[i].getCorrectAnswer();
         }
         this.answers = answers;
         this.questions = questions;
@@ -123,7 +128,7 @@ public class Game {
             player.setChosenAnswer(-1);
             player.setTimeLeft(1);
         }
-        this.curQuestion = Question.generateQuestion();
+        this.curQuestion = new Question(ServerUtils.retrieveActivitySetFromServer());
         //reset time
 
         this.curRound++;
