@@ -38,10 +38,20 @@ public class EndscreenSingleplayer implements Initializable {
         this.finalScoreTextBox.setText(Integer.toString(text));
     }
 
+    /**
+     * Switches the scene to singleplayer.
+     * @param event
+     * @throws IOException
+     */
     public void switchToSinglePlayer(ActionEvent event) throws IOException {
         mainCtrl.switchToSinglePlayer();
     }
 
+    /**
+     * Switches the scene to Splash.
+     * @param event
+     * @throws IOException
+     */
     public void switchToSplash(ActionEvent event) throws IOException{
         mainCtrl.switchToSplash();
     }

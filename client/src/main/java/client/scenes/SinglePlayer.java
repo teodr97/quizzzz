@@ -57,7 +57,7 @@ public class SinglePlayer implements Initializable {
 
     private double progress;
 
-    double EPSILON = 0.00001;
+    private static final double EPSILON = 0.00001;
     Button[] answerbuttons = new Button[3];
 
     //game object to generate all questions and answers
@@ -96,8 +96,6 @@ public class SinglePlayer implements Initializable {
         answerbuttons[1] = answerB;
         answerbuttons[2] = answerC;
 
-        //sets the current round to 1
-        this.game.setCurRound(1);
         displayQuestion(this.questionIterator.next());
 
         progress = 0;
@@ -106,8 +104,12 @@ public class SinglePlayer implements Initializable {
         tm.start();
     }
 
-    // check answers in singleplayer
-    // check answer also make sures the lpayers points get updated
+    /**
+     * Checks if the answer in singleplayer is correct
+     * @param event
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public void checkAnswer(ActionEvent event) throws IOException, InterruptedException {
         //check answer will also have to call a function:
         //disableAnswers so the uses can't click the answers after already choosing one
@@ -162,28 +164,36 @@ public class SinglePlayer implements Initializable {
 
         //change scene state to the one where someone has answered the question
         //in which case the buttons should be disabled and change colors
-        Disableanswers();
+        disableAnswers();
 
         return;
     }
 
-    //Disables all the answer buttons
-    public void Disableanswers(){
+    /**
+     * Disables all answer buttons.
+     */
+    public void disableAnswers(){
         answerA.setDisable(true);
         answerB.setDisable(true);
         answerC.setDisable(true);
 
         return;
     }
-    //Enables all the answer buttons
-    public void Enableanswers(){
+
+    /**
+     * Enables all answer buttons.
+     */
+    public void enableAnswers(){
         answerA.setDisable(false);
         answerB.setDisable(false);
         answerC.setDisable(false);
 
         return;
     }
-    //Enables all the answer buttons
+
+    /**
+     * Resets the game screen for the next round.
+     */
     public void resetGamescreen(){
         //resetting the answer buttons
         //color and clickability, the timer bar and the text prompt
@@ -192,7 +202,7 @@ public class SinglePlayer implements Initializable {
         answerA.setStyle("-fx-background-color: #0249bd;");
         answerB.setStyle("-fx-background-color: #0249bd;");
         answerC.setStyle("-fx-background-color: #0249bd;");
-        Enableanswers();
+        enableAnswers();
 
         //timerbar
         //we don't have to set the progress of the timer bar
@@ -205,7 +215,11 @@ public class SinglePlayer implements Initializable {
         return;
     }
 
-    //If the event is executed then the scene switches to Splash.fxml
+    /**
+     * Switches the scene to Splash.
+     * @param event
+     * @throws IOException
+     */
     public void switchToSplash(ActionEvent event) throws IOException{
         tm.stop();
         mainCtrl.switchToSplash();
@@ -236,7 +250,7 @@ public class SinglePlayer implements Initializable {
                     }
                 }
                 //when timer ends and game hasn't ended we want to display the next question
-                Disableanswers();
+                disableAnswers();
             }
             if((timerBar.getProgress() + EPSILON > 1.5 && timerBar.getProgress() - EPSILON <1.5)){
                 //when timer ends and game hasn't ended we want to display the next question;
@@ -270,9 +284,5 @@ public class SinglePlayer implements Initializable {
         tm.stop();
         this.statSharer.points = this.pointsInt;
         mainCtrl.switchToEndscreenSingleplayer();
-    }
-
-    public int getPoints() {
-        return this.pointsInt;
     }
 }
