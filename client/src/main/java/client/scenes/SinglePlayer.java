@@ -2,8 +2,8 @@ package client.scenes;
 
 import client.utils.StatSharerSingleplayer;
 import com.google.inject.Inject;
+import client.Game;
 import commons.game.Activity;
-import commons.game.Game;
 import commons.game.Question;
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
@@ -257,9 +257,9 @@ public class SinglePlayer implements Initializable {
     public void displayQuestion(Question question){
         questionField.setText(question.toString());
         qNumber.setText(game.getCurRound() + " / 20");
-        answerA.setText(question.getOptions()[0].toString());
-        answerB.setText(question.getOptions()[1].toString());
-        answerC.setText(question.getOptions()[2].toString());
+        answerA.setText(question.getActivityList().get(0).toString());
+        answerB.setText(question.getActivityList().get(1).toString());
+        answerC.setText(question.getActivityList().get(2).toString());
         resetGamescreen();
     }
 

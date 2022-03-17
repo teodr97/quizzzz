@@ -1,80 +1,120 @@
 package commons.game;
 
-import java.util.Arrays;
+import commons.game.utils.Utils;
+
+import java.util.List;
 import java.util.Objects;
 
-public class Question<OptionsType> {
+/**
+ * The Question entity works in a simple manner: initializing it is enough, as the constructor
+ * function contains everything that is necessary (logic-wise) in order to generate a question
+ * and a set of answers, of which one is correct. This object is supposed to be used only on
+ * the server side, as it contains the correct answer; the clients should only receive copies
+ * of the question and the answer set (without the correct answer to prevent client-side abuse)
+ * in the form of a ClientQuestion object (see the subclass).
+ */
+public class Question {
+    public String question;
+
+    private List<Activity> activityList;
+    private Activity correctAnswer;
+
+    private int points; // Are we using this anymore?
 
     /**
-     * The activity options of the question.
+     * Use this class for sending the data to the client side. It hides irrelevant data
+     * (such as the correct answer) from the clients in order to prevent abuse from the
+     * players.
      */
-    private OptionsType[] options;
+    public class ClientQuestion {
+        private String question;
+
+        private List<Activity> activityList;
+
+        /**
+         * The constructor function.
+         * @param question the String containing the question to be displayed
+         * @param activityList the set of 3 activities that will be displayed
+         */
+        public ClientQuestion(String question, List<Activity> activityList) {
+            this.question = question;
+            this.activityList = activityList;
+        }
+
+        public String getQuestion() { return question; }
+
+        public List<Activity> getActivityList() { return activityList; }
+    }
 
     /**
-     * The index of the correct activity, should within [0, activities.size).
+     * This function compares a given answer against the
+     * correct one and decides if it's correct or not.
+     * @param question The question that's currently on-screen
+     * @param answer The player's answer
+     * @return True or false, depending on whether the answer is correct or not
      */
-    private OptionsType answer;
+    public static boolean hasCorrectAnswer(Question question, Activity answer) {
+        return answer.getActivity().equals(question.getCorrectAnswer().getActivity());
+    }
 
     /**
-     * The prompt of the question, telling the user what the question is.
+     * Constructor method.
+     * @param activityList the set of 3 activities that serve as potential answers to the question
      */
-    private String prompt;
+    public Question(List<Activity> activityList) {
+        this.activityList = activityList;
 
-    /**
-     * Question Constructor.
-     * @param options The activities of the question.
-     * @param answer The correct activity
-     * @param prompt The type of question.
-     */
-    public Question(OptionsType[] options, OptionsType answer, String prompt) {
-
-        this.options = options;
-        this.answer = answer;
-        this.prompt = prompt;
+        // Generate a new random integer to determine the type of question that will be used.
+        // Not a good solution for a greater amount of questions, they should be stored in a
+        // database instead.
+        int randomFactor = Utils.generateRandomIntSmallerThan(4);
+        switch (randomFactor) {
+            case 1:
+                this.question = "Which activity uses the most amount of power?";
+                this.correctAnswer = Utils.retrieveActivityMostEnergy(activityList);
+                break;
+            case 2:
+                this.question = "Which activity uses the least amount of power?";
+                this.correctAnswer = Utils.retrieveActivityLeastEnergy(activityList);
+                break;
+            default:
+                // Generate a random integer from 0 to 2 for getting an index for the correct answer
+                int correctAnswerIndex = Utils.generateRandomIntSmallerThan(3);
+                // Retrieve a random activity that will serve as the correct answer using indexes 0-3
+                this.correctAnswer = activityList.get(correctAnswerIndex);
+                this.question = "How much power does " + correctAnswer.getActivity() + "require?";
+                this.activityList = Utils.replaceActivitiesWithPowerDraws(activityList, correctAnswerIndex);
+                break;
+        }
     }
 
-    /** TEMPORARY METHOD (REPLACE WITH DATABASE QUERIES)
-     * creates a question instance for the game
-     * @return a question containing a question prompt and answers
-     */
-    public static Question createQuestion(){
+    //SETTERS==========================================================
+    public void setQuestion(String question) { this.question = question; }
 
-        //TEMPORARY: this whole part needs to be replaced with a database query
-        Activity a = new Activity("Running a mile",1);
-        Activity b = new Activity("Swimming a mile", 1);
-        Activity c = new Activity("Biking a mile",1);
-        Activity[] activityList = new Activity[]{a,b,c};
-        //NEEDS TO BE CHANGED TO A GET RIGHT ANSWER METHOD
-        Activity answer = b;
+    //GETTERS==========================================================
+    public String getQuestion() { return this.question; }
 
-        return new Question<>(activityList, answer,"What uses more energy?");
-    }
+    public List<Activity> getActivityList() { return activityList; }
 
-    public static Question generateQuestion() {
-        return null;
-    }
+    public Activity getCorrectAnswer() { return this.correctAnswer; }
 
-    public OptionsType[] getOptions() { return options; }
-
-    public OptionsType getAnswer() {
-        return answer;
-    }
-
-    public String getPrompt() {
-        return prompt;
+    @Override
+    public int hashCode() {
+        return Objects.hash(question, activityList);
     }
 
     @Override
     public String toString() {
-        return prompt;
+        return question;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Question<?> question = (Question<?>) o;
-        return Arrays.equals(options, question.options) && Objects.equals(answer, question.answer) && Objects.equals(prompt, question.prompt);
+        Question other = (Question) o;
+        return activityList.equals(other.getActivityList()) && question.equals(other.getQuestion()) &&
+                correctAnswer.equals(other.getCorrectAnswer());
     }
 
 }
