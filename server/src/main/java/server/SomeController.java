@@ -12,12 +12,21 @@ import java.util.Optional;
 @RequestMapping("/")
 public class SomeController {
 
+    /**
+     *
+     * @return
+     */
     @GetMapping("/")
     @ResponseBody
     public String index() {
         return "Hello world!";
     }
 
+    /**
+     *
+     * @param string
+     * @return
+     */
     @ResponseBody
     @GetMapping("/pathTest")
     public String methodPathTest(@RequestParam(name = "name") Optional<String> string) {

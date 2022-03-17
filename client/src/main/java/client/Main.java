@@ -42,6 +42,12 @@ public class Main extends Application {
         mainCtrl.initialize(primaryStage, overview, FXML);
     }
 
+    /**
+     * Main method.
+     * @param args
+     * @throws URISyntaxException
+     * @throws IOException
+     */
     public static void main(String[] args) throws URISyntaxException, IOException {
         launch();
     }

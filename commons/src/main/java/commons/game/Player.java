@@ -34,10 +34,18 @@ public class Player {
         this.points = 0;
     }
 
+    /**
+     * Gets the player nickname.
+     * @return
+     */
     public String getNickname() {
         return nickname;
     }
 
+    /**
+     * Gets the amount of points the player currently has.
+     * @return
+     */
     public int getPoints() {
         return points;
     }
@@ -50,18 +58,34 @@ public class Player {
         this.points += gainedPoints;
     }
 
+    /**
+     * Gets the answer currently chosen by the player.
+     * @return A number in the range [0, amount of answers)
+     */
     public int getChosenAnswer() {
         return this.chosenAnswer;
     }
 
+    /**
+     * Sets the answwer the players wants to choose.
+     * @param choice A number in the range [0, amount of answers)
+     */
     public void setChosenAnswer(int choice) {
         this.chosenAnswer = choice;
     }
 
+    /**
+     * Gets how much the player has left for the answer. Should be removed/changed.
+     * @return
+     */
     public double getTimeLeft() {
         return timeLeft;
     }
 
+    /**
+     *
+     * @param timeLeft
+     */
     public void setTimeLeft(double timeLeft) {
         this.timeLeft = timeLeft;
     }
