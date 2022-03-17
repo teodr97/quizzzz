@@ -87,5 +87,10 @@
             <property name="optional" value="true"/>
         </module>
 
+        <!-- Javadoc checks. -->
+        <module name="MissingJavadocMethod">
+            <property name="tokens" value="METHOD_DEF  , ANNOTATION_FIELD_DEF"/>
+        </module>
+
     </module>
 </module>
