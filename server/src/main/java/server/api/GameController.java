@@ -10,10 +10,16 @@ import commons.game.exceptions.InvalidGameException;
 import commons.game.exceptions.NotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @Slf4j
@@ -21,6 +27,8 @@ import java.util.Map;
 @RequestMapping("/game")
 public class GameController {
     private final GameService gameService = new GameService();
+    private final List<Player> playerStore = new ArrayList<>();
+
 
     //creates game
     @PostMapping("/create")
@@ -41,13 +49,49 @@ public class GameController {
     @PostMapping("/connect")
     public ResponseEntity<Game> connect(@RequestBody Player player) throws NicknameTakenException, NotFoundException, GameAlreadyExistsException {
         //log.info("connect random {}", player);
+        player.setWaitingRoomId(playerStore.size() + 1);
+        playerStore.add(player);
         return ResponseEntity.ok(gameService.connectToWaitingRoom(player));
     }
+
+    
+    //get the players in a long polling fashion
+    //we keep the request open untill a new player connects in which case we
+    //send the new array of all players
+    @GetMapping("/getPlayers/{id}")
+    public ResponseEntity<List<String>> getPlayers(@PathVariable("id") int playerid) throws InterruptedException {
+        if (lastStoredPlayer().isPresent() && lastStoredPlayer().get().getWaitingRoomId() > playerid) {
+            List<String> output = new ArrayList<>();
+            for (int index = playerid; index < playerStore.size(); index++) {
+                output.add(playerStore.get(index).getNickname());
+            }
+            return ResponseEntity.ok(output);
+        }
+
+        return keepPolling(playerid);
+    }
+
+    //keeppolling code
+    private ResponseEntity<List<String>> keepPolling(int playerid) throws InterruptedException {
+        Thread.sleep(5000);
+        String idstring = Integer.toString(playerid);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create("/getPlayers/"+idstring));
+        return new ResponseEntity<>(headers, HttpStatus.TEMPORARY_REDIRECT);
+    }
+
+
+    private Optional<Player> lastStoredPlayer() {
+        return playerStore.isEmpty() ? Optional.empty() : Optional.of(playerStore.get(playerStore.size()-1));
+    }
+
 
     @PostMapping("/leave")
     public ResponseEntity<Player> leave(@RequestBody Player player) throws NotFoundException{
         return ResponseEntity.ok(gameService.leaveGame(player));
     }
+
+    
 
     //starts a game
     @PostMapping("/start")
