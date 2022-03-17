@@ -6,7 +6,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 
-public class Username implements Initializable {
+public class EndscreenMultiplayer implements Initializable {
 
     //no real functionality yet
     @Override
