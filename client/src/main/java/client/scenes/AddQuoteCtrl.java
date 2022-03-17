@@ -27,10 +27,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Modality;
 
-public class    AddQuoteCtrl {
+public class AddQuoteCtrl {
 
     private final ServerUtils server;
-    private final MainCtrl mainCtrl;
+    private final MainCtrlQuotes mainCtrl;
 
     @FXML
     private TextField firstName;
@@ -42,7 +42,7 @@ public class    AddQuoteCtrl {
     private TextField quote;
 
     @Inject
-    public AddQuoteCtrl(ServerUtils server, MainCtrl mainCtrl) {
+    public AddQuoteCtrl(ServerUtils server, MainCtrlQuotes mainCtrl) {
         this.mainCtrl = mainCtrl;
         this.server = server;
 

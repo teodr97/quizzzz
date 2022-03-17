@@ -1,0 +1,82 @@
+package commons.game.utils;
+
+import commons.game.Activity;
+
+import java.util.List;
+
+public class Utils {
+    /**
+     * Generates a random integer smaller than the argument specified.
+     * @param smallerThan the smallest integer which will NOT be included
+     *                    in the generation
+     * @return random int STRICTILY smaller than smallerThan
+     */
+    public static int generateRandomIntSmallerThan(int smallerThan) {
+        return (int) (Math.random() * smallerThan);
+    }
+
+    /**
+     * Compares the activities in a given list and retrieves the activity
+     * that draws the least power.
+     * @param activityList the list of activities to compare
+     * @return the activity which draws the least power
+     */
+    public static Activity retrieveActivityLeastEnergy(List<Activity> activityList) {
+        Activity smallestEnergy = activityList.get(0);
+
+        for (int i = 1; i < activityList.size(); i++) {
+            if (smallestEnergy.getPower() >
+                    activityList.get(i).getPower()) smallestEnergy = activityList.get(i);
+        }
+        return smallestEnergy;
+    }
+
+    /**
+     * Compares the activities in a given list and retrieves the activity
+     * that draws the most power.
+     * @param activityList the list of activities to compare
+     * @return the activity which draws the most power
+     */
+    public static Activity retrieveActivityMostEnergy(List<Activity> activityList) {
+        Activity biggestEnergy = activityList.get(0);
+
+        for (int i = 1; i < activityList.size(); i++) {
+            if (biggestEnergy.getPower() <
+                    activityList.get(i).getPower()) biggestEnergy = activityList.get(i);
+        }
+        return biggestEnergy;
+    }
+
+    /**
+     * Replaces the string variables of each activity in the list with their
+     * corresponding power draws (in order to make displaying options on the
+     * front-end more convenient). For any option but the correct one, the
+     * string variable will hold a multiple of the power draw of the correct
+     * answer in order to prevent identical power draws in more options.
+     * @param activityList the list of activities that will be displayed as
+     *                     options
+     * @param correctAnswerIndex the index of the correct answer in the list
+     * @return the list of activities with their string variables holding
+     * power draw values
+     */
+    public static List<Activity> replaceActivitiesWithPowerDraws(List<Activity> activityList, int correctAnswerIndex) {
+        List<Activity> result = List.copyOf(activityList);
+
+        // We replace every string containing the activity by the power it draws,
+        // as that is what we need to show for the answers the player will choose from.
+        for (int i = 0; i < result.size(); i++) {
+            result.get(i).setActivity(Integer.toString(result.get(i).getPower()));
+            // We change the power amounts used within other answers to amounts that
+            // are different to the amount in the correct answer.
+            if (i != correctAnswerIndex) {
+                // Generate another result if the power draw to be displayed with this options is the
+                // same as the one of the correct answer.
+                while (result.get(i).getActivity().equals(result.get(correctAnswerIndex).getActivity()))
+                result.get(i).setActivity(Integer.toString(
+                        result.get(correctAnswerIndex).getPower() + (int) (Math.random() * 100)
+                ));
+            }
+        }
+        return result;
+    }
+}

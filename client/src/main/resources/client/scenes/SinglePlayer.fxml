@@ -76,5 +76,10 @@
             <Font name="Arial Bold" size="36.0" />
          </font>
       </Text>
+      <Text fx:id="qNumber" fill="WHITE" layoutX="20.0" layoutY="221.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0 / 20" textAlignment="CENTER">
+         <font>
+            <Font name="Arial Bold" size="25.0" />
+         </font>
+      </Text>
     </children>
 </AnchorPane>
