@@ -45,13 +45,15 @@ public class Main {
         List<Activity> activities = (List<Activity>) repository.findAll();
         boolean contains = false;
         for(Activity a : activities){
-            if(a.getActivity().equals("Why are you running?")) {
+            if(a.getActivity().equals("Why are you not running?")) {
                 contains = true;
                 break;
             }
         }
 
         if(!contains){
+            repository.save(new Activity("Why are you not running?", 132));
+            repository.save(new Activity("Why are you SO SO running?", 5));
             repository.save(new Activity("Why are you running?", 2345));
         }
     }

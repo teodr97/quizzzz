@@ -78,8 +78,8 @@ public class Question {
                 this.correctAnswer = Utils.retrieveActivityLeastEnergy(activityList);
                 break;
             default:
-                // Generate a random integer from 0 to 3 for getting an index for the correct answer
-                int correctAnswerIndex = Utils.generateRandomIntSmallerThan(4);
+                // Generate a random integer from 0 to 2 for getting an index for the correct answer
+                int correctAnswerIndex = Utils.generateRandomIntSmallerThan(3);
                 // Retrieve a random activity that will serve as the correct answer using indexes 0-3
                 this.correctAnswer = activityList.get(correctAnswerIndex);
                 this.question = "How much power does " + correctAnswer.getActivity() + "require?";

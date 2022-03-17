@@ -36,10 +36,6 @@ public class Activity {
     //GETTERS==========================================================
     public int getId() { return this.id; }
 
-    public String getTitle() {
-        return activity;
-    }
-
     public String getActivity() { return this.activity; }
 
     public int getPower() { return this.power; }

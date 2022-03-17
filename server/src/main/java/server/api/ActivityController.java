@@ -4,9 +4,10 @@ import commons.game.Activity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.database.ActivityRepository;
-import server.utils.ServerUtils;
 
 import javax.websocket.server.PathParam;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -19,6 +20,8 @@ public class ActivityController {
      * A reference to the object used for querying the database.
      */
     private final ActivityRepository repository;
+
+    private List<Activity> activityList;
 
     public ActivityController(ActivityRepository repo) {
         this.repository = repo;
@@ -34,13 +37,32 @@ public class ActivityController {
     }
 
     /**
+     * Get the amount of activities in the database
+     * @return the amount of activities in the database
+     */
+    private int getActivitiesSize() {
+        activityList = (List<Activity>) repository.findAll();
+        return activityList.size();
+    }
+
+    /**
      * This function returns a set of three random questions upon request from
      * the client.
      * @return List of three random, different activities from the database
      */
     @GetMapping("/get/randomSetActivities")
     public ResponseEntity<List<Activity>> retrieveRandomActivitiesSet() {
-        return ResponseEntity.ok(ServerUtils.retrieveRandomActivities());
+        List<Activity> activitySet = new LinkedList<>();
+        List<Integer> alreadyChosenIndexes = new ArrayList<>();
+
+        for (int i = 0; i < 3; i++) {
+            int index = (int)(Math.random() * getActivitiesSize());
+
+            while (alreadyChosenIndexes.contains(index)) index = (int)(Math.random() * getActivitiesSize());
+            activitySet.add(activityList.get(index));
+            alreadyChosenIndexes.add(index);
+        }
+        return ResponseEntity.ok(activitySet);
     }
 
     /**

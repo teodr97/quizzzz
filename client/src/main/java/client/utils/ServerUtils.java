@@ -81,7 +81,7 @@ public class ServerUtils {
      */
     public static List<Activity> retrieveActivitySetFromServer() {
         return ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("api/randomSetActivities")
+                .target(SERVER).path("/api/v1/activity/get/randomSetActivities")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<List<Activity>>() {});
