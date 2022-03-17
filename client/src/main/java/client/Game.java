@@ -43,7 +43,11 @@ public class Game {
 
     public Game() {
         this.curRound = 0;
+<<<<<<< HEAD:commons/src/main/java/commons/game/Game.java
+        this.totalRounds = 10;
+=======
         this.totalRounds = 20;
+>>>>>>> main:client/src/main/java/client/Game.java
         this.players = new ArrayList<>();
         this.curQuestion = null;
     }

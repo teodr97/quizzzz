@@ -61,6 +61,14 @@ public class MainCtrl {
         setAndShowScenes(new Scene(overview.getValue()));
     }
 
+    /**
+     * Switches to the multiplayer scene after the add name button is clicked
+     */
+    public void switchToMultiplayer() {
+        var overview = FXML.load(MultiPlayer.class, "client", "scenes", "MultiPlayer.fxml");
+        setAndShowScenes(new Scene(overview.getValue()));
+    }
+
 
     /**
      * Switches the scene to the end-screen for singleplayer.
