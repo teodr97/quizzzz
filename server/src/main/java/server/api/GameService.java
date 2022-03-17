@@ -7,10 +7,7 @@ import commons.models.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static commons.models.GameStatus.*;
 
@@ -29,7 +26,7 @@ public class GameService {
         return game;
     }
 
-    public Game connectToWaitingRoom(Player player) throws NicknameTakenException{
+    public Game connectToWaitingRoom(Player player) throws NicknameTakenException, NotFoundException{
         Map<String, Game> games = GameStorage.getGames();
         if(games != null){
             for(Game g : games.values()){
@@ -40,9 +37,11 @@ public class GameService {
         }
         Game game = GameStorage.getInstance().getGames().values().stream()
                 .filter(it -> it.getStatus().equals(WAITING))
-                .findFirst().orElse(createGame());
+                .findAny().orElse(null);
+        if(game == null){
+            game = createGame();
+        }
         game.addPlayer(player);
-        GameStorage.getInstance().setGame(game);
         return game;
     }
 
