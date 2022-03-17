@@ -1,6 +1,7 @@
 package client.scenes;
 
-import commons.game.Game;
+
+import client.Game;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -14,7 +15,6 @@ import javafx.scene.image.ImageView;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.ResourceBundle;
 
 public class MultiPlayer implements Initializable {
