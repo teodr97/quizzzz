@@ -51,7 +51,7 @@ public class GameController {
     @PostMapping("/connect")
     public ResponseEntity<Game> connect(@RequestBody Player player) throws NicknameTakenException, NotFoundException, GameAlreadyExistsException {
         //log.info("connect random {}", player);
-        player.setWaitingRoomId(playerStore.size() + 1);
+        player.setWaitingRoomId(playerStore.size()+1);
         playerStore.add(player);
         return ResponseEntity.ok(gameService.connectToWaitingRoom(player));
     }
@@ -70,16 +70,20 @@ public class GameController {
             }
             return ResponseEntity.ok(output);
         }
+        System.out.println("poll:");
 
         return keepPolling(playerid);
     }
 
     //keeppolling code
     private ResponseEntity<List<String>> keepPolling(String playerid) throws InterruptedException {
+        System.out.println("ff wachten");
         Thread.sleep(5000);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create("/getPlayers/"+playerid));
-        return new ResponseEntity<>(headers, HttpStatus.TEMPORARY_REDIRECT);
+        return getPlayers(playerid);
+//        HttpHeaders headers = new HttpHeaders();
+//
+//        headers.setLocation(URI.create(playerid));
+//        return new ResponseEntity<>(headers, HttpStatus.TEMPORARY_REDIRECT);
     }
 
 
