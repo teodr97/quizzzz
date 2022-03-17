@@ -17,6 +17,10 @@ public class WaitingRoom {
         this.waitingPlayers = new ArrayList<>();
     }
 
+    /**
+     * Gets the player in the waiting room.
+     * @return
+     */
     public List<Player> getWaitingPlayers() {
         return waitingPlayers;
     }

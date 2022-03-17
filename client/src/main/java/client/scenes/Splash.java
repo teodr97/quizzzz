@@ -36,18 +36,38 @@ public class Splash implements Initializable {
         }
     }
 
+    /**
+     * Switches the scene to Past Games.
+     * @param event
+     * @throws IOException
+     */
     public void switchToPastGames(ActionEvent event) throws IOException {
         mainCtrl.switchToPastGames();
     }
 
+    /**
+     * Switches the scene to Single Player.
+     * @param event
+     * @throws IOException
+     */
     public void switchToSinglePlayer(ActionEvent event) throws IOException {
         mainCtrl.switchToSinglePlayer();
     }
 
+    /**
+     * Switches the scene to Username.
+     * @param event
+     * @throws IOException
+     */
     public void switchToUsername(ActionEvent event) throws IOException {
         mainCtrl.switchToUsername();
     }
 
+    /**
+     * Switches the scene to How To Play.
+     * @param event
+     * @throws IOException
+     */
     public void switchToHowToPlay(ActionEvent event) throws IOException {
         mainCtrl.switchToHowToPlay();
     }

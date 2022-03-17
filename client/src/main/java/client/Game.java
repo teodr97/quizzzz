@@ -42,32 +42,51 @@ public class Game {
     public Activity[] answers;
 
     public Game() {
-        this.curRound = 0;
+        this.curRound = 1;
         this.totalRounds = 20;
         this.players = new ArrayList<>();
         this.curQuestion = null;
     }
 
+    /**
+     * Gets the current round.
+     * @return
+     */
     public int getCurRound() {
         return curRound;
     }
 
+    /**
+     * Cur Round setter.
+     * @param newCurRound
+     */
+    public void setCurRound(int newCurRound) {
+        this.curRound = newCurRound;
+    }
+
+    /**
+     * Gets the total amounts of the game.
+     * @return
+     */
     public int getTotalRounds() {
         return totalRounds;
     }
 
+    /**
+     * Gets the current question for the current round.
+     * @return
+     */
     public Question getCurQuestion() {
         return curQuestion;
     }
 
+    /**
+     * Gets the list of players participating in the game.
+     * @return
+     */
     public List<Player> getPlayers() {
         return players;
     }
-
-    public void setCurRound(int curRound) {
-        this.curRound = curRound;
-    }
-
 
     /**
      * creates a list of 20 questions and a list of 20 answers, assigning them to the game class variables
