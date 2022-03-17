@@ -64,7 +64,7 @@ public class SinglePlayer implements Initializable {
 
     private double progress;
 
-    double EPSILON = 0.00001;
+    double epsilon = 0.00001;
     Button[] answerbuttons = new Button[3];
 
     //game object to generate all questions and answers
@@ -182,13 +182,13 @@ public class SinglePlayer implements Initializable {
 
         //change scene state to the one where someone has answered the question
         //in which case the buttons should be disabled and change colors
-        Disableanswers();
+        disableAnswers();
 
         return;
     }
 
     //Disables all the answer buttons
-    public void Disableanswers(){
+    public void disableAnswers(){
         answerA.setDisable(true);
         answerB.setDisable(true);
         answerC.setDisable(true);
@@ -196,7 +196,7 @@ public class SinglePlayer implements Initializable {
         return;
     }
     //Enables all the answer buttons
-    public void Enableanswers(){
+    public void enableAnswers(){
         answerA.setDisable(false);
         answerB.setDisable(false);
         answerC.setDisable(false);
@@ -212,7 +212,7 @@ public class SinglePlayer implements Initializable {
         answerA.setStyle("-fx-background-color: #0249bd;");
         answerB.setStyle("-fx-background-color: #0249bd;");
         answerC.setStyle("-fx-background-color: #0249bd;");
-        Enableanswers();
+        enableAnswers();
 
         //timerbar
         //we don't have to set the progress of the timer bar
@@ -249,7 +249,7 @@ public class SinglePlayer implements Initializable {
             timerBar.setProgress(progress);
             //checks if the progress is 1 and will display prompt accordingly
             // will also disable the buttons if the timer ends
-            if((timerBar.getProgress() + EPSILON > 1 && timerBar.getProgress() - EPSILON <1)){
+            if((timerBar.getProgress() + epsilon > 1 && timerBar.getProgress() - epsilon <1)){
                 qnumber += 1;
                 if(prompt != null){
                     if(prompt.getText().equals("")){
@@ -257,9 +257,9 @@ public class SinglePlayer implements Initializable {
                     }
                 }
                 //when timer ends and game hasn't ended we want to display the next question
-                Disableanswers();
+                disableAnswers();
             }
-            if((timerBar.getProgress() + EPSILON > 1.5 && timerBar.getProgress() - EPSILON <1.5)){
+            if((timerBar.getProgress() + epsilon > 1.5 && timerBar.getProgress() - epsilon <1.5)){
                 //when timer ends and game hasn't ended we want to display the next question;
                 if(questionIterator.hasNext()){
                     displayQuestion(questionIterator.next());

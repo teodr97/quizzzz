@@ -15,10 +15,10 @@ public class AnimationTimerSample extends Application {
     private Label lbel;
     @Override
     public void start(Stage st) {
-        UIinit(st);
+        uiIniit(st);
     }
-    //define the UIinit method
-    private void UIinit(Stage st) {
+    //define the uiIniit method
+    private void uiIniit(Stage st) {
 //create a stackpane
         StackPane sp = new StackPane();
 //define the label
