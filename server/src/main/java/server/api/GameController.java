@@ -26,7 +26,10 @@ public class GameController {
     @PostMapping("/create")
     public ResponseEntity<Game> create(@RequestBody Player player) throws NotFoundException, GameAlreadyExistsException {
         //log.info("started game with players: {}", players);
-        return ResponseEntity.ok(gameService.createGame(player));
+        // before jordano edit return ResponseEntity.ok(gameService.createGame(player));
+        //to get rid of error
+        return ResponseEntity.ok(gameService.createGame());
+
     }
 
     @GetMapping

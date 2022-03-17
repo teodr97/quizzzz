@@ -19,10 +19,10 @@ import static commons.models.GameStatus.*;
 public class GameService {
 
     //creates a game and sets its status, id, players, etc.
-    public Game createGame(Player player){
+    public Game createGame(){
         Game game = new Game();
         List<Player> players = new ArrayList<>();
-        players.add(player);
+        //players.add(player);
         game.setGameID(UUID.randomUUID().toString());
         game.setStatus(WAITING);
         game.setPlayers(players);
@@ -41,7 +41,7 @@ public class GameService {
         }
         Game game = GameStorage.getInstance().getGames().values().stream()
                 .filter(it -> it.getStatus().equals(WAITING))
-                .findFirst().orElse(createGame(player));
+                .findFirst().orElse(createGame());
         game.addPlayer(player);
         GameStorage.getInstance().setGame(game);
         return game;

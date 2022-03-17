@@ -7,6 +7,7 @@ import commons.models.Player;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.Response;
 import javafx.fxml.FXML;
 
 import javafx.scene.Node;
@@ -121,11 +122,13 @@ public class TestMainCtrl{
     public void switchToWaitingRoom(ActionEvent event) throws IOException{
         var overview = FXML.load(HowToPlay.class, "client", "scenes", "WaitingRoom.fxml");
         this.player = new Player(username.getText());
-        ClientBuilder.newClient(new ClientConfig()) //
+        Response response = ClientBuilder.newClient(new ClientConfig()) //
                 .target(SERVER).path("/game/connect") //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .post(Entity.entity(player, APPLICATION_JSON));
+        String responsestring = response.readEntity(String.class);
+        System.out.println(responsestring);
         scene = new Scene(overview.getValue());
         setAndShowScenes(event);
     }
