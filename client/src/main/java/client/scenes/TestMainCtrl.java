@@ -4,6 +4,7 @@ import client.MyFXML;
 import client.MyModule;
 import com.google.inject.Injector;
 import commons.models.Player;
+import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import javafx.fxml.FXML;
@@ -36,6 +37,7 @@ public class TestMainCtrl{
     private Stage primaryStage;
     private Stage stage;
     private Scene scene;
+    private Player player;
 
     @FXML
     private Button answerA;
@@ -118,12 +120,24 @@ public class TestMainCtrl{
     //Switches to WaitingRoom.fxml
     public void switchToWaitingRoom(ActionEvent event) throws IOException{
         var overview = FXML.load(HowToPlay.class, "client", "scenes", "WaitingRoom.fxml");
-        Player player = new Player(username.getText());
+        this.player = new Player(username.getText());
         ClientBuilder.newClient(new ClientConfig()) //
                 .target(SERVER).path("/game/connect") //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .post(Entity.entity(player, APPLICATION_JSON));
+        scene = new Scene(overview.getValue());
+        setAndShowScenes(event);
+    }
+
+    //If the event is executed then the scene switches to Splash.fxml
+    public void leaveGame(ActionEvent event) throws IOException{
+        ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("/game/leave") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .delete().close();
+        var overview = FXML.load(Splash.class, "client", "scenes", "Splash.fxml");
         scene = new Scene(overview.getValue());
         setAndShowScenes(event);
     }

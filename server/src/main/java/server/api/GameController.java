@@ -41,6 +41,11 @@ public class GameController {
         return ResponseEntity.ok(gameService.connectToWaitingRoom(player));
     }
 
+    @DeleteMapping("/leave")
+    public ResponseEntity<Player> leave(@RequestBody Player player) throws NotFoundException{
+        return ResponseEntity.ok(gameService.leaveGame(player));
+    }
+
     //starts a game
     @PostMapping("/start")
     public ResponseEntity<Game> start(@RequestBody Player player) throws NotFoundException{

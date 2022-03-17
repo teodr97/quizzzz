@@ -18,7 +18,7 @@
                 <Cursor fx:constant="HAND" />
             </cursor>
         </Button>
-        <Button layoutX="897.0" layoutY="685.0" mnemonicParsing="false" onAction="#switchToSplash" prefHeight="55.0" prefWidth="174.0" style="-fx-background-color: #f73444;" text="Back to menu" textAlignment="CENTER" textFill="WHITE">
+        <Button layoutX="897.0" layoutY="685.0" mnemonicParsing="false" onAction="#leaveGame" prefHeight="55.0" prefWidth="174.0" style="-fx-background-color: #f73444;" text="Back to menu" textAlignment="CENTER" textFill="WHITE">
             <font>
                 <Font size="18.0" />
             </font>

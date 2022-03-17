@@ -2,6 +2,7 @@ package commons.models;
 
 import commons.game.Question;
 import commons.game.exceptions.NicknameTakenException;
+import commons.game.exceptions.NotFoundException;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -89,6 +90,12 @@ public class Game {
         if(!contains(player.getNickname())){
             players.add(player);
         } else throw new NicknameTakenException("Username is already used by another player!");
+    }
+
+    public void removePlayer(Player player) throws NotFoundException {
+        if(contains(player.getNickname())){
+            players.remove(player);
+        } else throw new NotFoundException("Username not found!");
     }
 
     public Boolean contains(String nickname){

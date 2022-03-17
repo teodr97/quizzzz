@@ -32,9 +32,11 @@ public class GameService {
 
     public Game connectToWaitingRoom(Player player) throws NicknameTakenException{
         Map<String, Game> games = GameStorage.getGames();
-        for(Game g : games.values()){
-            if(g.contains(player.getNickname())){
-                throw new NicknameTakenException("Nickname already taken!");
+        if(games != null){
+            for(Game g : games.values()){
+                if(g.contains(player.getNickname())){
+                    throw new NicknameTakenException("Nickname already taken!");
+                }
             }
         }
         Game game = GameStorage.getInstance().getGames().values().stream()
@@ -43,6 +45,17 @@ public class GameService {
         game.addPlayer(player);
         GameStorage.getInstance().setGame(game);
         return game;
+    }
+
+    public Player leaveGame(Player player) throws NotFoundException{
+        Map<String, Game> games = GameStorage.getGames();
+        for(Game g : games.values()){
+            if(g.contains(player.getNickname())){
+                g.removePlayer(player);
+                return player;
+            }
+        }
+        throw new NotFoundException("No player with username, " + player.getNickname() + " in the game");
     }
 
     public Game startGame() throws NotFoundException{
