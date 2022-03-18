@@ -1,3 +1,8 @@
 dependencies {
-	implementation group: 'jakarta.persistence', name: 'jakarta.persistence-api', version: '2.2.3'
+
+
+    implementation 'com.github.gv2011:gsoncore-canonical:0.8'
+    implementation 'com.yashoid:jsonparsable:1.0.4'
+    implementation 'org.projectlombok:lombok:1.18.20'
+    implementation group: 'jakarta.persistence', name: 'jakarta.persistence-api', version: '2.2.3'
 }

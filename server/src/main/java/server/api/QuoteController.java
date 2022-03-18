@@ -15,19 +15,13 @@
  */
 package server.api;
 
+import commons.Quote;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import server.database.QuoteRepository;
+
 import java.util.List;
 import java.util.Random;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import commons.Quote;
-import server.database.QuoteRepository;
 
 @RestController
 @RequestMapping("/api/quotes")
@@ -41,11 +35,20 @@ public class QuoteController {
         this.repo = repo;
     }
 
+    /**
+     *
+     * @return
+     */
     @GetMapping(path = { "", "/" })
     public List<Quote> getAll() {
         return repo.findAll();
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Quote> getById(@PathVariable("id") long id) {
         if (id < 0 || !repo.existsById(id)) {
@@ -54,6 +57,11 @@ public class QuoteController {
         return ResponseEntity.ok(repo.getById(id));
     }
 
+    /**
+     *
+     * @param quote
+     * @return
+     */
     @PostMapping(path = { "", "/" })
     public ResponseEntity<Quote> add(@RequestBody Quote quote) {
 
@@ -66,10 +74,19 @@ public class QuoteController {
         return ResponseEntity.ok(saved);
     }
 
+    /**
+     *
+     * @param s
+     * @return
+     */
     private static boolean isNullOrEmpty(String s) {
         return s == null || s.isEmpty();
     }
 
+    /**
+     *
+     * @return
+     */
     @GetMapping("rnd")
     public ResponseEntity<Quote> getRandom() {
         var idx = random.nextInt((int) repo.count());

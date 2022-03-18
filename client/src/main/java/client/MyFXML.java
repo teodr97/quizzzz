@@ -15,19 +15,18 @@
  */
 package client;
 
-import java.io.IOException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-
 import com.google.inject.Injector;
-
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.util.Builder;
 import javafx.util.BuilderFactory;
 import javafx.util.Callback;
 import javafx.util.Pair;
+
+import java.io.IOException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 
 public class MyFXML {
 
@@ -37,6 +36,13 @@ public class MyFXML {
         this.injector = injector;
     }
 
+    /**
+     * Loads a new scene.
+     * @param c The class of the controller for the scene. Each scene should have a different controller.
+     * @param parts
+     * @param <T>
+     * @return
+     */
     public <T> Pair<T, Parent> load(Class<T> c, String... parts) {
         try {
             var loader = new FXMLLoader(getLocation(parts), null, null, new MyFactory(), StandardCharsets.UTF_8);
@@ -48,6 +54,11 @@ public class MyFXML {
         }
     }
 
+    /**
+     *
+     * @param parts
+     * @return
+     */
     private URL getLocation(String... parts) {
         var path = Path.of("", parts).toString();
         return MyFXML.class.getClassLoader().getResource(path);
