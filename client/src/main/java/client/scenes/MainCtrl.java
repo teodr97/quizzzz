@@ -21,10 +21,16 @@ public class MainCtrl {
     public MainCtrl() {
     }
 
+    /**
+     * Sets the player object.
+     */
     public void setPlayer(Player player){
         this.player = player;
     }
 
+    /**
+     * Gets the player object.
+     */
     public Player getPlayer(){
         return this.player;
     }
