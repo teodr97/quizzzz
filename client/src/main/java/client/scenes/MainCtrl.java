@@ -1,6 +1,7 @@
 package client.scenes;
 
 import client.MyFXML;
+import commons.models.Player;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -8,11 +9,33 @@ import javafx.util.Pair;
 
 import java.io.IOException;
 
+
 public class MainCtrl {
 
+    public static final String SERVER = "http://localhost:8080/";
     private static MyFXML myFXML;
+    private Player player;
 
     private Stage primaryStage;
+
+    public MainCtrl() {
+    }
+
+    /**
+     * Sets the player object.
+     * @param player The player that will be set through Username class.
+     */
+    public void setPlayer(Player player){
+        this.player = player;
+    }
+
+    /**
+     * Gets the player object.
+     */
+    public Player getPlayer(){
+        return this.player;
+    }
+
 
     /**
      * Initialises the starting stage of the application.
@@ -104,6 +127,14 @@ public class MainCtrl {
      */
     public void switchToEndscreenMultiplayer() {
         var overview = myFXML.load(EndscreenMultiplayer.class, "client", "scenes", "EndscreenSingleplayer.fxml");
+        setAndShowScenes(new Scene(overview.getValue()));
+    }
+
+    /**
+     * Switches the scene to the waiting room scene for multiplayer.
+     */
+    public void switchToWaitingRoom() {
+        var overview = myFXML.load(WaitingRoom.class, "client", "scenes", "WaitingRoom.fxml");
         setAndShowScenes(new Scene(overview.getValue()));
     }
 }
