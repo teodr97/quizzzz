@@ -8,7 +8,12 @@ public class StatSharerSingleplayer {
     public int correctAnswers = 0;
     public int totalAnswers = 0;
 
+    /**
+     * Resets the Stat Sharer between the singleplayer screen and the singleplayer endscreen.
+     */
     public void reset() {
-        this.points = this.correctAnswers = this.totalAnswers = 0;
+        this.points = 0;
+        this.correctAnswers = 0;
+        this.totalAnswers = 0;
     }
 }

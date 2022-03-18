@@ -4,10 +4,8 @@ import com.google.inject.Inject;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -28,13 +26,13 @@ public class Splash implements Initializable {
     //no real functionality yet
     @Override
     public void initialize(URL location, ResourceBundle resources){
-        File qImgFile = new File("./client/src/main/resources/images/quizz.jpg");
-        try {
-            System.out.println(qImgFile.getCanonicalPath());
-            quizImage.setImage(new Image(qImgFile.getCanonicalPath()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        File qImgFile = new File("./client/src/main/resources/images/quizz.jpg");
+//        try {
+//            System.out.println(qImgFile.getCanonicalPath());
+//            quizImage.setImage(new Image(qImgFile.getCanonicalPath()));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     /**
