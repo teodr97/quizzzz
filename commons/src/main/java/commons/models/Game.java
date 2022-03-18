@@ -149,6 +149,8 @@ public class Game {
     public void addPlayer(Player player) throws NicknameTakenException {
         if(!contains(player.getNickname())){
             players.add(player);
+            System.out.println(players.size());
+            System.out.println(players.toString());
         } else throw new NicknameTakenException("Username is already used by another player!");
     }
 
@@ -159,7 +161,14 @@ public class Game {
      */
     public void removePlayer(Player player) throws NotFoundException {
         if(contains(player.getNickname())){
-            players.remove(player);
+            for(int i = 0; i < players.size(); i++){
+                if(players.get(i).getNickname().equals(player.getNickname())){
+                    players.remove(i);
+                }
+            }
+            System.out.println("Player actually removed!");
+            System.out.println(players.size());
+            System.out.println(players.toString());
         } else throw new NotFoundException("Username not found!");
     }
 
