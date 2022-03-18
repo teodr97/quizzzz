@@ -85,7 +85,9 @@ public class SinglePlayer implements Initializable {
     public void initialize(URL location, ResourceBundle resources){
         //When this screen starts, it will create a new game entity and fetch a question
         this.game = new Game();
+        this.statSharer.reset();
         game.createQuestionList();
+        this.statSharer.totalAnswers = game.getTotalRounds();
 
         //assigns the game questions, answers, and points list to the questionIterator
         this.questionIterator = Arrays.stream(game.questions).iterator();
@@ -131,6 +133,7 @@ public class SinglePlayer implements Initializable {
             //the one corresponding with he next answers entry is the correct answer and  becomes green
             if(answerbutton.getText().equals(correctanswer)){
                 answerbutton.setStyle("-fx-background-color: #309500;");
+                this.statSharer.correctAnswers++;
             }else{ //we make it red
                 answerbutton.setStyle("-fx-background-color: #BD0000;");
             }
@@ -283,6 +286,7 @@ public class SinglePlayer implements Initializable {
     private void loadEndscreen()  {
         tm.stop();
         this.statSharer.points = this.pointsInt;
+
         mainCtrl.switchToEndscreenSingleplayer();
     }
 }
