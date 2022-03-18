@@ -7,10 +7,7 @@ import commons.models.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static commons.models.GameStatus.*;
 
@@ -18,14 +15,10 @@ import static commons.models.GameStatus.*;
 @AllArgsConstructor
 public class GameService {
 
-    /**
-     * Creates a game and sets its status, id, players, etc.
-     * @return The created game.
-     */
+    //creates a game and sets its status, id, players, etc.
     public Game createGame(){
         Game game = new Game();
         List<Player> players = new ArrayList<>();
-        //players.add(player);
         game.setGameID(UUID.randomUUID().toString());
         game.setStatus(WAITING);
         game.setPlayers(players);
@@ -33,13 +26,7 @@ public class GameService {
         return game;
     }
 
-    /**
-     *
-     * @param player
-     * @return
-     * @throws NicknameTakenException
-     */
-    public Game connectToWaitingRoom(Player player) throws NicknameTakenException{
+    public Game connectToWaitingRoom(Player player) throws NicknameTakenException, NotFoundException{
         Map<String, Game> games = GameStorage.getGames();
         if(games != null){
             for(Game g : games.values()){
@@ -50,34 +37,23 @@ public class GameService {
         }
         Game game = GameStorage.getInstance().getGames().values().stream()
                 .filter(it -> it.getStatus().equals(WAITING))
-                .findFirst().orElse(createGame());
+                .findAny().orElse(null);
+        if(game == null){
+            game = createGame();
+        }
         game.addPlayer(player);
-        GameStorage.getInstance().setGame(game);
         return game;
     }
 
-    /**
-     *
-     * @param player
-     * @return
-     * @throws NotFoundException
-     */
     public Player leaveGame(Player player) throws NotFoundException{
-        Map<String, Game> games = GameStorage.getGames();
-        for(Game g : games.values()){
-            if(g.contains(player.getNickname())){
-                g.removePlayer(player);
-                return player;
-            }
-        }
-        throw new NotFoundException("No player with username, " + player.getNickname() + " in the game");
+        Game game = GameStorage.getInstance().getGames().values().stream()
+                .filter(it -> it.contains(player.getNickname()))
+                .findFirst().orElseThrow(() -> new NotFoundException("No player with username, " + player.getNickname() + " in the game"));
+        game.removePlayer(player);
+        System.out.println("Player deleted: " + player.getNickname());
+        return player;
     }
 
-    /**
-     *
-     * @return
-     * @throws NotFoundException
-     */
     public Game startGame() throws NotFoundException{
         Game game = GameStorage.getInstance().getGames().values().stream()
                 .filter(it -> it.getStatus().equals(WAITING))
@@ -87,9 +63,7 @@ public class GameService {
         return game;
     }
 
-    /**
-     * Checks the gameState of the game
-     * */
+    //checks the gameState of the game
     public Game gamePlay(GamePlay gamePlay) throws NotFoundException, InvalidGameException {
         if(!GameStorage.getInstance().getGames().containsKey(gamePlay.getGameId())){
             throw new NotFoundException("Game not found!");
@@ -112,11 +86,7 @@ public class GameService {
         return game;
     }
 
-    /**
-     * Returns an array of players in decreasing order based on their points
-     * @param players
-     * @return
-     */
+    //returns an array of players in decreasing order based on their points
     private Player[] leaderBoard(List<Player> players){
         Player[] list = new Player[players.size()];
         int max = Integer.MIN_VALUE;

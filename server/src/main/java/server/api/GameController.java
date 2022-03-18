@@ -68,7 +68,7 @@ public class GameController {
      * @return
      * @throws NotFoundException
      */
-    @DeleteMapping("/leave")
+    @PostMapping("/leave")
     public ResponseEntity<Player> leave(@RequestBody Player player) throws NotFoundException{
         return ResponseEntity.ok(gameService.leaveGame(player));
     }

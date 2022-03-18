@@ -15,55 +15,17 @@
  */
 package server;
 
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.context.annotation.Bean;
-import commons.game.Activity;
-import server.database.ActivityRepository;
 
-import java.util.List;
 
 @SpringBootApplication
 @EntityScan(basePackages = { "commons", "server" })
 public class Main {
 
-    /**
-     * Main method.
-     * @param args
-     */
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
     }
 
-    /**
-     *
-     * @param repository
-     * @return
-     */
-    @Bean
-    public CommandLineRunner run(ActivityRepository repository){
-        return (args -> {
-            insertJavaAdvocates(repository);
-            System.out.println(repository.findAll());
-        });
-    }
-
-    private void insertJavaAdvocates(ActivityRepository repository){
-        List<Activity> activities = (List<Activity>) repository.findAll();
-        boolean contains = false;
-        for(Activity a : activities){
-            if(a.getActivity().equals("Why are you not running?")) {
-                contains = true;
-                break;
-            }
-        }
-
-        if(!contains){
-            repository.save(new Activity("Why are you not running?", 132));
-            repository.save(new Activity("Why are you SO SO running?", 5));
-            repository.save(new Activity("Why are you running?", 2345));
-        }
-    }
 }

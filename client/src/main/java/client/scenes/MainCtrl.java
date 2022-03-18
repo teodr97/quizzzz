@@ -1,6 +1,7 @@
 package client.scenes;
 
 import client.MyFXML;
+import commons.models.Player;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -8,12 +9,26 @@ import javafx.util.Pair;
 
 import java.io.IOException;
 
+
 public class MainCtrl {
 
     public static final String SERVER = "http://localhost:8080/";
     private static MyFXML myFXML;
+    private Player player;
 
     private Stage primaryStage;
+
+    public MainCtrl() {
+    }
+
+    public void setPlayer(Player player){
+        this.player = player;
+    }
+
+    public Player getPlayer(){
+        return this.player;
+    }
+
 
     /**
      * Initialises the starting stage of the application.

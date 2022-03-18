@@ -1,10 +1,8 @@
 package client.scenes;
 
 import com.google.inject.Inject;
-import commons.models.Player;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.core.Response;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import org.glassfish.jersey.client.ClientConfig;
@@ -20,8 +18,6 @@ public class WaitingRoom implements Initializable {
 
     private final MainCtrl mainCtrl;
 
-    private Player player;
-
     private Username usernameCtrl;
 
     @Inject
@@ -33,14 +29,7 @@ public class WaitingRoom implements Initializable {
     //no real functionality yet
     @Override
     public void initialize(URL location, ResourceBundle resources){
-        this.player = new Player(usernameCtrl.getUsername());
-        Response response = ClientBuilder.newClient(new ClientConfig()) //
-                .target(mainCtrl.SERVER).path("/game/connect") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .post(Entity.entity(this.player, APPLICATION_JSON));
-        String responsestring = response.readEntity(String.class);
-        System.out.println(responsestring);
+
     }
 
     /**
@@ -53,7 +42,7 @@ public class WaitingRoom implements Initializable {
                 .target(mainCtrl.SERVER).path("/game/leave") //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
-                .delete().close();
+                .post(Entity.entity(mainCtrl.getPlayer(), APPLICATION_JSON));
 
         mainCtrl.switchToSplash();
     }
