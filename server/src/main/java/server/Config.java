@@ -15,16 +15,22 @@
  */
 package server;
 
-import java.util.Random;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.Random;
 
 @Configuration
 public class Config {
 
+    private static Random random = new Random();
+
+    /**
+     * Gets a reusable instance of Random.
+     * @return A one-off instance of Random.
+     */
     @Bean
     public Random getRandom() {
-        return new Random();
+        return random;
     }
 }

@@ -7,6 +7,10 @@ public class NotFoundException extends Exception{
         this.message = message;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getMessage(){
         return message;
     }

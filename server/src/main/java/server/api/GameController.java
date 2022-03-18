@@ -22,6 +22,13 @@ import java.util.Map;
 public class GameController {
     private final GameService gameService = new GameService();
 
+    /**
+     * Creates a new game, started by a given player. That player will be the first one put into the game.
+     * @param player
+     * @return
+     * @throws NotFoundException
+     * @throws GameAlreadyExistsException
+     */
     //creates game
     @PostMapping("/create")
     public ResponseEntity<Game> create(@RequestBody Player player) throws NotFoundException, GameAlreadyExistsException {
@@ -32,30 +39,59 @@ public class GameController {
 
     }
 
+    /**
+     * Gets all ongoing games.
+     * @return
+     */
     @GetMapping
     public ResponseEntity<Map<String, Game>> getAllGames(){
         return ResponseEntity.ok(GameStorage.getGames());
     }
 
-    //connects player to waiting room
+    /**
+     * Connects the player to the current waiting room.
+     * @param player
+     * @return
+     * @throws NicknameTakenException
+     * @throws NotFoundException
+     * @throws GameAlreadyExistsException
+     */
     @PostMapping("/connect")
     public ResponseEntity<Game> connect(@RequestBody Player player) throws NicknameTakenException, NotFoundException, GameAlreadyExistsException {
         //log.info("connect random {}", player);
         return ResponseEntity.ok(gameService.connectToWaitingRoom(player));
     }
 
+    /**
+     * A player leaves the game.
+     * @param player
+     * @return
+     * @throws NotFoundException
+     */
     @DeleteMapping("/leave")
     public ResponseEntity<Player> leave(@RequestBody Player player) throws NotFoundException{
         return ResponseEntity.ok(gameService.leaveGame(player));
     }
 
-    //starts a game
+    /**
+     * Starts a game.
+     * @param player
+     * @return
+     * @throws NotFoundException
+     */
     @PostMapping("/start")
     public ResponseEntity<Game> start(@RequestBody Player player) throws NotFoundException{
         //log.info("game started by: {}", player);
         return ResponseEntity.ok(gameService.startGame());
     }
 
+    /**
+     * Not sure what this is supposed to do. This javadoc should be edited by someone who knows.
+     * @param request
+     * @return
+     * @throws NotFoundException
+     * @throws InvalidGameException
+     */
     @PostMapping("/gameplay")
     public ResponseEntity<Game> gamePlay(@RequestBody GamePlay request) throws NotFoundException, InvalidGameException {
         //log.info("gameplay: {}", request);y

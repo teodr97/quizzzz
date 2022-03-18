@@ -18,7 +18,10 @@ import static commons.models.GameStatus.*;
 @AllArgsConstructor
 public class GameService {
 
-    //creates a game and sets its status, id, players, etc.
+    /**
+     * Creates a game and sets its status, id, players, etc.
+     * @return The created game.
+     */
     public Game createGame(){
         Game game = new Game();
         List<Player> players = new ArrayList<>();
@@ -30,6 +33,12 @@ public class GameService {
         return game;
     }
 
+    /**
+     *
+     * @param player
+     * @return
+     * @throws NicknameTakenException
+     */
     public Game connectToWaitingRoom(Player player) throws NicknameTakenException{
         Map<String, Game> games = GameStorage.getGames();
         if(games != null){
@@ -47,6 +56,12 @@ public class GameService {
         return game;
     }
 
+    /**
+     *
+     * @param player
+     * @return
+     * @throws NotFoundException
+     */
     public Player leaveGame(Player player) throws NotFoundException{
         Map<String, Game> games = GameStorage.getGames();
         for(Game g : games.values()){
@@ -58,6 +73,11 @@ public class GameService {
         throw new NotFoundException("No player with username, " + player.getNickname() + " in the game");
     }
 
+    /**
+     *
+     * @return
+     * @throws NotFoundException
+     */
     public Game startGame() throws NotFoundException{
         Game game = GameStorage.getInstance().getGames().values().stream()
                 .filter(it -> it.getStatus().equals(WAITING))
@@ -67,7 +87,9 @@ public class GameService {
         return game;
     }
 
-    //checks the gameState of the game
+    /**
+     * Checks the gameState of the game
+     * */
     public Game gamePlay(GamePlay gamePlay) throws NotFoundException, InvalidGameException {
         if(!GameStorage.getInstance().getGames().containsKey(gamePlay.getGameId())){
             throw new NotFoundException("Game not found!");
@@ -90,7 +112,11 @@ public class GameService {
         return game;
     }
 
-    //returns an array of players in decreasing order based on their points
+    /**
+     * Returns an array of players in decreasing order based on their points
+     * @param players
+     * @return
+     */
     private Player[] leaderBoard(List<Player> players){
         Player[] list = new Player[players.size()];
         int max = Integer.MIN_VALUE;

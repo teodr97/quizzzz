@@ -8,6 +8,10 @@ public class GameAlreadyExistsException extends Exception {
         this.message = message;
     }
 
+    /**
+     * Gets the message of the exception.
+     * @return
+     */
     public String getMessage() {
         return message;
     }

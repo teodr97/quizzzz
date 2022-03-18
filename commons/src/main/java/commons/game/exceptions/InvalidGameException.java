@@ -7,6 +7,10 @@ public class InvalidGameException extends Exception{
         this.message = message;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getMessage(){
         return message;
     }

@@ -16,20 +16,27 @@
 package client;
 
 import client.scenes.*;
+import client.utils.QuestionRetriever;
+import client.utils.StatSharerSingleplayer;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
 
 public class MyModule implements Module {
 
-    //basically configures the TestMainCtrl and other frontend classes so it can be used
+    //basically configures the MainCtrl and other frontend classes so it can be used
     @Override
     public void configure(Binder binder) {
-        binder.bind(TestMainCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(MainCtrl.class).in(Scopes.SINGLETON);
         binder.bind(Splash.class).in(Scopes.SINGLETON);
         binder.bind(HowToPlay.class).in(Scopes.SINGLETON);
         binder.bind(Username.class).in(Scopes.SINGLETON);
         binder.bind(PastGames.class).in(Scopes.SINGLETON);
         binder.bind(SinglePlayer.class).in(Scopes.SINGLETON);
+        binder.bind(EndscreenSingleplayer.class).in(Scopes.SINGLETON);
+        binder.bind(EndscreenMultiplayer.class).in(Scopes.SINGLETON);
+        binder.bind(StatSharerSingleplayer.class).in(Scopes.SINGLETON);
+        binder.bind(QuestionRetriever.class).in(Scopes.SINGLETON);
+        binder.bind(WaitingRoom.class).in(Scopes.SINGLETON);
     }
 }

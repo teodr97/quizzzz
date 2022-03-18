@@ -40,16 +40,9 @@ public class Activity {
 
     public int getPower() { return this.power; }
 
-    /**
-     * This function should be used for debugging purposes only
-     * @return String containing the question and its ID
-     */
     @Override
     public String toString() {
-        return "Activity{" +
-                "id=" + id +
-                ", activity='" + activity + '\'' +
-                ", power=" + power +
-                '}';
+        return activity;
     }
+
 }
