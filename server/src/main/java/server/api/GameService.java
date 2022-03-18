@@ -15,7 +15,11 @@ import static commons.models.GameStatus.*;
 @AllArgsConstructor
 public class GameService {
 
-    //creates a game and sets its status, id, players, etc.
+    /**
+     * Creates a game with a list of Players (Objects) which is empty in the beginning.
+     * Adds the game object to GameStorage.
+     * @return Returns the game object
+     */
     public Game createGame(){
         Game game = new Game();
         List<Player> players = new ArrayList<>();
@@ -26,6 +30,14 @@ public class GameService {
         return game;
     }
 
+    /**
+     * Connects player to a game that's in WAITING status
+     * or creates a new game if no such game exists
+     * @param player The player that wants to connect.
+     * @return  Returns the game that the player connected to.
+     * @throws NicknameTakenException
+     * @throws NotFoundException
+     */
     public Game connectToWaitingRoom(Player player) throws NicknameTakenException, NotFoundException{
         Map<String, Game> games = GameStorage.getGames();
         if(games != null){
@@ -45,6 +57,12 @@ public class GameService {
         return game;
     }
 
+    /**
+     * Leaves the current game/waiting room.
+     * @param player Player that wants to leave the game.
+     * @return Returns the Player that left the game.
+     * @throws NotFoundException
+     */
     public Player leaveGame(Player player) throws NotFoundException{
         Game game = GameStorage.getInstance().getGames().values().stream()
                 .filter(it -> it.contains(player.getNickname()))
@@ -54,6 +72,11 @@ public class GameService {
         return player;
     }
 
+    /**
+     * Starts the game NOT SET YET!!!
+     * @return Returns the started game.
+     * @throws NotFoundException
+     */
     public Game startGame() throws NotFoundException{
         Game game = GameStorage.getInstance().getGames().values().stream()
                 .filter(it -> it.getStatus().equals(WAITING))
@@ -63,7 +86,14 @@ public class GameService {
         return game;
     }
 
-    //checks the gameState of the game
+    /**
+     * NOT FULLY IMPLEMENTED YET
+     * Should check what gamestate is the game in.
+     * @param gamePlay Gets a gamePlay object.
+     * @return Returns the game that was checked.
+     * @throws NotFoundException
+     * @throws InvalidGameException
+     */
     public Game gamePlay(GamePlay gamePlay) throws NotFoundException, InvalidGameException {
         if(!GameStorage.getInstance().getGames().containsKey(gamePlay.getGameId())){
             throw new NotFoundException("Game not found!");
@@ -86,7 +116,11 @@ public class GameService {
         return game;
     }
 
-    //returns an array of players in decreasing order based on their points
+    /**
+     * Makes a leaderboard at the end of the game.
+     * @param players All the players that were in the game.
+     * @return Returns the List of players in order by points.
+     */
     private Player[] leaderBoard(List<Player> players){
         Player[] list = new Player[players.size()];
         int max = Integer.MIN_VALUE;

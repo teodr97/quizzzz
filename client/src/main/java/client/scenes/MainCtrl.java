@@ -23,6 +23,7 @@ public class MainCtrl {
 
     /**
      * Sets the player object.
+     * @param player The player that will be set through Username class.
      */
     public void setPlayer(Player player){
         this.player = player;
