@@ -93,4 +93,3 @@ public class QuoteController {
         return ResponseEntity.ok(repo.getById((long) idx));
     }
 }
-

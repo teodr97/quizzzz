@@ -1,10 +1,11 @@
 package client.scenes;
 
+import client.utils.QuestionRetriever;
 import client.utils.StatSharerSingleplayer;
 import com.google.inject.Inject;
-import client.Game;
 import commons.game.Activity;
 import commons.game.Question;
+import commons.models.Game;
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -85,7 +86,7 @@ public class SinglePlayer implements Initializable {
     public void initialize(URL location, ResourceBundle resources){
         //When this screen starts, it will create a new game entity and fetch a question
         this.game = new Game();
-        game.createQuestionList();
+        game.createQuestionList(new QuestionRetriever(mainCtrl));
 
         //assigns the game questions, answers, and points list to the questionIterator
         this.questionIterator = Arrays.stream(game.questions).iterator();

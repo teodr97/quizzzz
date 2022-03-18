@@ -1,17 +1,15 @@
 package client.scenes;
 
-
-import client.Game;
+import commons.models.Game;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
-import javafx.scene.image.ImageView;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;

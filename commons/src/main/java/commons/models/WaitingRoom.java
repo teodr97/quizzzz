@@ -1,4 +1,4 @@
-package commons.game;
+package commons.models;
 
 import java.util.ArrayList;
 import java.util.List;

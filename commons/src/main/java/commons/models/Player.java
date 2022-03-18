@@ -1,5 +1,8 @@
-package commons.game;
+package commons.models;
 
+import lombok.Data;
+
+@Data
 public class Player {
     /**
      * The nickname of the player.
@@ -24,6 +27,12 @@ public class Player {
      * The time is represented as a value from 0 to 1, 0 meaning no time left and 1 that all time is left.
      */
     private double timeLeft = 1;
+
+
+
+    public Player(){
+
+    }
 
     /**
      * Player Constructor.
