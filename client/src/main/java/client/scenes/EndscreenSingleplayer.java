@@ -23,6 +23,7 @@ public class EndscreenSingleplayer implements Initializable {
     private StatSharerSingleplayer statSharer;
 
     @FXML private Text finalScoreTextBox;
+    @FXML private Text questionsAnswered;
 
     @Inject
     public EndscreenSingleplayer(StatSharerSingleplayer statSharer, MainCtrl mainCtrl) {
@@ -33,8 +34,8 @@ public class EndscreenSingleplayer implements Initializable {
     //no real functionality yet
     @Override
     public void initialize(URL location, ResourceBundle resources){
-        int text = statSharer.points;
-        this.finalScoreTextBox.setText(Integer.toString(text));
+        this.finalScoreTextBox.setText("Points: " + statSharer.points);
+        this.questionsAnswered.setText("Correct Answers: " + statSharer.correctAnswers + "/" + statSharer.totalAnswers);
     }
 
     /**

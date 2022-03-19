@@ -1,11 +1,11 @@
 package client.scenes;
 
-import client.Game;
-import client.utils.SingleplayerHighscoreHandler;
+import client.utils.QuestionRetriever;
 import client.utils.StatSharerSingleplayer;
 import com.google.inject.Inject;
 import commons.game.Activity;
 import commons.game.Question;
+import commons.models.Game;
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,7 +14,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.text.Text;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
@@ -87,7 +86,9 @@ public class SinglePlayer implements Initializable {
     public void initialize(URL location, ResourceBundle resources){
         //When this screen starts, it will create a new game entity and fetch a question
         this.game = new Game();
-        game.createQuestionList();
+        this.statSharer.reset();
+        game.createQuestionList(new QuestionRetriever(mainCtrl));
+        this.statSharer.totalAnswers = game.getTotalRounds();
 
         //assigns the game questions, answers, and points list to the questionIterator
         this.questionIterator = Arrays.stream(game.questions).iterator();
@@ -160,6 +161,7 @@ public class SinglePlayer implements Initializable {
             this.pointsInt = newpoints;
             userpoint.setText(String.valueOf(newpoints));
             prompt.setText("Correct");
+            this.statSharer.correctAnswers++;
         } else{
             prompt.setText("Incorrect");
         }
