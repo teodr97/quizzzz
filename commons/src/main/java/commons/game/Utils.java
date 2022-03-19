@@ -1,6 +1,4 @@
-package commons.game.utils;
-
-import commons.game.Activity;
+package commons.game;
 
 import java.util.List;
 

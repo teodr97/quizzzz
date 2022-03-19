@@ -1,17 +1,29 @@
 package client.scenes;
 
+import commons.models.Player;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.Response;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.TextField;
+import org.glassfish.jersey.client.ClientConfig;
 
 import javax.inject.Inject;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+
 
 public class Username implements Initializable {
 
     private MainCtrl mainCtrl;
+
+    @FXML
+    private TextField username;
 
     @Inject
     public Username(MainCtrl mainCtrl) {
@@ -42,5 +54,27 @@ public class Username implements Initializable {
         mainCtrl.switchToMultiplayer();
     }
 
+    /**
+     * Switches to the waiting room screen.
+     * @param event
+     */
+    public void switchToWaitingRoom(ActionEvent event) {
+        mainCtrl.setPlayer(new Player(username.getText()));
+        Response response = ClientBuilder.newClient(new ClientConfig()) //
+                .target(mainCtrl.SERVER).path("/game/connect") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .post(Entity.entity(mainCtrl.getPlayer(), APPLICATION_JSON));
+        String responsestring = response.readEntity(String.class);
+        System.out.println(responsestring);
+        mainCtrl.switchToWaitingRoom();
+    }
 
+    /**
+     *
+     * @return
+     */
+    public String getUsername() {
+        return this.username.getText();
+    }
 }
