@@ -27,9 +27,9 @@ public class SinglePlayer implements Initializable {
      * Used to share information between the game and the end-screen.
      * Here it is used to set the information.
      */
-    private StatSharerSingleplayer statSharer;
+    private final StatSharerSingleplayer statSharer;
 
-    private MainCtrl mainCtrl;
+    private final MainCtrl mainCtrl;
 
     @FXML
     private ProgressBar timerBar;
@@ -87,13 +87,15 @@ public class SinglePlayer implements Initializable {
         //When this screen starts, it will create a new game entity and fetch a question
         this.game = new Game();
         game.createQuestionList(new QuestionRetriever(mainCtrl));
+        this.statSharer.reset();
+        this.statSharer.totalAnswers = game.getTotalRounds();
 
         //assigns the game questions, answers, and points list to the questionIterator
         this.questionIterator = Arrays.stream(game.questions).iterator();
         this.answersIterator = Arrays.stream(game.answers).iterator();
 
         //makes an array with references to the answer buttons
-        answerbuttons[0]= answerA;
+        answerbuttons[0] = answerA;
         answerbuttons[1] = answerB;
         answerbuttons[2] = answerC;
 
@@ -159,6 +161,7 @@ public class SinglePlayer implements Initializable {
             this.pointsInt = newpoints;
             userpoint.setText(String.valueOf(newpoints));
             prompt.setText("Correct");
+            this.statSharer.correctAnswers++;
         } else{
             prompt.setText("Incorrect");
         }
