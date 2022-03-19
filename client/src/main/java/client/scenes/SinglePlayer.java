@@ -1,6 +1,7 @@
 package client.scenes;
 
 import client.Game;
+import client.utils.SingleplayerHighscoreHandler;
 import client.utils.StatSharerSingleplayer;
 import com.google.inject.Inject;
 import commons.game.Activity;
@@ -13,10 +14,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.text.Text;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.ResourceBundle;
@@ -293,8 +293,13 @@ public class SinglePlayer implements Initializable {
      * Logs the current game and writes it to a local file.
      */
     private void logGame() {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        String date = dtf.format(LocalDate.now());
-        System.out.println(date);
+        SingleplayerHighscoreHandler shh = null;
+        try {
+            shh = SingleplayerHighscoreHandler.getHighscores();
+            shh.saveNewEntry(this.statSharer.points);
+        } catch (FileNotFoundException e) {
+            System.out.println("Game could not be recorded.");
+            e.printStackTrace();
+        }
     }
 }

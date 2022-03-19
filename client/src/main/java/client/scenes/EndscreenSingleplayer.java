@@ -34,7 +34,6 @@ public class EndscreenSingleplayer implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources){
         int text = statSharer.points;
-        //int text = (int)finalScoreTextBox.getScene().getUserData();
         this.finalScoreTextBox.setText(Integer.toString(text));
     }
 
