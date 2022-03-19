@@ -30,19 +30,34 @@
                 <Font name="Arial Bold" size="72.0" />
             </font>
         </Text>
-      <Text fill="WHITE" layoutX="366.0" layoutY="267.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your past games" textAlignment="CENTER" underline="true">
+      <Text fill="WHITE" layoutX="512.0" layoutY="272.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your Past Games" textAlignment="CENTER" underline="true" wrappingWidth="455.89996337890625">
          <font>
             <Font name="Arial Bold" size="48.0" />
          </font>
       </Text>
-      <TableView id="leaderboard" fx:id="leaderboard" accessibleRole="MENU" layoutX="365.0" layoutY="296.0" maxHeight="297.0" maxWidth="387.0" minHeight="297.0" minWidth="387.0" prefHeight="297.0" prefWidth="387.0" style="-fx-background-color: transparent; -fx-text-fill: white;">
+      <TableView fx:id="leaderboard" layoutX="546.0" layoutY="291.0" prefHeight="297.0" prefWidth="387.0" style="-fx-background-color: transparent; -fx-text-fill: white;">
         <columns>
-          <TableColumn fx:id="colDate" editable="false" prefWidth="194.0" sortable="false" style="-fx-background-color: #08223e; -fx-text-fill: white; -fx-alignment: center;" text="Date" />
+          <TableColumn fx:id="colDate" editable="false" prefWidth="194.0" sortable="false" style="-fx-background-color: #08223e; -fx-text-fill: #ffffff; -fx-alignment: center;" text="Date" />
           <TableColumn fx:id="colPoints" editable="false" prefWidth="192.0" style="-fx-background-color: #08223e; -fx-text-fill: white; -fx-alignment: center;" text="Total points" />
         </columns>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
+      <Text fill="WHITE" layoutX="141.0" layoutY="365.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Best Score" underline="true">
+         <font>
+            <Font name="Arial Bold" size="48.0" />
+         </font>
+      </Text>
+      <Text fx:id="bestPoints" fill="WHITE" layoutX="73.0" layoutY="452.0" strokeType="OUTSIDE" strokeWidth="0.0" text="XXXX Points" textAlignment="CENTER" wrappingWidth="387.20000000000005">
+         <font>
+            <Font name="Arial Bold" size="36.0" />
+         </font>
+      </Text>
+      <Text fx:id="bestDate" fill="WHITE" layoutX="98.0" layoutY="489.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Achieved dd-mm-yyyy" textAlignment="CENTER" wrappingWidth="336.0625">
+         <font>
+            <Font name="Arial" size="24.0" />
+         </font>
+      </Text>
     </children>
 </AnchorPane>

@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.text.Text;
 
 import java.io.FileNotFoundException;
 import java.net.URL;
@@ -25,6 +26,9 @@ public class PastGames implements Initializable {
 
     @FXML private TableColumn<LeaderboardEntry, String> colDate;
     @FXML private TableColumn<LeaderboardEntry, String> colPoints;
+
+    @FXML private Text bestPoints;
+    @FXML private Text bestDate;
 
     @Inject
     public PastGames(MainCtrl mainCtrl) {
@@ -56,6 +60,11 @@ public class PastGames implements Initializable {
             }
 
             leaderboard.setItems(FXCollections.observableList(entryBase));
+
+            if (shh.getAllTimeBest() != null) {
+                bestPoints.setText(shh.getAllTimeBest().getValue() + " Points");
+                bestDate.setText("Achieved " + shh.getAllTimeBest().getKey());
+            }
 
         } catch (FileNotFoundException | SingleplayerHighscoreHandler.IncorrectFileFormat e) {
             e.printStackTrace();
