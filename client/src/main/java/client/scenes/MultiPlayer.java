@@ -6,13 +6,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
-import javafx.scene.image.ImageView;
-
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -61,17 +58,16 @@ public class MultiPlayer implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources){
-        File j2x = new File("./src/main/resources/images/Joker2X.png");
-        File jHg = new File("./src/main/resources/images/JokerHG.png");
-        File jMb = new File("./src/main/resources/images/JokerMB.png");
-        try {
-            joker2X.setImage(new Image(j2x.getCanonicalPath()));
-            jokerHG.setImage(new Image(jHg.getCanonicalPath()));
-            jokerMB.setImage(new Image(jMb.getCanonicalPath()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+//        File j2x = new File("./src/main/resources/images/Joker2X.png");
+//        File jHg = new File("./src/main/resources/images/JokerHG.png");
+//        File jMb = new File("./src/main/resources/images/JokerMB.png");
+//        try {
+//            joker2X.setImage(new Image(j2x.getCanonicalPath()));
+//            jokerHG.setImage(new Image(jHg.getCanonicalPath()));
+//            jokerMB.setImage(new Image(jMb.getCanonicalPath()));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     /**

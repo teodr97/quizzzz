@@ -1,8 +1,8 @@
 package client.scenes;
 
+import client.Game;
 import client.utils.StatSharerSingleplayer;
 import com.google.inject.Inject;
-import client.Game;
 import commons.game.Activity;
 import commons.game.Question;
 import javafx.animation.AnimationTimer;
@@ -15,6 +15,8 @@ import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.ResourceBundle;
@@ -284,5 +286,15 @@ public class SinglePlayer implements Initializable {
         tm.stop();
         this.statSharer.points = this.pointsInt;
         mainCtrl.switchToEndscreenSingleplayer();
+        logGame();
+    }
+
+    /**
+     * Logs the current game and writes it to a local file.
+     */
+    private void logGame() {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        String date = dtf.format(LocalDate.now());
+        System.out.println(date);
     }
 }
