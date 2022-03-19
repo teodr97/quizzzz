@@ -1,7 +1,5 @@
 package commons.game;
 
-import commons.game.utils.Utils;
-
 import java.util.List;
 import java.util.Objects;
 

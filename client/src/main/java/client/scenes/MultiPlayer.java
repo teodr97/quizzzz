@@ -1,7 +1,6 @@
 package client.scenes;
 
-
-import client.Game;
+import commons.models.Game;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

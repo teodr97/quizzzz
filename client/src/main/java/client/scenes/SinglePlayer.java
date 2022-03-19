@@ -1,10 +1,11 @@
 package client.scenes;
 
+import client.utils.QuestionRetriever;
 import client.utils.StatSharerSingleplayer;
 import com.google.inject.Inject;
-import client.Game;
 import commons.game.Activity;
 import commons.game.Question;
+import commons.models.Game;
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
