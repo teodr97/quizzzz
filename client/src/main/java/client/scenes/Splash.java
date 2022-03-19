@@ -26,8 +26,9 @@ public class Splash implements Initializable {
     //no real functionality yet
     @Override
     public void initialize(URL location, ResourceBundle resources){
-//        File qImgFile = new File("./src/main/resources/images/quizz.jpg");
+//        File qImgFile = new File("./client/src/main/resources/images/quizz.jpg");
 //        try {
+//            System.out.println(qImgFile.getCanonicalPath());
 //            quizImage.setImage(new Image(qImgFile.getCanonicalPath()));
 //        } catch (IOException e) {
 //            e.printStackTrace();
