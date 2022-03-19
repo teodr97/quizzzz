@@ -32,10 +32,21 @@ public class SingleplayerHighscoreHandler {
         return new SingleplayerHighscoreHandler(null);
     }
 
+    /**
+     * Gets the entry for the best past game.
+     * @return A pair representing the best past game. The key contains the date
+     * and the entry contains the points.
+     */
     public Pair<String, Integer> getAllTimeBest() {
         return this.allTimeBest;
     }
 
+    /**
+     * Gets the entries from all games previously played.
+     * @return An iterator containing all previously played game. The iterator
+     * gives key-value pairs, where the key is the date of the game and the value
+     * is how many poitns were earned.
+     */
     public Iterator<Pair<String, Integer>> getEntries() {
         return this.latestGames.iterator();
     }
@@ -109,10 +120,14 @@ public class SingleplayerHighscoreHandler {
         fw.close();
     }
 
+    /**
+     * Saves a new game entry to the SHH and also writes it to the local file.
+     * @param points How many points were earned in the game.
+     */
     public void saveNewEntry(int points) {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         String curDate = dtf.format(LocalDate.now());
-        var newEntry = new Pair<String, Integer>(curDate, points);
+        var newEntry = new Pair<>(curDate, points);
         this.latestGames.addFirst(newEntry);
         if (this.allTimeBest.getValue() < newEntry.getValue()) {
             this.allTimeBest = newEntry;

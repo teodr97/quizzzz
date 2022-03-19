@@ -76,7 +76,7 @@ public class PastGames implements Initializable {
 
     /**
      * Switches the current screen to the splash screen.
-     * @param event
+     * @param event Event used for the button click
      */
     public void switchToSplash(ActionEvent event) {
         mainCtrl.switchToSplash();
@@ -86,7 +86,7 @@ public class PastGames implements Initializable {
         String date;
         Integer points;
 
-        public LeaderboardEntry(String date, Integer points) {
+        LeaderboardEntry(String date, Integer points) {
             this.date = date;
             this.points = points;
         }
