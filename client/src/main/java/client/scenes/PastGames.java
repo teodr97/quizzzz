@@ -64,6 +64,9 @@ public class PastGames implements Initializable {
             if (shh.getAllTimeBest() != null) {
                 bestPoints.setText(shh.getAllTimeBest().getValue() + " Points");
                 bestDate.setText("Achieved " + shh.getAllTimeBest().getKey());
+            } else {
+                bestPoints.setText("");
+                bestDate.setText("No Games Have Been Played");
             }
 
         } catch (FileNotFoundException | SingleplayerHighscoreHandler.IncorrectFileFormat e) {

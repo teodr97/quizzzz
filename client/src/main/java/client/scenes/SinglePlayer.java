@@ -1,6 +1,7 @@
 package client.scenes;
 
 import client.utils.QuestionRetriever;
+import client.utils.SingleplayerHighscoreHandler;
 import client.utils.StatSharerSingleplayer;
 import com.google.inject.Inject;
 import commons.game.Activity;
@@ -14,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.text.Text;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
