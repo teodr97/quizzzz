@@ -92,7 +92,7 @@ public class SinglePlayer implements Initializable {
         this.answersIterator = Arrays.stream(game.answers).iterator();
 
         //makes an array with references to the answer buttons
-        answerbuttons[0]= answerA;
+        answerbuttons[0] = answerA;
         answerbuttons[1] = answerB;
         answerbuttons[2] = answerC;
 
@@ -117,9 +117,9 @@ public class SinglePlayer implements Initializable {
 
         //gets the amount of points to be handed, and assigns the correct answer to a variable
         int questionpoints = (int)(500 - 250*progress);
-        String correctanswer = answersIterator.next().toString();
-        System.out.println("correct answer:"+ correctanswer);
-        System.out.println("your answer:"+ useranswer.getText());
+        String correctanswer = answersIterator.next().getActivity();
+        System.out.println("correct answer: "+ correctanswer);
+        System.out.println("your answer: "+ useranswer.getText());
 
         //since we made an iterator of the answers the program checks if  the users button clicked is the right corresponding click
         //this function should definitely be tested
@@ -255,11 +255,11 @@ public class SinglePlayer implements Initializable {
      * @param question: a Question entity to display
      */
     public void displayQuestion(Question question){
-        questionField.setText(question.toString());
+        questionField.setText(question.getQuestion());
         qNumber.setText(game.getCurRound() + " / 20");
-        answerA.setText(question.getActivityList().get(0).toString());
-        answerB.setText(question.getActivityList().get(1).toString());
-        answerC.setText(question.getActivityList().get(2).toString());
+        answerA.setText(question.getActivityList().get(0).getActivity());
+        answerB.setText(question.getActivityList().get(1).getActivity());
+        answerC.setText(question.getActivityList().get(2).getActivity());
         resetGamescreen();
     }
 
@@ -270,9 +270,5 @@ public class SinglePlayer implements Initializable {
         tm.stop();
         this.statSharer.points = this.pointsInt;
         mainCtrl.switchToEndscreenSingleplayer();
-    }
-
-    public int getPoints() {
-        return this.pointsInt;
     }
 }

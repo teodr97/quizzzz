@@ -42,7 +42,7 @@ public class Activity {
 
     @Override
     public String toString() {
-        return activity;
+        return "{Activity: " + this.activity + " | Power: " + this.power + " | Id: " + this.id + "}";
     }
 
 }
