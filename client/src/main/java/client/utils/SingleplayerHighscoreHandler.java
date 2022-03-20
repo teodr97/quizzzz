@@ -129,7 +129,8 @@ public class SingleplayerHighscoreHandler {
         String curDate = dtf.format(LocalDate.now());
         var newEntry = new Pair<>(curDate, points);
         this.latestGames.addFirst(newEntry);
-        if (this.allTimeBest.getValue() < newEntry.getValue()) {
+
+        if (this.allTimeBest == null || this.allTimeBest.getValue() < newEntry.getValue()) {
             this.allTimeBest = newEntry;
         }
         try {
