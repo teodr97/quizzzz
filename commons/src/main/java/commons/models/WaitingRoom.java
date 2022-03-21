@@ -1,4 +1,4 @@
-package commons.game;
+package commons.models;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +17,10 @@ public class WaitingRoom {
         this.waitingPlayers = new ArrayList<>();
     }
 
+    /**
+     * Gets the player in the waiting room.
+     * @return
+     */
     public List<Player> getWaitingPlayers() {
         return waitingPlayers;
     }

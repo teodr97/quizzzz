@@ -14,7 +14,11 @@ javafx {
 
 
 dependencies {
-	implementation project(":commons")
+
+
+    implementation 'com.github.gv2011:gsoncore-canonical:0.8'
+    implementation 'com.yashoid:jsonparsable:1.0.4'
+    implementation project(":commons")
 	
 	implementation group: 'org.glassfish.jersey.core', name: 'jersey-client', version: '3.0.3'
 	implementation group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: '3.0.3'
