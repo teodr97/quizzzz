@@ -134,6 +134,12 @@ public class Game {
     }
 
     /**
+     * Sets the current question of this game.
+     * @param question the question to be set as current
+     */
+    public void setCurQuestion(Question question) { this.curQuestion = question; }
+
+    /**
      * Gets the list of players participating in the game.
      * @return
      */

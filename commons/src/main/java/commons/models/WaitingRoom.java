@@ -24,4 +24,6 @@ public class WaitingRoom {
     public List<Player> getWaitingPlayers() {
         return waitingPlayers;
     }
+
+    public void setWaitingPlayers(List<Player> waitingPlayers) { this.waitingPlayers = waitingPlayers; }
 }
