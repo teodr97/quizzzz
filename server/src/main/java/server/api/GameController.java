@@ -76,10 +76,9 @@ public class GameController {
 
     //keeppolling code
     private ResponseEntity<List<String>> keepPolling(String playerid) throws InterruptedException {
-        Thread.sleep(5000);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create("/getPlayers/"+playerid));
-        return new ResponseEntity<>(headers, HttpStatus.TEMPORARY_REDIRECT);
+        Thread.sleep(1000);
+        return getPlayers(playerid);
+
     }
 
 

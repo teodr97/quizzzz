@@ -134,7 +134,13 @@ public class TestMainCtrl{
         String responsestring = response.readEntity(String.class);
         System.out.println(responsestring);
 
-        longpollUpdateLobby();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // code goes here.
+                longpollUpdateLobby();
+            }
+        }).start();
 
         scene = new Scene(overview.getValue());
         setAndShowScenes(event);
@@ -142,7 +148,7 @@ public class TestMainCtrl{
 
     //recursive function that keeps requesting the server for new data
     //in a longpolling fashion
-    public void longpollUpdateLobby() throws InterruptedException{
+    public void longpollUpdateLobby(){
         //this get requests gets all the players that are connected/connecting to the server
         Response playersResponse = ClientBuilder.newClient(new ClientConfig()) //
                 .target(SERVER).path("/game/getPlayers/0") //
@@ -152,7 +158,7 @@ public class TestMainCtrl{
                 .get();
         String playersstring = playersResponse.readEntity(String.class);
         System.out.println(playersstring);
-        Thread.sleep(5000);
+
         longpollUpdateLobby();
 
     }
