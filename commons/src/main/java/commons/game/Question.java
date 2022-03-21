@@ -12,7 +12,7 @@ import java.util.Objects;
  * in the form of a ClientQuestion object (see the subclass).
  */
 public class Question {
-    public String question;
+    public String question = "<Question>";
 
     private List<Activity> activityList;
     private Activity correctAnswer;
@@ -24,7 +24,7 @@ public class Question {
      * (such as the correct answer) from the clients in order to prevent abuse from the
      * players.
      */
-    public class ClientQuestion {
+    public static class ClientQuestion {
         private String question;
 
         private List<Activity> activityList;
@@ -88,6 +88,8 @@ public class Question {
 
     //SETTERS==========================================================
     public void setQuestion(String question) { this.question = question; }
+
+    public void setCorrectAnswer (Activity correctAnswer) { this.correctAnswer = correctAnswer; }
 
     //GETTERS==========================================================
     public String getQuestion() { return this.question; }

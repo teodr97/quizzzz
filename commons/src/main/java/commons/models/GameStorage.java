@@ -34,7 +34,7 @@ public class GameStorage {
      * Puts a game into the games map, with which we can see how many games are being played
      * @param game
      */
-    public void setGame(Game game){
+    public static void setGame(Game game){
         games.put(game.getGameID(), game);
     }
 }
