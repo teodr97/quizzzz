@@ -201,6 +201,7 @@ public class Game {
         for(int i = 0; i < totalRounds; i++){
             questions[i] = new Question(questionGenerator.retrieveActivitySetFromServer());
             answers[i] = questions[i].getCorrectAnswer();
+            System.out.println(questions[i].toString());
         }
         this.answers = answers;
         this.questions = questions;
