@@ -77,7 +77,15 @@ class QuestionTest {
      */
     @Test
     void testToString() {
-        assertEquals(question.getQuestion(), question.toString());
+
+        String correct = "{\nQuestion: " + question;
+        correct += "\nOption: " + this.activityList.get(0).toString();
+        correct += "\nOption: " + this.activityList.get(1).toString();
+        correct += "\nOption: " + this.activityList.get(2).toString();
+        correct += "\nAnswer: " + this.question.getCorrectAnswer().toString();
+        correct += "\n}";
+
+        assertEquals(correct, question.toString());
     }
 
     /**
