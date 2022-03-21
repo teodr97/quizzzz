@@ -73,7 +73,7 @@ class ActivityTest {
      */
     @Test
     void testToString() {
-        assertEquals("Test", "{Activity: Test | Power: 1 | Id: 0}");
+        assertEquals("{Activity: Test | Power: 1 | Id: 0}", activity.toString());
     }
 
     /**

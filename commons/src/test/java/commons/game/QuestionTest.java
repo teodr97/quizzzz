@@ -78,7 +78,7 @@ class QuestionTest {
     @Test
     void testToString() {
 
-        String correct = "{\nQuestion: " + question;
+        String correct = "{\nQuestion: " + question.getQuestion();
         correct += "\nOption: " + this.activityList.get(0).toString();
         correct += "\nOption: " + this.activityList.get(1).toString();
         correct += "\nOption: " + this.activityList.get(2).toString();
