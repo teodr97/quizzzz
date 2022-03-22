@@ -74,7 +74,7 @@ public class WaitingRoom implements Initializable {
 
     //no real functionality yet
     @Override
-    public void initialize(URL location, ResourceBundle resources){
+    public void initialize(URL location, ResourceBundle resources) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -83,6 +83,7 @@ public class WaitingRoom implements Initializable {
 
             }
         }).start();
+    }
 
     /**
      * If the event is executed then the scene switches to Splash.fxml
@@ -90,13 +91,13 @@ public class WaitingRoom implements Initializable {
      * @throws IOException
      */
     public void leaveGame(ActionEvent event) throws IOException {
-        ClientBuilder.newClient(new ClientConfig()) //
-                .target(mainCtrl.SERVER).path("/game/leave") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .post(Entity.entity(mainCtrl.getPlayer(), APPLICATION_JSON));
-
-        mainCtrl.switchToSplash();
+//        ClientBuilder.newClient(new ClientConfig()) //
+//                .target(SERVER).path("/game/leave") //
+//                .request(APPLICATION_JSON) //
+//                .accept(APPLICATION_JSON) //
+//                .post(Entity.entity(mainCtrl.getPlayer(), APPLICATION_JSON));
+//
+//        mainCtrl.switchToSplash();
     }
 
     //recursive function that keeps requesting the server for new data

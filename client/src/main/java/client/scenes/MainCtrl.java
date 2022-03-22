@@ -26,6 +26,8 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import java.io.IOException;
 
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+
 
 public class MainCtrl {
 
@@ -36,7 +38,10 @@ public class MainCtrl {
     private Stage primaryStage;
     private Stage stage;
     private Scene scene;
-    public Player player;
+
+    @FXML
+    private TextField username;
+
 
     public MainCtrl() {
     }
@@ -153,23 +158,11 @@ public class MainCtrl {
     /**
      * Switches the scene to the waiting room scene for multiplayer.
      */
-    public void switchToWaitingRoom(ActionEvent event) throws IOException, InterruptedException{
+    public void switchToWaitingRoom(){
 
-        this.player = new Player(username.getText());
+        var overview = myFXML.load(WaitingRoom.class, "client", "scenes", "WaitingRoom.fxml");
+        setAndShowScenes(new Scene(overview.getValue()));
 
-        //this request sends the player info to the server
-        Response response = ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("/game/connect") //
-                .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.TRUE)//
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .post(Entity.entity(player, APPLICATION_JSON));
-        String responsestring = response.readEntity(String.class);
-        System.out.println(responsestring);
-
-        var overview = FXML.load(WaitingRoom.class, "client", "scenes", "WaitingRoom.fxml");
-        scene = new Scene(overview.getValue());
-        setAndShowScenes(event);
 
 
     }
@@ -181,8 +174,8 @@ public class MainCtrl {
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .post(Entity.entity(player, APPLICATION_JSON));
-        var overview = FXML.load(Splash.class, "client", "scenes", "Splash.fxml");
+        var overview = this.myFXML.load(Splash.class, "client", "scenes", "Splash.fxml");
         scene = new Scene(overview.getValue());
-        setAndShowScenes(event);
+        setAndShowScenes(new Scene(overview.getValue()));
     }
 }
