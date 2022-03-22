@@ -76,8 +76,6 @@ public class WaitingRoom implements Initializable {
         this.mainCtrl = mainCtrl;
 
         this.players = new Text();
-
-
     }
 
     //no real functionality yet
@@ -103,7 +101,8 @@ public class WaitingRoom implements Initializable {
                 .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.TRUE)//
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
-                .get();
+                .get();;
+
 
 
         ArrayList<String> playersstring = playersResponse.readEntity(ArrayList.class);
@@ -128,14 +127,17 @@ public class WaitingRoom implements Initializable {
 
     }
 
+    public void startGame(){
+
+    }
+
+    public void leaveGame(){
+        return;
+    }
 
     //renders the lobby in fxml fil
 
     //we switched controllers so we add the leave game methode so that the fxml won't throw an error
     // for no it's just a place holder tho because we dont have acces to the player object we want to post
 
-    //If the event is executed then the scene switches to Splash.fxml
-    public void leaveGame(ActionEvent event) {
-        return;
-    }
 }
