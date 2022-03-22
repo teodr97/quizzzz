@@ -12,7 +12,7 @@ import java.util.*;
 
 public class SingleplayerHighscoreHandler {
 
-    private static final String PATH = "client/data/pastgames.data";
+    private static final String PATH = "data\\pastgames.data";
 
     private Pair<String, Integer> allTimeBest;
     private LinkedList<Pair<String, Integer>> latestGames;
@@ -58,7 +58,9 @@ public class SingleplayerHighscoreHandler {
      * @throws IncorrectFileFormat If the file of the format was incorrect.
      */
     public static SingleplayerHighscoreHandler getHighscores() throws FileNotFoundException, IncorrectFileFormat {
-        Scanner scanner = new Scanner(new File(PATH));
+        System.out.println("Default Path: " + new File("").getAbsolutePath());
+        String absPath = new File("").getAbsolutePath();
+        Scanner scanner = new Scanner(new File(absPath + "\\" + PATH));
         // The file is empty, therefore no information has been recorded yet
         if (!scanner.hasNextLine()) {
             return noPreviousData();

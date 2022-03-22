@@ -61,6 +61,7 @@ public class MyFXML {
      */
     private URL getLocation(String... parts) {
         var path = Path.of("", parts).toString();
+        System.out.println("Path: " + path);
         return MyFXML.class.getClassLoader().getResource(path);
     }
 
