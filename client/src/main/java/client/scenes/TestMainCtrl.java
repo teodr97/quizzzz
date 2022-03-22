@@ -134,13 +134,13 @@ public class TestMainCtrl{
         String responsestring = response.readEntity(String.class);
         System.out.println(responsestring);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // code goes here.
-                longpollUpdateLobby();
-            }
-        }).start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                // code goes here.
+//                longpollUpdateLobby();
+//            }
+//        }).start();
 
         scene = new Scene(overview.getValue());
         setAndShowScenes(event);

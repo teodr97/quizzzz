@@ -81,7 +81,7 @@ public class WaitingRoom implements Initializable {
 
         ArrayList<String> playersstring = playersResponse.readEntity(ArrayList.class);
         System.out.println(playersstring.toString());
-        while(playersstring.size()>1){
+        while(playersstring.size()>=1){
             playersResponse = ClientBuilder.newClient(new ClientConfig()) //
                     .target(SERVER).path("/game/getPlayers/0") //
                     .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.TRUE)//
