@@ -2,6 +2,8 @@ package commons.models;
 
 import lombok.Data;
 
+import java.util.Objects;
+
 @Data
 public class Player {
     /**
@@ -46,10 +48,18 @@ public class Player {
         this.points = 0;
     }
 
+    /**
+     * Gets the player nickname.
+     * @return
+     */
     public String getNickname() {
         return nickname;
     }
 
+    /**
+     * Gets the amount of points the player currently has.
+     * @return
+     */
     public int getPoints() {
         return points;
     }
@@ -62,18 +72,34 @@ public class Player {
         this.points += gainedPoints;
     }
 
+    /**
+     * Gets the answer currently chosen by the player.
+     * @return A number in the range [0, amount of answers)
+     */
     public int getChosenAnswer() {
         return this.chosenAnswer;
     }
 
+    /**
+     * Sets the answwer the players wants to choose.
+     * @param choice A number in the range [0, amount of answers)
+     */
     public void setChosenAnswer(int choice) {
         this.chosenAnswer = choice;
     }
 
+    /**
+     * Gets how much the player has left for the answer. Should be removed/changed.
+     * @return
+     */
     public double getTimeLeft() {
         return timeLeft;
     }
 
+    /**
+     *
+     * @param timeLeft
+     */
     public void setTimeLeft(double timeLeft) {
         this.timeLeft = timeLeft;
     }
@@ -81,4 +107,26 @@ public class Player {
     public int getWaitingRoomId(){return this.waitingroomid;}
 
     public void setWaitingRoomId(int id){this.waitingroomid = id;}
+
+    /**
+     * The equals method of this object.
+     * @param o the object against which the instance of this class is to be compared
+     * @return boolean that indicates whether the two objects are equal
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Player player = (Player) o;
+        return points == player.points && nickname.equals(player.nickname);
+    }
+
+    /**
+     * The hash method of this object.
+     * @return a hash of the instance of this object
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(nickname, points);
+    }
 }

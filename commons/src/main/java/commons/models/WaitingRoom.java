@@ -1,11 +1,8 @@
 package commons.models;
 
-import lombok.Data;
-
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
 public class WaitingRoom {
 
     /**
@@ -20,11 +17,13 @@ public class WaitingRoom {
         this.waitingPlayers = new ArrayList<>();
     }
 
-    public void AddPlayer(Player player){
-        waitingPlayers.add(player);
+    /**
+     * Gets the player in the waiting room.
+     * @return
+     */
+    public List<Player> getWaitingPlayers() {
+        return waitingPlayers;
     }
 
-    public List<Player> getWaitingPlayers() {
-        return this.waitingPlayers;
-    }
+    public void setWaitingPlayers(List<Player> waitingPlayers) { this.waitingPlayers = waitingPlayers; }
 }

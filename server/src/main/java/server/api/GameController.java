@@ -1,17 +1,17 @@
 package server.api;
 
 import commons.game.exceptions.GameAlreadyExistsException;
+import commons.game.exceptions.InvalidGameException;
 import commons.game.exceptions.NicknameTakenException;
+import commons.game.exceptions.NotFoundException;
 import commons.models.Game;
 import commons.models.GamePlay;
 import commons.models.GameStorage;
 import commons.models.Player;
-import commons.game.exceptions.InvalidGameException;
-import commons.game.exceptions.NotFoundException;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +25,6 @@ import static java.lang.Integer.parseInt;
 
 @RestController
 @Slf4j
-@AllArgsConstructor
 @RequestMapping("/game")
 public class GameController {
     private final GameService gameService = new GameService();
@@ -42,12 +41,23 @@ public class GameController {
 
     }
 
+    /**
+     * Gets all ongoing games.
+     * @return
+     */
     @GetMapping
     public ResponseEntity<Map<String, Game>> getAllGames(){
         return ResponseEntity.ok(GameStorage.getGames());
     }
 
-    //connects player to waiting room
+    /**
+     * Connects the player to the current waiting room.
+     * @param player
+     * @return
+     * @throws NicknameTakenException
+     * @throws NotFoundException
+     * @throws GameAlreadyExistsException
+     */
     @PostMapping("/connect")
     public ResponseEntity<Game> connect(@RequestBody Player player) throws NicknameTakenException, NotFoundException, GameAlreadyExistsException {
         //log.info("connect random {}", player);
@@ -58,6 +68,16 @@ public class GameController {
         return ResponseEntity.ok(gameService.connectToWaitingRoom(player));
     }
 
+    /**
+     * A player leaves the game.
+     * @param player
+     * @return
+     * @throws NotFoundException
+     */
+     @PostMapping("/leave")
+    public ResponseEntity<Player> leave(@RequestBody Player player) throws NotFoundException{
+        return ResponseEntity.ok(gameService.leaveGame(player));
+    }
     
     //get the players in a long polling fashion
     //we keep the request open untill a new player connects in which case we
@@ -90,20 +110,27 @@ public class GameController {
     }
 
 
-    @PostMapping("/leave")
-    public ResponseEntity<Player> leave(@RequestBody Player player) throws NotFoundException{
-        return ResponseEntity.ok(gameService.leaveGame(player));
-    }
-
     
 
-    //starts a game
+    /**
+     * Starts a game.
+     * @param player
+     * @return
+     * @throws NotFoundException
+     */
     @PostMapping("/start")
     public ResponseEntity<Game> start(@RequestBody Player player) throws NotFoundException{
         //log.info("game started by: {}", player);
         return ResponseEntity.ok(gameService.startGame());
     }
 
+    /**
+     * Not sure what this is supposed to do. This javadoc should be edited by someone who knows.
+     * @param request
+     * @return
+     * @throws NotFoundException
+     * @throws InvalidGameException
+     */
     @PostMapping("/gameplay")
     public ResponseEntity<Game> gamePlay(@RequestBody GamePlay request) throws NotFoundException, InvalidGameException {
         //log.info("gameplay: {}", request);y

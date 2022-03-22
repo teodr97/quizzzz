@@ -39,3 +39,24 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# Temp
+*.tmp
+*.temp
+
+# Thumbnail cache files
+._*
+Thumbs.db
+
+# Misc
+.Spotlight-V100
+.Trashes
+
+# Log files
+log/
+logs/
+*.log
+
+# Folder view configuration files
+.DS_Store
+Desktop.ini

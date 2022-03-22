@@ -8,6 +8,10 @@ public class InvalidParamException extends Exception {
         this.message = message;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getMessage() {
         return message;
     }

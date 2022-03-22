@@ -11,6 +11,10 @@ public class GameStorage {
         games = new HashMap<>();
     }
 
+    /**
+     * This javadoc should be edited.
+     * @return
+     */
     public static synchronized GameStorage getInstance(){
         if(instance == null){
             instance = new GameStorage();
@@ -18,12 +22,19 @@ public class GameStorage {
         return instance;
     }
 
+    /**
+     *
+     * @return
+     */
     public static Map<String, Game> getGames(){
         return games;
     }
 
-    //puts a game into the games map, with which we can see how many games are being played
-    public void setGame(Game game){
+    /**
+     * Puts a game into the games map, with which we can see how many games are being played
+     * @param game
+     */
+    public static void setGame(Game game){
         games.put(game.getGameID(), game);
     }
 }

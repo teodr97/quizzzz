@@ -24,103 +24,135 @@ import javafx.scene.control.Button;
 import javafx.event.ActionEvent;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
-
 import java.io.IOException;
-import java.util.List;
 
-import static com.google.inject.Guice.createInjector;
-import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
-public class TestMainCtrl{
+public class MainCtrl {
 
-    private static final Injector INJECTOR = createInjector(new MyModule());
-    private static final MyFXML FXML = new MyFXML(INJECTOR);
-    private static final String SERVER = "http://localhost:8080/";
+    public static final String SERVER = "http://localhost:8080/";
+    private static MyFXML myFXML;
+    private Player player;
 
     private Stage primaryStage;
     private Stage stage;
     private Scene scene;
     public Player player;
 
-    @FXML
-    private Button answerA;
-
-    @FXML
-    private Button answerB;
-
-    @FXML
-    private Button answerC;
-
-    @FXML
-    private Text prompt;
-    @FXML
-    private ProgressBar timerBar;
-
-    @FXML
-    private Text questionField;
-
-    @FXML
-    private TextField username;
-
-    @FXML
-    private Button startGame;
-
-
-
-    //initializes the stage and gets the scene from Splash.fxml
-    //Opens/Shows the stage.
-    public void initialize(Stage primaryStage, Pair<Splash, Parent> overview) {
-        this.primaryStage = primaryStage;
-        this.scene = new Scene(overview.getValue());
-        this.prompt = new Text();
-
-        showPrimaryStage();
+    public MainCtrl() {
     }
 
-    //Sets the title and scene for the Startingstage.
-    public void showPrimaryStage() {
+    /**
+     * Sets the player object.
+     * @param player The player that will be set through Username class.
+     */
+    public void setPlayer(Player player){
+        this.player = player;
+    }
+
+    /**
+     * Gets the player object.
+     */
+    public Player getPlayer(){
+        return this.player;
+    }
+
+
+    /**
+     * Initialises the starting stage of the application.
+     * @param primaryStage The primary stage used throughout the lifespan of the app.
+     * @param overview Overview of the Splash scene.
+     * @param myFXML The FXML injector used throughout the lifespan of the app.
+     */
+    public void initialize(Stage primaryStage, Pair<Splash, Parent> overview, MyFXML myFXML) {
+        this.primaryStage = primaryStage;
+        MainCtrl.myFXML = myFXML;
+
         primaryStage.setTitle("QUIZZ");
-        primaryStage.setScene(scene);
+        primaryStage.setScene(new Scene(overview.getValue()));
         primaryStage.show();
     }
 
     //Sets and shows the scene.
-    public void setAndShowScenes(ActionEvent event){
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
+
+    /**
+     * Sets the primary stage to a given scene.
+     * @param scene The scene that will be shown next.
+     */
+    public void setAndShowScenes(Scene scene){
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 
-    //If the event is executed then the scene switches to Splash.fxml
-    public void switchToSplash(ActionEvent event) throws IOException{
-        var overview = FXML.load(Splash.class, "client", "scenes", "Splash.fxml");
-        scene = new Scene(overview.getValue());
-        setAndShowScenes(event);
+    /**
+     * Switches the scene to Splash.
+     */
+    public void switchToSplash() {
+        var overview = myFXML.load(Splash.class, "client", "scenes", "Splash.fxml");
+        setAndShowScenes(new Scene(overview.getValue()));
     }
 
-    //Switches to HowToPlay.fxml
-    public void switchToHowToPlay(ActionEvent event) throws IOException{
-        var overview = FXML.load(HowToPlay.class, "client", "scenes", "HowToPlay.fxml");
-        scene = new Scene(overview.getValue());
-        setAndShowScenes(event);
+    /**
+     * Switches the scene to the How To Play scene.
+     */
+    public void switchToHowToPlay() {
+        var overview = myFXML.load(HowToPlay.class, "client", "scenes", "HowToPlay.fxml");
+        setAndShowScenes(new Scene(overview.getValue()));
     }
 
-    //Switches to PastGames.fxml
-    public void switchToPastGames(ActionEvent event) throws IOException{
-        var overview = FXML.load(HowToPlay.class, "client", "scenes", "PastGames.fxml");
-        scene = new Scene(overview.getValue());
-        setAndShowScenes(event);
+    /**
+     * Switches the scene to the list of Past Games.
+     */
+    public void switchToPastGames() {
+        var overview = myFXML.load(PastGames.class, "client", "scenes", "PastGames.fxml");
+        setAndShowScenes(new Scene(overview.getValue()));
+    }
+
+    /**
+     * Switches the scene to the Username selection scene.
+     */
+    public void switchToUsername() {
+        var overview = myFXML.load(Username.class, "client", "scenes", "Username.fxml");
+        setAndShowScenes(new Scene(overview.getValue()));
+    }
+
+    /**
+     * Switches the scene to the Single Player scene that also starts a new Single Player game.
+     */
+    public void switchToSinglePlayer() {
+        var overview = myFXML.load(SinglePlayer.class, "client", "scenes", "SinglePlayer.fxml");
+        setAndShowScenes(new Scene(overview.getValue()));
+    }
+
+    /**
+     * Switches to the multiplayer scene after the add name button is clicked
+     */
+    public void switchToMultiplayer() {
+        var overview = myFXML.load(MultiPlayer.class, "client", "scenes", "MultiPlayer.fxml");
+        setAndShowScenes(new Scene(overview.getValue()));
     }
 
 
-    //Switches to Username.fxml
-    public void switchToUsername(ActionEvent event) throws IOException{
-        var overview = FXML.load(HowToPlay.class, "client", "scenes", "Username.fxml");
-        scene = new Scene(overview.getValue());
-        setAndShowScenes(event);
+    /**
+     * Switches the scene to the end-screen for singleplayer.
+     * @throws IOException
+     */
+    public void switchToEndscreenSingleplayer() {
+        var overview = myFXML.load(EndscreenSingleplayer.class, "client", "scenes", "EndscreenSingleplayer.fxml");
+        setAndShowScenes(new Scene(overview.getValue()));
     }
 
-    //Switches to WaitingRoom.fxml
+    /**
+     * Switches the scene to the end-screen for multiplayer.
+     * @throws IOException
+     */
+    public void switchToEndscreenMultiplayer() {
+        var overview = myFXML.load(EndscreenMultiplayer.class, "client", "scenes", "EndscreenSingleplayer.fxml");
+        setAndShowScenes(new Scene(overview.getValue()));
+    }
+
+    /**
+     * Switches the scene to the waiting room scene for multiplayer.
+     */
     public void switchToWaitingRoom(ActionEvent event) throws IOException, InterruptedException{
 
         this.player = new Player(username.getText());
@@ -142,30 +174,6 @@ public class TestMainCtrl{
 
     }
 
-    //recursive function that keeps requesting the server for new data
-    //in a longpolling fashion
-    public void longpollUpdateLobby(){
-        //this get requests gets all the players that are connected/connecting to the server
-        Response playersResponse = ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("/game/getPlayers/0") //
-                .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.TRUE)//
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .get();
-        String playersstring = playersResponse.readEntity(String.class);
-        System.out.println(playersstring);
-
-        longpollUpdateLobby();
-
-    }
-
-
-    //fucntion used to put the users on the screen
-    public void renderUsernameLobby(List<String> players){
-
-        return;
-    }
-
     //If the event is executed then the scene switches to Splash.fxml
     public void leaveGame(ActionEvent event) throws IOException{
         ClientBuilder.newClient(new ClientConfig()) //
@@ -177,72 +185,4 @@ public class TestMainCtrl{
         scene = new Scene(overview.getValue());
         setAndShowScenes(event);
     }
-
-    //Start single player game(for now only goes to singleplayer game screen
-    public void switchToSinglePlayer(ActionEvent event) throws IOException{
-        var overview = FXML.load(SinglePlayer.class, "client", "scenes", "SinglePlayer.fxml");
-        scene = new Scene(overview.getValue());
-        //questionField.setText("What what what is this world?");
-
-        setAndShowScenes(event);
-
-        //questionField.setText("What what what is this world?");
-    }
-
-
-
-
-    //check answers in singleplayer this needs can be more profesional
-    //by putting it in the singleplayer class
-    public void checkAnswer(ActionEvent event) throws IOException {
-        //check answer will also have to call a function:
-        //disableAnswers so the uses can't click the answers after already choosing one
-        Button useranswer = (Button) event.getTarget();
-
-        if(useranswer == answerA){
-            prompt.setText("Correct");
-            answerA.setStyle("-fx-background-color: #309500; -fx-border-color: black; -fx-border-width: 3px;");
-
-        }else{
-            prompt.setText("Incorrect");
-        }
-
-        if(useranswer == answerB){
-            answerB.setStyle("-fx-background-color: #BD0000;-fx-border-color: black; -fx-border-width: 3px;");
-
-        }else if(useranswer == answerC){
-            answerC.setStyle("-fx-background-color: #BD0000; -fx-border-color: black; -fx-border-width: 3px;");
-        }
-
-        //change scene sate to the one where someone has answererd the question
-        //in which case the buttons hould bedisabled and change collors
-        answerA.setDisable(true);
-        answerB.setDisable(true);
-        answerB.setStyle("-fx-background-color: #BD0000;");
-        answerC.setDisable(true);
-        answerC.setStyle("-fx-background-color: #BD0000;");
-
-
-
-
-        System.out.println("user choose answer");
-
-        return;
-    }
-    public void showCorrect() throws IOException {
-
-
-        answerA.setDisable(true);
-        answerA.setStyle("-fx-background-color: #309500");
-        answerA.setDisable(true);
-        answerB.setStyle("-fx-background-color: #BD0000");
-
-        answerC.setDisable(true);
-        answerC.setStyle("-fx-background-color: #BD0000");
-        return;
-    }
-
-
-
-
 }

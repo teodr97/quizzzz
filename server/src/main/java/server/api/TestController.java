@@ -6,11 +6,18 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/testmapping")
 public class TestController {
 
+    /**
+     *
+     */
     @PostMapping("/post")
     public void postReq() {
         System.out.println("Request received.");
     }
 
+    /**
+     * 
+     * @return
+     */
     @GetMapping("/get")
     public String getReq() {
         return "Get Request Message";

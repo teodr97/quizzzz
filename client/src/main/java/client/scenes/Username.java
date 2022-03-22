@@ -1,26 +1,32 @@
 package client.scenes;
 
-import client.utils.ServerUtils;
-import com.google.inject.Inject;
+import commons.models.Player;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.Response;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+import javafx.scene.control.TextField;
+import org.glassfish.jersey.client.ClientConfig;
+
+import javax.inject.Inject;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 
 public class Username implements Initializable {
 
-    private final ServerUtils server;
-    private final MainCtrl mainCtrl;
+    private MainCtrl mainCtrl;
 
-    private Stage primaryStage;
-
-    private Scene overview;
+    @FXML
+    private TextField username;
 
     @Inject
-    public Username(ServerUtils server, MainCtrl mainCtrl) {
-        this.server = server;
+    public Username(MainCtrl mainCtrl) {
         this.mainCtrl = mainCtrl;
     }
 
@@ -28,7 +34,47 @@ public class Username implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources){
 
-
     }
 
+    /**
+     * switches to the splash screen, for the leave button
+     * @param event
+     * @throws IOException
+     */
+    public void switchToSplash(ActionEvent event) throws IOException {
+        mainCtrl.switchToSplash();
+    }
+
+    /**
+     * switches to the multiplayer screen, for the join game button
+     * @param event
+     * @throws IOException
+     */
+    public void switchToMultiplayer(ActionEvent event) throws IOException {
+        mainCtrl.switchToMultiplayer();
+    }
+
+    /**
+     * Switches to the waiting room screen.
+     * @param event
+     */
+    public void switchToWaitingRoom(ActionEvent event) {
+        mainCtrl.setPlayer(new Player(username.getText()));
+        Response response = ClientBuilder.newClient(new ClientConfig()) //
+                .target(mainCtrl.SERVER).path("/game/connect") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .post(Entity.entity(mainCtrl.getPlayer(), APPLICATION_JSON));
+        String responsestring = response.readEntity(String.class);
+        System.out.println(responsestring);
+        mainCtrl.switchToWaitingRoom();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public String getUsername() {
+        return this.username.getText();
+    }
 }

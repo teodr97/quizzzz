@@ -43,12 +43,6 @@ import java.util.ResourceBundle;
 import static com.google.inject.Guice.createInjector;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
-
-
-
-
-
-
 public class WaitingRoom implements Initializable {
 
     private static final Injector INJECTOR = createInjector(new MyModule());
@@ -58,7 +52,7 @@ public class WaitingRoom implements Initializable {
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
 
-    private Stage primaryStage;
+    private Username usernameCtrl;
 
     private Scene overview;
 
@@ -90,6 +84,19 @@ public class WaitingRoom implements Initializable {
             }
         }).start();
 
+    /**
+     * If the event is executed then the scene switches to Splash.fxml
+     * @param event
+     * @throws IOException
+     */
+    public void leaveGame(ActionEvent event) throws IOException {
+        ClientBuilder.newClient(new ClientConfig()) //
+                .target(mainCtrl.SERVER).path("/game/leave") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .post(Entity.entity(mainCtrl.getPlayer(), APPLICATION_JSON));
+
+        mainCtrl.switchToSplash();
     }
 
     //recursive function that keeps requesting the server for new data

@@ -19,6 +19,10 @@ public abstract class Joker {
         this.state = JokerState.Available;
     }
 
+    /**
+     * Gets the name of the joker.
+     * @return
+     */
     public String getName() {
         return name;
     }
