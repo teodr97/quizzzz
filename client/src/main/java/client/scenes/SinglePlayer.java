@@ -1,6 +1,7 @@
 package client.scenes;
 
 import client.utils.QuestionRetriever;
+import client.utils.SingleplayerHighscoreHandler;
 import client.utils.StatSharerSingleplayer;
 import com.google.inject.Inject;
 import commons.game.Activity;
@@ -14,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.text.Text;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
@@ -287,7 +289,21 @@ public class SinglePlayer implements Initializable {
     private void loadEndscreen()  {
         tm.stop();
         this.statSharer.points = this.pointsInt;
-
         mainCtrl.switchToEndscreenSingleplayer();
+        logGame();
+    }
+
+    /**
+     * Logs the current game and writes it to a local file.
+     */
+    private void logGame() {
+        SingleplayerHighscoreHandler shh = null;
+        try {
+            shh = SingleplayerHighscoreHandler.getHighscores();
+            shh.saveNewEntry(this.statSharer.points);
+        } catch (FileNotFoundException e) {
+            System.out.println("Game could not be recorded.");
+            e.printStackTrace();
+        }
     }
 }
