@@ -122,7 +122,7 @@ public class SinglePlayer implements Initializable {
 
         //gets the amount of points to be handed, and assigns the correct answer to a variable
         int questionpoints = (int)(500 - 250*progress);
-        String correctanswer = answersIterator.next().getActivity();
+        String correctanswer = answersIterator.next().getTitle();
         System.out.println("correct answer: "+ correctanswer);
         System.out.println("your answer: "+ useranswer.getText());
 
@@ -240,7 +240,7 @@ public class SinglePlayer implements Initializable {
         //method handlee
         private void handlee(){
             //making this smaller will slow down the times
-            progress += 0.01;
+            progress += 0.005;
             //set the new progress
             timerBar.setProgress(progress);
             //checks if the progress is 1 and will display prompt accordingly
@@ -275,9 +275,9 @@ public class SinglePlayer implements Initializable {
     public void displayQuestion(Question question){
         questionField.setText(question.getQuestion());
         qNumber.setText(game.getCurRound() + " / 20");
-        answerA.setText(question.getActivityList().get(0).getActivity());
-        answerB.setText(question.getActivityList().get(1).getActivity());
-        answerC.setText(question.getActivityList().get(2).getActivity());
+        answerA.setText(question.getActivityList().get(0).getTitle());
+        answerB.setText(question.getActivityList().get(1).getTitle());
+        answerC.setText(question.getActivityList().get(2).getTitle());
         resetGamescreen();
     }
 

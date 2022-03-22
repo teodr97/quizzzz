@@ -14,7 +14,7 @@ class ActivityTest {
      */
     @BeforeEach
     private void initialiseTest() {
-        activity = new Activity("Test", 1);
+        activity = new Activity("Test", "Test", 1, "Test");
     }
 
     /**
@@ -22,8 +22,8 @@ class ActivityTest {
      */
     @Test
     void setId() {
-        activity.setId(19);
-        assertEquals(19, activity.getId());
+        activity.setAutoId(19);
+        assertEquals(19, activity.getAutoId());
     }
 
     /**
@@ -31,8 +31,8 @@ class ActivityTest {
      */
     @Test
     void setActivity() {
-        activity.setActivity("Activity");
-        assertEquals("Activity", activity.getActivity());
+        activity.setTitle("Activity");
+        assertEquals("Activity", activity.getTitle());
     }
 
     /**
@@ -40,8 +40,8 @@ class ActivityTest {
      */
     @Test
     void setPower() {
-        activity.setPower(90);
-        assertEquals(90, activity.getPower());
+        activity.setConsumption_in_wh(90);
+        assertEquals(90, activity.getConsumption_in_wh());
     }
 
     /**
@@ -49,7 +49,7 @@ class ActivityTest {
      */
     @Test
     void getId() {
-        assertEquals(0, activity.getId());
+        assertEquals(0, activity.getAutoId());
     }
 
     /**
@@ -57,7 +57,7 @@ class ActivityTest {
      */
     @Test
     void getActivity() {
-        assertEquals("Test", activity.getActivity());
+        assertEquals("Test", activity.getTitle());
     }
 
     /**
@@ -65,7 +65,7 @@ class ActivityTest {
      */
     @Test
     void getPower() {
-        assertEquals(1, activity.getPower());
+        assertEquals(1, activity.getConsumption_in_wh());
     }
 
     /**
@@ -81,7 +81,7 @@ class ActivityTest {
      */
     @Test
     void testEquals() {
-        Activity activity1 = new Activity("Test", 1);
+        Activity activity1 = new Activity("Test", "Test", 1, "Test");
 
         assertEquals(activity1, activity);
     }

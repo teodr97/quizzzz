@@ -5,11 +5,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import commons.game.Activity;
-import jakarta.ws.rs.client.ClientBuilder;
-import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.core.GenericType;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -17,22 +12,17 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.stage.Window;
-import org.glassfish.jersey.client.ClientConfig;
+
 
 
 import javax.inject.Inject;
 import java.io.*;
 import java.net.URL;
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
-import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 public class Admin implements Initializable {
 
@@ -114,17 +104,16 @@ public class Admin implements Initializable {
         ZipEntry ze = zf.getEntry("activities.json");
 
         //converts input stream into activityList
-//        ObjectMapper om = new ObjectMapper();
-//        om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-//        activityList = om.readValue(zf.getInputStream(ze), new TypeReference<ArrayList<Activity>>(){});
+        ObjectMapper om = new ObjectMapper();
+        om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        activityList = om.readValue(zf.getInputStream(ze), new TypeReference<ArrayList<Activity>>(){});
 
-
-        Activity a = new Activity("Test Activity", 50);
-        System.out.println(a);
-        ServerUtils.postActivity(a);
-
+        for(int i = 0; i < activityList.size(); i++){
+            ServerUtils.postActivity(activityList.get(i));
+        }
 
         fileText.setText("Importing Complete");
+        this.file = null;
 
     }
 }
