@@ -1,57 +1,248 @@
-/*
- * Copyright 2021 Delft University of Technology
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package client.scenes;
 
+import client.MyFXML;
+import client.MyModule;
+import com.google.inject.Injector;
+import commons.models.Player;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.Response;
+import javafx.fxml.FXML;
+
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ProgressBar;
+
+import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import javafx.scene.control.Button;
 
-public class MainCtrl {
+import javafx.event.ActionEvent;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientProperties;
+
+import java.io.IOException;
+import java.util.List;
+
+import static com.google.inject.Guice.createInjector;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+
+public class TestMainCtrl{
+
+    private static final Injector INJECTOR = createInjector(new MyModule());
+    private static final MyFXML FXML = new MyFXML(INJECTOR);
+    private static final String SERVER = "http://localhost:8080/";
 
     private Stage primaryStage;
+    private Stage stage;
+    private Scene scene;
+    public Player player;
 
-    private QuoteOverviewCtrl overviewCtrl;
-    private Scene overview;
+    @FXML
+    private Button answerA;
 
-    private AddQuoteCtrl addCtrl;
-    private Scene add;
+    @FXML
+    private Button answerB;
 
-    public void initialize(Stage primaryStage, Pair<QuoteOverviewCtrl, Parent> overview,
-            Pair<AddQuoteCtrl, Parent> add) {
+    @FXML
+    private Button answerC;
+
+    @FXML
+    private Text prompt;
+    @FXML
+    private ProgressBar timerBar;
+
+    @FXML
+    private Text questionField;
+
+    @FXML
+    private TextField username;
+
+    @FXML
+    private Button startGame;
+
+
+
+    //initializes the stage and gets the scene from Splash.fxml
+    //Opens/Shows the stage.
+    public void initialize(Stage primaryStage, Pair<Splash, Parent> overview) {
         this.primaryStage = primaryStage;
-        this.overviewCtrl = overview.getKey();
-        this.overview = new Scene(overview.getValue());
+        this.scene = new Scene(overview.getValue());
+        this.prompt = new Text();
 
-        this.addCtrl = add.getKey();
-        this.add = new Scene(add.getValue());
+        showPrimaryStage();
+    }
 
-        showOverview();
+    //Sets the title and scene for the Startingstage.
+    public void showPrimaryStage() {
+        primaryStage.setTitle("QUIZZ");
+        primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    public void showOverview() {
-        primaryStage.setTitle("Quotes: Overview");
-        primaryStage.setScene(overview);
-        overviewCtrl.refresh();
+    //Sets and shows the scene.
+    public void setAndShowScenes(ActionEvent event){
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
     }
 
-    public void showAdd() {
-        primaryStage.setTitle("Quotes: Adding Quote");
-        primaryStage.setScene(add);
-        add.setOnKeyPressed(e -> addCtrl.keyPressed(e));
+    //If the event is executed then the scene switches to Splash.fxml
+    public void switchToSplash(ActionEvent event) throws IOException{
+        var overview = FXML.load(Splash.class, "client", "scenes", "Splash.fxml");
+        scene = new Scene(overview.getValue());
+        setAndShowScenes(event);
     }
+
+    //Switches to HowToPlay.fxml
+    public void switchToHowToPlay(ActionEvent event) throws IOException{
+        var overview = FXML.load(HowToPlay.class, "client", "scenes", "HowToPlay.fxml");
+        scene = new Scene(overview.getValue());
+        setAndShowScenes(event);
+    }
+
+    //Switches to PastGames.fxml
+    public void switchToPastGames(ActionEvent event) throws IOException{
+        var overview = FXML.load(HowToPlay.class, "client", "scenes", "PastGames.fxml");
+        scene = new Scene(overview.getValue());
+        setAndShowScenes(event);
+    }
+
+
+    //Switches to Username.fxml
+    public void switchToUsername(ActionEvent event) throws IOException{
+        var overview = FXML.load(HowToPlay.class, "client", "scenes", "Username.fxml");
+        scene = new Scene(overview.getValue());
+        setAndShowScenes(event);
+    }
+
+    //Switches to WaitingRoom.fxml
+    public void switchToWaitingRoom(ActionEvent event) throws IOException, InterruptedException{
+
+        this.player = new Player(username.getText());
+
+        //this request sends the player info to the server
+        Response response = ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("/game/connect") //
+                .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.TRUE)//
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .post(Entity.entity(player, APPLICATION_JSON));
+        String responsestring = response.readEntity(String.class);
+        System.out.println(responsestring);
+
+        var overview = FXML.load(WaitingRoom.class, "client", "scenes", "WaitingRoom.fxml");
+        scene = new Scene(overview.getValue());
+        setAndShowScenes(event);
+
+
+    }
+
+    //recursive function that keeps requesting the server for new data
+    //in a longpolling fashion
+    public void longpollUpdateLobby(){
+        //this get requests gets all the players that are connected/connecting to the server
+        Response playersResponse = ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("/game/getPlayers/0") //
+                .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.TRUE)//
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get();
+        String playersstring = playersResponse.readEntity(String.class);
+        System.out.println(playersstring);
+
+        longpollUpdateLobby();
+
+    }
+
+
+    //fucntion used to put the users on the screen
+    public void renderUsernameLobby(List<String> players){
+
+        return;
+    }
+
+    //If the event is executed then the scene switches to Splash.fxml
+    public void leaveGame(ActionEvent event) throws IOException{
+        ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("/game/leave") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .post(Entity.entity(player, APPLICATION_JSON));
+        var overview = FXML.load(Splash.class, "client", "scenes", "Splash.fxml");
+        scene = new Scene(overview.getValue());
+        setAndShowScenes(event);
+    }
+
+    //Start single player game(for now only goes to singleplayer game screen
+    public void switchToSinglePlayer(ActionEvent event) throws IOException{
+        var overview = FXML.load(SinglePlayer.class, "client", "scenes", "SinglePlayer.fxml");
+        scene = new Scene(overview.getValue());
+        //questionField.setText("What what what is this world?");
+
+        setAndShowScenes(event);
+
+        //questionField.setText("What what what is this world?");
+    }
+
+
+
+
+    //check answers in singleplayer this needs can be more profesional
+    //by putting it in the singleplayer class
+    public void checkAnswer(ActionEvent event) throws IOException {
+        //check answer will also have to call a function:
+        //disableAnswers so the uses can't click the answers after already choosing one
+        Button useranswer = (Button) event.getTarget();
+
+        if(useranswer == answerA){
+            prompt.setText("Correct");
+            answerA.setStyle("-fx-background-color: #309500; -fx-border-color: black; -fx-border-width: 3px;");
+
+        }else{
+            prompt.setText("Incorrect");
+        }
+
+        if(useranswer == answerB){
+            answerB.setStyle("-fx-background-color: #BD0000;-fx-border-color: black; -fx-border-width: 3px;");
+
+        }else if(useranswer == answerC){
+            answerC.setStyle("-fx-background-color: #BD0000; -fx-border-color: black; -fx-border-width: 3px;");
+        }
+
+        //change scene sate to the one where someone has answererd the question
+        //in which case the buttons hould bedisabled and change collors
+        answerA.setDisable(true);
+        answerB.setDisable(true);
+        answerB.setStyle("-fx-background-color: #BD0000;");
+        answerC.setDisable(true);
+        answerC.setStyle("-fx-background-color: #BD0000;");
+
+
+
+
+        System.out.println("user choose answer");
+
+        return;
+    }
+    public void showCorrect() throws IOException {
+
+
+        answerA.setDisable(true);
+        answerA.setStyle("-fx-background-color: #309500");
+        answerA.setDisable(true);
+        answerB.setStyle("-fx-background-color: #BD0000");
+
+        answerC.setDisable(true);
+        answerC.setStyle("-fx-background-color: #BD0000");
+        return;
+    }
+
+
+
+
 }
