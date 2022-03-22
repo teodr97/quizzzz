@@ -137,4 +137,13 @@ public class MainCtrl {
         var overview = myFXML.load(WaitingRoom.class, "client", "scenes", "WaitingRoom.fxml");
         setAndShowScenes(new Scene(overview.getValue()));
     }
+
+    /**
+     * Switches the scene to the admin panel
+     */
+    public void switchToAdmin() {
+        var overview = myFXML.load(WaitingRoom.class, "client", "scenes", "Admin.fxml");
+        setAndShowScenes(new Scene(overview.getValue()));
+    }
+
 }

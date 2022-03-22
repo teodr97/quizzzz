@@ -71,4 +71,13 @@ public class Splash implements Initializable {
         mainCtrl.switchToHowToPlay();
     }
 
+    /**
+     * Switches the scene to Admin panel.
+     * @param event
+     * @throws IOException
+     */
+    public void switchToAdmin(ActionEvent event) throws IOException {
+        mainCtrl.switchToAdmin();
+    }
+
 }

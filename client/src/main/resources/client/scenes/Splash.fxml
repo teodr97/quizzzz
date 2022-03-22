@@ -48,5 +48,13 @@
       <ImageView fx:id="quizImage" fitHeight="350.0" fitWidth="1129.0" layoutX="-6.0" layoutY="158.0" pickOnBounds="true">
             <Image url="@../../images/quizz.jpg" />
       </ImageView>
+      <Button fx:id="adminBtn" layoutX="47.0" layoutY="640.0" mnemonicParsing="false" onAction="#switchToAdmin" prefHeight="74.0" prefWidth="224.0" style="-fx-background-color: #0249bd;" styleClass="buttons" text="Admin" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font size="24.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
    </children>
 </AnchorPane>

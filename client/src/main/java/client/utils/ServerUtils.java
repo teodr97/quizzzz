@@ -18,7 +18,9 @@ package client.utils;
 import commons.game.Activity;
 import commons.game.Question;
 import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.client.ClientConfig;
 
 import java.util.List;
@@ -53,5 +55,13 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<List<Activity>>() {});
+    }
+
+    public static Response postActivity(Activity activity) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/v1/activity/post")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(activity, APPLICATION_JSON));
     }
 }
