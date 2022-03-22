@@ -1,7 +1,6 @@
 package client.scenes;
 
 import com.google.inject.Inject;
-import commons.game.exceptions.NotFoundException;
 import commons.models.Game;
 import commons.models.GameStorage;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -38,10 +37,10 @@ public class WaitingRoom implements Initializable {
     //no real functionality yet
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Game game = GameStorage.getInstance().getGames().values().stream()
+        /* Not working properly yet Game game = GameStorage.getInstance().getGames().values().stream()
                 .filter(it -> it.getStatus().equals(WAITING))
                 .findFirst().orElse(game = new Game());
-        waitingPlayers.setText(game.getPlayers().size() + " players waiting");
+        waitingPlayers.setText(game.getPlayers().size() + " players waiting");*/
     }
 
     /**

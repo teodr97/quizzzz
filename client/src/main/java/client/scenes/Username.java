@@ -1,6 +1,5 @@
 package client.scenes;
 
-import commons.game.exceptions.NotFoundException;
 import commons.models.Game;
 import commons.models.GameStorage;
 import commons.models.Player;
@@ -84,6 +83,11 @@ public class Username implements Initializable {
         }
     }
 
+    /**
+     * Checks whether the username is already used by other player.
+     * @param username
+     * @return true or false
+     */
     public boolean usernameTaken(String username){
         Game game = GameStorage.getInstance().getGames().values().stream()
                 .filter(it -> it.contains(username))
