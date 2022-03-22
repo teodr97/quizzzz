@@ -2,6 +2,7 @@ package client.scenes;
 
 import client.utils.SingleplayerHighscoreHandler;
 import com.google.inject.Inject;
+import commons.models.Player;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -21,6 +22,7 @@ import java.util.ResourceBundle;
 public class PastGames implements Initializable {
 
     private MainCtrl mainCtrl;
+    private Player player;
 
     @FXML private TableView<LeaderboardEntry> leaderboard;
 
@@ -56,7 +58,7 @@ public class PastGames implements Initializable {
             var entries = shh.getEntries();
             while (entries.hasNext()) {
                 var entry = entries.next();
-                entryBase.add(new LeaderboardEntry(entry.getKey(), entry.getValue()));
+                entryBase.add(new LeaderboardEntry(player.getNickname(), entry.getKey(), entry.getValue()));
             }
 
             leaderboard.setItems(FXCollections.observableList(entryBase));
@@ -83,10 +85,12 @@ public class PastGames implements Initializable {
     }
 
     private class LeaderboardEntry {
+        String username;
         String date;
         Integer points;
 
-        LeaderboardEntry(String date, Integer points) {
+        LeaderboardEntry(String username, String date, Integer points) {
+            this.username = username;
             this.date = date;
             this.points = points;
         }

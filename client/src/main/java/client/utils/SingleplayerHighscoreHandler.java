@@ -12,7 +12,7 @@ import java.util.*;
 
 public class SingleplayerHighscoreHandler {
 
-    private static final String PATH = "data\\pastgames.data";
+    private static final String PATH = "client\\data\\pastgames.data";
 
     private Pair<String, Integer> allTimeBest;
     private LinkedList<Pair<String, Integer>> latestGames;

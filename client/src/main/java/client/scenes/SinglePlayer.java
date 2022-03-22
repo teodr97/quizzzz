@@ -66,6 +66,9 @@ public class SinglePlayer implements Initializable {
     //game object to generate all questions and answers
     private Game game;
 
+    //player's username
+    private String username;
+
     //questionIterator to get the next question
     private Iterator<Question> questionIterator;
 
@@ -79,6 +82,19 @@ public class SinglePlayer implements Initializable {
     public SinglePlayer(StatSharerSingleplayer statSharer, MainCtrl mainCtrl) {
         this.mainCtrl = mainCtrl;
         this.statSharer = statSharer;
+    }
+
+    public SinglePlayer(){
+
+    }
+
+    /**
+     * Setting up the username.
+     * @param username
+     */
+    public void setUsername(String username){
+        this.username = username;
+        System.out.println(this.username);
     }
 
     /**
