@@ -67,6 +67,13 @@ public class GameController {
         return ResponseEntity.ok(gameService.connectToWaitingRoom(player));
     }
 
+    /**
+     * Adds a random player to a game for testing purposes
+     * @return The game the player was added to
+     * @throws NicknameTakenException
+     * @throws NotFoundException
+     * @throws GameAlreadyExistsException
+     */
     @PostMapping("/random")
     public ResponseEntity<Game> random() throws NicknameTakenException, NotFoundException, GameAlreadyExistsException {
         //log.info("connect random {}", player);
