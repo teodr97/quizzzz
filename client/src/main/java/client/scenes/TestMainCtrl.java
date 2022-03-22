@@ -122,7 +122,7 @@ public class TestMainCtrl{
 
     //Switches to WaitingRoom.fxml
     public void switchToWaitingRoom(ActionEvent event) throws IOException, InterruptedException{
-        var overview = FXML.load(WaitingRoom.class, "client", "scenes", "WaitingRoom.fxml");
+
         this.player = new Player(username.getText());
 
         //this request sends the player info to the server
@@ -134,6 +134,8 @@ public class TestMainCtrl{
                 .post(Entity.entity(player, APPLICATION_JSON));
         String responsestring = response.readEntity(String.class);
         System.out.println(responsestring);
+
+        var overview = FXML.load(WaitingRoom.class, "client", "scenes", "WaitingRoom.fxml");
         scene = new Scene(overview.getValue());
         setAndShowScenes(event);
 
@@ -152,7 +154,7 @@ public class TestMainCtrl{
                 .get();
         String playersstring = playersResponse.readEntity(String.class);
         System.out.println(playersstring);
-        Thread.sleep(5000);
+
         longpollUpdateLobby();
 
     }
