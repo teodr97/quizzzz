@@ -240,7 +240,7 @@ public class SinglePlayer implements Initializable {
         //method handlee
         private void handlee(){
             //making this smaller will slow down the times
-            progress += 0.005;
+            progress += 0.0025;
             //set the new progress
             timerBar.setProgress(progress);
             //checks if the progress is 1 and will display prompt accordingly
