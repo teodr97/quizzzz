@@ -2,6 +2,8 @@ package commons.models;
 
 import lombok.Data;
 
+import java.util.Objects;
+
 @Data
 public class Player {
     /**
@@ -97,5 +99,27 @@ public class Player {
      */
     public void setTimeLeft(double timeLeft) {
         this.timeLeft = timeLeft;
+    }
+
+    /**
+     * The equals method of this object.
+     * @param o the object against which the instance of this class is to be compared
+     * @return boolean that indicates whether the two objects are equal
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Player player = (Player) o;
+        return points == player.points && nickname.equals(player.nickname);
+    }
+
+    /**
+     * The hash method of this object.
+     * @return a hash of the instance of this object
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(nickname, points);
     }
 }

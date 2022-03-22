@@ -40,8 +40,8 @@ public class ActivityController {
      * Get the amount of activities in the database
      * @return the amount of activities in the database
      */
-    private int getActivitiesSize() {
-        activityList = (List<Activity>) repository.findAll();
+    int getActivitiesSize() {
+        if (activityList == null || activityList.isEmpty()) activityList = (List<Activity>) repository.findAll();
         return activityList.size();
     }
 

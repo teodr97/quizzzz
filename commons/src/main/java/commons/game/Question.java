@@ -12,7 +12,7 @@ import java.util.Objects;
  * in the form of a ClientQuestion object (see the subclass).
  */
 public class Question {
-    public String question;
+    public String question = "<Question>";
 
     private List<Activity> activityList;
     private Activity correctAnswer;
@@ -24,7 +24,7 @@ public class Question {
      * (such as the correct answer) from the clients in order to prevent abuse from the
      * players.
      */
-    public class ClientQuestion {
+    public static class ClientQuestion {
         private String question;
 
         private List<Activity> activityList;
@@ -80,7 +80,7 @@ public class Question {
                 int correctAnswerIndex = Utils.generateRandomIntSmallerThan(3);
                 // Retrieve a random activity that will serve as the correct answer using indexes 0-3
                 this.correctAnswer = activityList.get(correctAnswerIndex);
-                this.question = "How much power does " + correctAnswer.getActivity() + "require?";
+                this.question = "How much power does the following activity use:\n\"" + correctAnswer.getActivity() + "\"";
                 this.activityList = Utils.replaceActivitiesWithPowerDraws(activityList, correctAnswerIndex);
                 break;
         }
@@ -88,6 +88,8 @@ public class Question {
 
     //SETTERS==========================================================
     public void setQuestion(String question) { this.question = question; }
+
+    public void setCorrectAnswer (Activity correctAnswer) { this.correctAnswer = correctAnswer; }
 
     //GETTERS==========================================================
     public String getQuestion() { return this.question; }
@@ -103,7 +105,13 @@ public class Question {
 
     @Override
     public String toString() {
-        return question;
+        String ret = "{\nQuestion: " + question;
+        ret += "\nOption: " + this.activityList.get(0).toString();
+        ret += "\nOption: " + this.activityList.get(1).toString();
+        ret += "\nOption: " + this.activityList.get(2).toString();
+        ret += "\nAnswer: " + this.correctAnswer.toString();
+        ret += "\n}";
+        return ret;
     }
 
     @Override
