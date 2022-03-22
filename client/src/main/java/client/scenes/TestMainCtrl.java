@@ -26,6 +26,7 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 
 import java.io.IOException;
+import java.util.List;
 
 import static com.google.inject.Guice.createInjector;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -39,7 +40,7 @@ public class TestMainCtrl{
     private Stage primaryStage;
     private Stage stage;
     private Scene scene;
-    private Player player;
+    public Player player;
 
     @FXML
     private Button answerA;
@@ -121,7 +122,7 @@ public class TestMainCtrl{
 
     //Switches to WaitingRoom.fxml
     public void switchToWaitingRoom(ActionEvent event) throws IOException, InterruptedException{
-        var overview = FXML.load(HowToPlay.class, "client", "scenes", "WaitingRoom.fxml");
+        var overview = FXML.load(WaitingRoom.class, "client", "scenes", "WaitingRoom.fxml");
         this.player = new Player(username.getText());
 
         //this request sends the player info to the server
@@ -133,17 +134,10 @@ public class TestMainCtrl{
                 .post(Entity.entity(player, APPLICATION_JSON));
         String responsestring = response.readEntity(String.class);
         System.out.println(responsestring);
-
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                // code goes here.
-//                longpollUpdateLobby();
-//            }
-//        }).start();
-
         scene = new Scene(overview.getValue());
         setAndShowScenes(event);
+
+
     }
 
     //recursive function that keeps requesting the server for new data
@@ -158,9 +152,16 @@ public class TestMainCtrl{
                 .get();
         String playersstring = playersResponse.readEntity(String.class);
         System.out.println(playersstring);
-
+        Thread.sleep(5000);
         longpollUpdateLobby();
 
+    }
+
+
+    //fucntion used to put the users on the screen
+    public void renderUsernameLobby(List<String> players){
+
+        return;
     }
 
     //If the event is executed then the scene switches to Splash.fxml
@@ -185,6 +186,8 @@ public class TestMainCtrl{
 
         //questionField.setText("What what what is this world?");
     }
+
+
 
 
     //check answers in singleplayer this needs can be more profesional

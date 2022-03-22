@@ -51,7 +51,7 @@ public class GameController {
     @PostMapping("/connect")
     public ResponseEntity<Game> connect(@RequestBody Player player) throws NicknameTakenException, NotFoundException, GameAlreadyExistsException {
         //log.info("connect random {}", player);
-        player.setWaitingRoomId(playerStore.size() + 1);
+        player.setWaitingRoomId(playerStore.size()+1);
         playerStore.add(player);
         return ResponseEntity.ok(gameService.connectToWaitingRoom(player));
     }
@@ -70,6 +70,7 @@ public class GameController {
             }
             return ResponseEntity.ok(output);
         }
+        System.out.println("poll:");
 
         return keepPolling(playerid);
     }
