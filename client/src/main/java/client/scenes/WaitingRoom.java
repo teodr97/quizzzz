@@ -1,8 +1,6 @@
 package client.scenes;
 
 import com.google.inject.Inject;
-import commons.models.Game;
-import commons.models.GameStorage;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import javafx.event.ActionEvent;
@@ -15,7 +13,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import static commons.models.GameStatus.WAITING;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 
