@@ -23,8 +23,8 @@ public class Utils {
         Activity smallestEnergy = activityList.get(0);
 
         for (int i = 1; i < activityList.size(); i++) {
-            if (smallestEnergy.getPower() >
-                    activityList.get(i).getPower()) smallestEnergy = activityList.get(i);
+            if (smallestEnergy.getConsumption_in_wh() >
+                    activityList.get(i).getConsumption_in_wh()) smallestEnergy = activityList.get(i);
         }
         return smallestEnergy;
     }
@@ -39,8 +39,8 @@ public class Utils {
         Activity biggestEnergy = activityList.get(0);
 
         for (int i = 1; i < activityList.size(); i++) {
-            if (biggestEnergy.getPower() <
-                    activityList.get(i).getPower()) biggestEnergy = activityList.get(i);
+            if (biggestEnergy.getConsumption_in_wh()<
+                    activityList.get(i).getConsumption_in_wh()) biggestEnergy = activityList.get(i);
         }
         return biggestEnergy;
     }
@@ -63,15 +63,15 @@ public class Utils {
         // We replace every string containing the activity by the power it draws,
         // as that is what we need to show for the answers the player will choose from.
         for (int i = 0; i < result.size(); i++) {
-            result.get(i).setActivity(Integer.toString(result.get(i).getPower()));
+            result.get(i).setTitle(Integer.toString(result.get(i).getConsumption_in_wh()));
             // We change the power amounts used within other answers to amounts that
             // are different to the amount in the correct answer.
             if (i != correctAnswerIndex) {
                 // Generate another result if the power draw to be displayed with this options is the
                 // same as the one of the correct answer.
-                while (result.get(i).getActivity().equals(result.get(correctAnswerIndex).getActivity()))
-                result.get(i).setActivity(Integer.toString(
-                        result.get(correctAnswerIndex).getPower() + (int) (Math.random() * 100)
+                while (result.get(i).getTitle().equals(result.get(correctAnswerIndex).getTitle()))
+                result.get(i).setTitle(Integer.toString(
+                        result.get(correctAnswerIndex).getConsumption_in_wh() + (int) (Math.random() * 100)
                 ));
             }
         }

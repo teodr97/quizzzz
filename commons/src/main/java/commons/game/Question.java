@@ -52,7 +52,7 @@ public class Question {
      * @return True or false, depending on whether the answer is correct or not
      */
     public static boolean hasCorrectAnswer(Question question, Activity answer) {
-        return answer.getActivity().equals(question.getCorrectAnswer().getActivity());
+        return answer.getTitle().equals(question.getCorrectAnswer().getTitle());
     }
 
     /**
@@ -80,7 +80,7 @@ public class Question {
                 int correctAnswerIndex = Utils.generateRandomIntSmallerThan(3);
                 // Retrieve a random activity that will serve as the correct answer using indexes 0-3
                 this.correctAnswer = activityList.get(correctAnswerIndex);
-                this.question = "How much power does the following activity use:\n\"" + correctAnswer.getActivity() + "\"";
+                this.question = "How much power does the following activity use:\n\"" + correctAnswer.getTitle() + "\"";
                 this.activityList = Utils.replaceActivitiesWithPowerDraws(activityList, correctAnswerIndex);
                 break;
         }

@@ -11,51 +11,100 @@ public class Activity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id; // PRIMARY KEY
-    private String activity;
-    private int power; // The energy this activity draws
+    private String image_path;
+    private String title;
+    private int consumption_in_wh;// The energy this activity draws
+    private String source;
 
     /**
-     * Constructor method.
-     * @param activity the activity that should be associated to the new entity
-     * @param power the power that this activity draws
+     * Constructor method
+     *
+     * @param image_path
+     * @param title
+     * @param consumption_in_wh
+     * @param source
      */
-    public Activity(String activity, int power) { this.activity = activity; this.power = power; }
+    public Activity(String image_path, String title, int consumption_in_wh, String source) {
+        this.image_path = image_path;
+        this.title = title;
+        this.consumption_in_wh = consumption_in_wh;
+        this.source = source;
+    }
 
     /**
-     * Empty constructor; should not be used for anything, but the compiler whines if
-     * it's missing from here.
+     * Empty constructor; important for adding into database
      */
-    public Activity() { }
+    public Activity() {
+    }
 
     //SETTERS==========================================================
-    public void setId(int id) { this.id = id; }
 
-    public void setActivity(String activity) { this.activity = activity; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public void setPower (int power) { this.power = power; }
+    public void setImage_path(String image_path) {
+        this.image_path = image_path;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setConsumption_in_wh(int consumption_in_wh) {
+        this.consumption_in_wh = consumption_in_wh;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
 
     //GETTERS==========================================================
-    public int getId() { return this.id; }
 
-    public String getActivity() { return this.activity; }
 
-    public int getPower() { return this.power; }
+    public int getId() {
+        return id;
+    }
 
-    @Override
-    public String toString() {
-        return "{Activity: " + this.activity + " | Power: " + this.power + " | Id: " + this.id + "}";
+    public String getImage_path() {
+        return image_path;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public int getConsumption_in_wh() {
+        return consumption_in_wh;
+    }
+
+    public String getSource() {
+        return source;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Activity activity1 = (Activity) o;
-        return power == activity1.power && activity.equals(activity1.activity);
+        Activity activity = (Activity) o;
+        return consumption_in_wh == activity.consumption_in_wh && Objects.equals(image_path, activity.image_path) && Objects.equals(title, activity.title) && Objects.equals(source, activity.source);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(activity, power);
+        return Objects.hash(image_path, title, consumption_in_wh, source);
+    }
+
+    @Override
+    public String toString() {
+        return "Activity{" +
+                "id=" + id +
+                ", image_path='" + image_path + '\'' +
+                ", title='" + title + '\'' +
+                ", consumption_in_wh=" + consumption_in_wh +
+                ", source='" + source + '\'' +
+                '}';
     }
 }
+
