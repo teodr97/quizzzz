@@ -1,12 +1,18 @@
 package client.scenes;
 
 import commons.models.Game;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -17,6 +23,8 @@ public class MultiPlayer implements Initializable {
 
     private Game game;
     private MainCtrl mainCtrl;
+
+    private final Image reactionAngry = new Image("file:///D:/Projects/Git/repository-template/client/resources/images/reactLolg.png");
 
     @FXML
     private ImageView jokerHG;
@@ -48,7 +56,9 @@ public class MultiPlayer implements Initializable {
 
     @FXML
     private Text qNumber;
-    //
+
+    @FXML
+    private ListView<Text> listViewReactions;
 
     @Inject
     public MultiPlayer(MainCtrl mainCtrl) {
@@ -69,6 +79,7 @@ public class MultiPlayer implements Initializable {
             e.printStackTrace();
         }
          */
+        displayReaction("TEst", reactionAngry);
     }
 
     /**
@@ -80,5 +91,24 @@ public class MultiPlayer implements Initializable {
         mainCtrl.switchToSplash();
     }
 
+    public void displayReaction(String username, Image reaction) {
+        ImageView reactionImg = new ImageView(reaction);
+        Text usernameText = new Text(username);
+        AnchorPane panel = new AnchorPane();
 
+        usernameText.setX(400);
+        usernameText.setX(400);
+        panel.getChildren().add(reactionImg);
+        panel.getChildren().add(usernameText);
+        reactionImg.setFitHeight(122);
+        reactionImg.setFitWidth(122);
+        reactionImg.setX(300);
+        reactionImg.setY(300);
+        Scene scene = new Scene(panel);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.show();
+
+        listViewReactions.setItems(FXCollections.observableArrayList(new Text("Test"), new Text("TExt")));
+    }
 }

@@ -48,5 +48,6 @@
       <ImageView fx:id="quizImage" fitHeight="350.0" fitWidth="1129.0" layoutX="-6.0" layoutY="158.0" pickOnBounds="true">
             <Image url="@../../images/quizz.jpg" />
       </ImageView>
+      <Button layoutX="14.0" layoutY="741.0" mnemonicParsing="false" onAction="#switchToMultiPlayer" text="MultiplayerScreenTest" />
    </children>
 </AnchorPane>
