@@ -136,7 +136,7 @@ public class WaitingRoom implements Initializable {
     }
 
     public void startGame(){
-
+        this.mainCtrl.switchToMultiplayer();
     }
 
     public void leaveGame(){

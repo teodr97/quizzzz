@@ -1,17 +1,21 @@
 package client.Networking;
 
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.net.ConnectException;
 import java.net.Socket;
+import java.net.SocketException;
 
 import client.scenes.MainCtrl;
+import client.scenes.MultiPlayer;
 import commons.models.Message;
 import commons.models.MessageType;
+import javafx.scene.control.Alert;
 
 public class ClientStream {
     private MainCtrl mainCtrl;
+
+    private MultiPlayer multiplayer;
+
     private ClientListener clientListener;
 
     private String nickname;
@@ -21,9 +25,10 @@ public class ClientStream {
     private InputStream is;
     private ObjectInputStream input;
 
-    public ClientStream(MainCtrl mainCtrl, String address, int port, String nickname){
+    public ClientStream(MainCtrl mainCtrl, MultiPlayer multiplayer, String address, int port, String nickname){
         this.mainCtrl = mainCtrl;
         this.nickname = nickname;
+        this.multiplayer = multiplayer;
 
         this.clientListener = new ClientListener(address, port);
         this.clientListener.start();
@@ -62,14 +67,64 @@ public class ClientStream {
 
                         System.out.println("Client (" + this.getId() + "): received " + incomingMsg.toString());
                         switch(incomingMsg.getMsgType()){
-
+                            case GAME_WAITING:
                             
                         }
                     }
                 }
 
+            }catch(SocketException e) {
+                System.out.println("Socket exception");
+                if(e instanceof ConnectException)
+                {
+                    //do some controller shit
+                    System.out.println("connection failed");
+                }
+                else if(e.getMessage().equals("Connection reset"))
+                {
+                    System.out.println("Stream closed");
+                }
+                else e.printStackTrace();
+            } catch (IOException e) {
+                System.out.println("Stream closed");
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
             }
+
+
+        }
+
+
+    }
+
+    private void sendMessage(Message message)
+    {
+        try {
+            this.output.writeObject(message);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
+
+    public void sendAnswer(String content)
+    {
+        Message msg = new Message(MessageType.MY_ANSWER, this.nickname, content);
+
+        // send the message
+        this.sendMessage(msg);
+
+        // do something in controller
+
+    }
+
+
+    public void sendClose()
+    {
+        Message msg = new Message(MessageType.DISCONNECT, this.nickname, "");
+
+        // send disconnect message
+        this.sendMessage(msg);
+    }
+
 
 }

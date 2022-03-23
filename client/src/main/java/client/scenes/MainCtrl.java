@@ -3,6 +3,7 @@ package client.scenes;
 import client.MyFXML;
 import client.MyModule;
 import com.google.inject.Injector;
+import commons.models.Game;
 import commons.models.Player;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -34,13 +35,12 @@ public class MainCtrl {
     public static final String SERVER = "http://localhost:8080/";
     private static MyFXML myFXML;
     private Player player;
+    private Game game;
 
     private Stage primaryStage;
     private Stage stage;
     private Scene scene;
 
-    @FXML
-    private TextField username;
 
 
     public MainCtrl() {
