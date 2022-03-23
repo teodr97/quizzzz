@@ -4,7 +4,9 @@ import com.google.inject.Inject;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.text.Text;
 import org.glassfish.jersey.client.ClientConfig;
 
 import java.io.IOException;
@@ -20,6 +22,9 @@ public class WaitingRoom implements Initializable {
 
     private Username usernameCtrl;
 
+    @FXML
+    private Text waitingPlayers;
+
     @Inject
     public WaitingRoom(MainCtrl mainCtrl, Username usernameCtrl) {
         this.mainCtrl = mainCtrl;
@@ -28,8 +33,11 @@ public class WaitingRoom implements Initializable {
 
     //no real functionality yet
     @Override
-    public void initialize(URL location, ResourceBundle resources){
-
+    public void initialize(URL location, ResourceBundle resources) {
+        /* Not working properly yet Game game = GameStorage.getInstance().getGames().values().stream()
+                .filter(it -> it.getStatus().equals(WAITING))
+                .findFirst().orElse(game = new Game());
+        waitingPlayers.setText(game.getPlayers().size() + " players waiting");*/
     }
 
     /**
