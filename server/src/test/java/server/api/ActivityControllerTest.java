@@ -47,9 +47,9 @@ class ActivityControllerTest {
     void retrieveRandomActivitiesSet() {
         List<Activity> activityList = new LinkedList<>();
 
-        activityList.add(new Activity("Test", 1));
-        activityList.add(new Activity("Test", 1));
-        activityList.add(new Activity("Test", 1));
+        activityList.add(new Activity("Test", "Test", 1, "Test"));
+        activityList.add(new Activity("Test", "Test", 1, "Test"));
+        activityList.add(new Activity("Test", "Test", 1, "Test"));
         when(repositoryMock.findAll()).thenReturn(activityList);
         controller.retrieveRandomActivitiesSet();
         verify(repositoryMock).findAll();
@@ -60,7 +60,7 @@ class ActivityControllerTest {
      */
     @Test
     void getById() {
-        when(repositoryMock.findById(3)).thenReturn(Optional.of(new Activity("Test", 1)));
+        when(repositoryMock.findById(3)).thenReturn(Optional.of(new Activity("Test", "Test", 1, "Test")));
         controller.getById(3);
         verify(repositoryMock).findById(3);
     }
@@ -70,9 +70,24 @@ class ActivityControllerTest {
      */
     @Test
     void createActivity() {
-        Activity activity = new Activity("Test", 1);
+        Activity activity = new Activity("Test", "Test", 1, "Test");
 
         controller.createActivity(activity);
         verify(repositoryMock).save(activity);
+    }
+
+    /**
+     * Test deleting all activities in the database
+     */
+    @Test
+    void deleteAll(){
+        Activity activity = new Activity("Test", "Test", 1, "Test");
+        controller.createActivity(activity);
+        controller.createActivity(activity);
+        controller.createActivity(activity);
+
+        controller.deleteAll();
+        controller.getAllActivities();
+        verify(repositoryMock).findAll();
     }
 }
