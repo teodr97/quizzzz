@@ -15,6 +15,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import ch.qos.logback.core.net.server.ServerListener;
+import commons.models.Message;
 import commons.models.Player;
 import server.api.GameController;
 
@@ -62,6 +63,11 @@ public class ServerStream {
             try {
 
                 while (!exit) {
+                    //in the server listener runnable you must start a new threas
+                    //because accecpting a socket connection is blocking
+
+                    //forever while since the server can accept and infinite amount of
+                    //client socket connections
                     new Handler(this.listener.accept()).start();
                 }
 
@@ -80,13 +86,47 @@ public class ServerStream {
         }
     }
 
-    private class Handles extends Thread{
+    //when connection between server and client is stablished this is
+    //the code that will be executed
+    private class Handler extends Thread{
         private Socket socket;
         private InputStream is;
         private ObjectInputStream input;
         private OutputStream os;
         private ObjectOutputStream output;
-        
+
+        public Handler(Socket socket){
+            //we connect a "server socket" with a "client socket"
+            //the socket attribute is the server socket connected to the
+            //client socket in question
+            System.out.println("Server accepted connection");
+            this.socket = socket;
+        }
+
+        @Override
+        public void run(){
+            try{
+
+                //since this.socket refers to a server side socket
+                // we get the client out put but server input like so
+
+                this.is = this.socket.getInputStream();
+                this.input =new ObjectInputStream(this.is);
+                this.os = this.socket.getOutputStream();
+                this.output = new ObjectOutputStream(this.os);
+
+                while(this.socket.isConnected()){
+
+
+                    Message incomingMsg = (Message) this.input.readObject();
+                    if(incomingMsg != null){
+                        System.out.println("Server received"+incomingMsg.toString());
+                    }
+
+                }
+            }
+        }
+
     }
 
 
