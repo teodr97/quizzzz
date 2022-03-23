@@ -141,15 +141,18 @@ public class Activity {
 
     /**
      * Tests if an activity is equal to given object
-     * @param o: any object
+     * @param other: any object
      * @return Boolean value depending on if o == activity or not
      */
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Activity activity = (Activity) o;
-        return consumption_in_wh == activity.consumption_in_wh && Objects.equals(image_path, activity.image_path) && Objects.equals(title, activity.title) && Objects.equals(source, activity.source);
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
+        Activity activity = (Activity) other;
+        return consumption_in_wh == activity.consumption_in_wh &&
+                Objects.equals(image_path, activity.image_path) &&
+                Objects.equals(title, activity.title) &&
+                Objects.equals(source, activity.source);
     }
 
     /**

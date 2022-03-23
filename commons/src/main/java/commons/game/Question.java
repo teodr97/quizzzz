@@ -115,12 +115,12 @@ public class Question {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Question other = (Question) o;
-        return activityList.equals(other.getActivityList()) && question.equals(other.getQuestion()) &&
-                correctAnswer.equals(other.getCorrectAnswer());
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
+        Question question1 = (Question) other;
+        return activityList.equals(question1.getActivityList()) && question.equals(question1.getQuestion()) &&
+                correctAnswer.equals(question1.getCorrectAnswer());
     }
 
 }
