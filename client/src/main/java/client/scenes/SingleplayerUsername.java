@@ -60,8 +60,6 @@ public class SingleplayerUsername implements Initializable {
             missingUser.setText("please enter a username");
         }else {
             player = new Player(username.getText());
-            SinglePlayer s = new SinglePlayer();
-            s.setUsername(player.getNickname());
             mainCtrl.switchToSinglePlayer();
         }
     }

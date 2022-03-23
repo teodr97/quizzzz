@@ -2,7 +2,6 @@ package client.scenes;
 
 import client.utils.SingleplayerHighscoreHandler;
 import com.google.inject.Inject;
-import commons.models.Player;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -22,10 +21,10 @@ import java.util.ResourceBundle;
 public class PastGames implements Initializable {
 
     private MainCtrl mainCtrl;
-    private Player player;
 
     @FXML private TableView<LeaderboardEntry> leaderboard;
 
+    @FXML private TableColumn<LeaderboardEntry, String> colNickname;
     @FXML private TableColumn<LeaderboardEntry, String> colDate;
     @FXML private TableColumn<LeaderboardEntry, String> colPoints;
 
@@ -37,9 +36,9 @@ public class PastGames implements Initializable {
         this.mainCtrl = mainCtrl;
     }
 
-    //no real functionality yet
     @Override
     public void initialize(URL location, ResourceBundle resources){
+        colNickname.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().username));
         colDate.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().date));
         colPoints.setCellValueFactory(q -> new SimpleStringProperty(Integer.toString(q.getValue().points)));
 
@@ -58,14 +57,14 @@ public class PastGames implements Initializable {
             var entries = shh.getEntries();
             while (entries.hasNext()) {
                 var entry = entries.next();
-                entryBase.add(new LeaderboardEntry(player.getNickname(), entry.getKey(), entry.getValue()));
+                entryBase.add(new LeaderboardEntry(entry.nickname, entry.date, entry.points));
             }
 
             leaderboard.setItems(FXCollections.observableList(entryBase));
 
             if (shh.getAllTimeBest() != null) {
-                bestPoints.setText(shh.getAllTimeBest().getValue() + " Points");
-                bestDate.setText("Achieved " + shh.getAllTimeBest().getKey());
+                bestPoints.setText(shh.getAllTimeBest().points + " Points");
+                bestDate.setText("Achieved " + shh.getAllTimeBest().date);
             } else {
                 bestPoints.setText("");
                 bestDate.setText("No Games Have Been Played");
