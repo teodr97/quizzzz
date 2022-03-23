@@ -30,6 +30,7 @@ public class PastGames implements Initializable {
 
     @FXML private Text bestPoints;
     @FXML private Text bestDate;
+    @FXML private Text bestNickname;
 
     @Inject
     public PastGames(MainCtrl mainCtrl) {
@@ -65,9 +66,11 @@ public class PastGames implements Initializable {
             if (shh.getAllTimeBest() != null) {
                 bestPoints.setText(shh.getAllTimeBest().points + " Points");
                 bestDate.setText("Achieved " + shh.getAllTimeBest().date);
+                bestNickname.setText("by " + shh.getAllTimeBest().nickname);
             } else {
                 bestPoints.setText("");
                 bestDate.setText("No Games Have Been Played");
+                bestNickname.setText("");
             }
 
         } catch (FileNotFoundException | SingleplayerHighscoreHandler.IncorrectFileFormat e) {
