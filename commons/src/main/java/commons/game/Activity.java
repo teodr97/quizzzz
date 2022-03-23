@@ -11,9 +11,25 @@ public class Activity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int autoId; // PRIMARY KEY
+
+    /**
+     * the image path to locate the image
+     */
     private String image_path;
+
+    /**
+     * the actual name/description of the activity
+     */
     private String title;
-    private int consumption_in_wh;// The energy this activity draws
+
+    /**
+     * the consumption in watt hours of the activity
+     */
+    private long consumption_in_wh;// The energy this activity draws
+
+    /**
+     * the source website which the activity was gotten from
+     */
     private String source;
 
     /**
@@ -24,7 +40,7 @@ public class Activity {
      * @param consumption_in_wh
      * @param source
      */
-    public Activity(String image_path, String title, int consumption_in_wh, String source) {
+    public Activity(String image_path, String title, long consumption_in_wh, String source) {
         this.image_path = image_path;
         this.title = title;
         this.consumption_in_wh = consumption_in_wh;
@@ -67,7 +83,7 @@ public class Activity {
      * Sets the consumption_in_wh
      * @param consumption_in_wh
      */
-    public void setConsumption_in_wh(int consumption_in_wh) {
+    public void setConsumption_in_wh(long consumption_in_wh) {
         this.consumption_in_wh = consumption_in_wh;
     }
 
@@ -111,7 +127,7 @@ public class Activity {
      * gets the consumption_in_wh
      * @return int consumption_in_wh
      */
-    public int getConsumption_in_wh() {
+    public long getConsumption_in_wh() {
         return consumption_in_wh;
     }
 
