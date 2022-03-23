@@ -5,12 +5,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
 public class MultiPlayer implements Initializable {
@@ -57,18 +60,14 @@ public class MultiPlayer implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources){
-        /*
-        File j2x = new File("./client/src/main/resources/images/Joker2X.png");
-        File jHg = new File("./client/src/main/resources/images/JokerHG.png");
-        File jMb = new File("./client/src/main/resources/images/JokerMB.png");
-        try {
-            joker2X.setImage(new Image(j2x.getCanonicalPath()));
-            jokerHG.setImage(new Image(jHg.getCanonicalPath()));
-            jokerMB.setImage(new Image(jMb.getCanonicalPath()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-         */
+
+        Path hgPath = Paths.get("src", "main","resources","images","JokerHG.png");
+        Path twoxPath = Paths.get("src", "main","resources","images","Joker2X.png");
+        Path mbPath = Paths.get("src", "main","resources","images","JokerMB.png");
+
+        jokerHG.setImage(new Image(hgPath.toUri().toString()));
+        joker2X.setImage(new Image(twoxPath.toUri().toString()));
+        jokerMB.setImage(new Image(mbPath.toUri().toString()));
     }
 
     /**
