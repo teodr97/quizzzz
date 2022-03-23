@@ -31,6 +31,12 @@ public class GameController {
     private final List<Player> playerStore = new ArrayList<>();
 
 
+    /**
+     * @param player creaets a new game
+     * @return
+     * @throws NotFoundException
+     * @throws GameAlreadyExistsException
+     */
     //creates game
     @PostMapping("/create")
     public ResponseEntity<Game> create(@RequestBody Player player) throws NotFoundException, GameAlreadyExistsException {
@@ -82,6 +88,12 @@ public class GameController {
     //get the players in a long polling fashion
     //we keep the request open untill a new player connects in which case we
     //send the new array of all players
+
+    /**
+     * @param playerid takes the player id and ask the server if there is this player id in the a certain game
+     * @return
+     * @throws InterruptedException
+     */
     @GetMapping("/getPlayers/{id}")
     public ResponseEntity<List<String>> getPlayers(@PathVariable("id") String playerid) throws InterruptedException {
         int playeridint = parseInt(playerid);
@@ -97,7 +109,12 @@ public class GameController {
         return keepPolling(playerid);
     }
 
-    //keeppolling code
+
+    /**
+     * @param playerid if the server doesn't have that id for a player recursively request the server every second
+     * @return
+     * @throws InterruptedException
+     */
     private ResponseEntity<List<String>> keepPolling(String playerid) throws InterruptedException {
         Thread.sleep(1000);
         return getPlayers(playerid);
@@ -105,6 +122,9 @@ public class GameController {
     }
 
 
+    /**
+     * @return returns last stored player in the playerstore arraylist if it exists
+     */
     private Optional<Player> lastStoredPlayer() {
         return playerStore.isEmpty() ? Optional.empty() : Optional.of(playerStore.get(playerStore.size()-1));
     }
