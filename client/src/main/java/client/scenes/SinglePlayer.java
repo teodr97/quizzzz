@@ -31,6 +31,8 @@ public class SinglePlayer implements Initializable {
      */
     private StatSharerSingleplayer statSharer;
 
+    private SingleplayerUsername singleplayerUsername;
+
     private MainCtrl mainCtrl;
 
     @FXML
@@ -66,6 +68,9 @@ public class SinglePlayer implements Initializable {
     //game object to generate all questions and answers
     private Game game;
 
+    //player's username
+    private String username;
+
     //questionIterator to get the next question
     private Iterator<Question> questionIterator;
 
@@ -76,9 +81,23 @@ public class SinglePlayer implements Initializable {
     private AnimationTimer tm = new TimerMethod();
 
     @Inject
-    public SinglePlayer(StatSharerSingleplayer statSharer, MainCtrl mainCtrl) {
+    public SinglePlayer(StatSharerSingleplayer statSharer, SingleplayerUsername singleplayerUsername, MainCtrl mainCtrl) {
         this.mainCtrl = mainCtrl;
+        this.singleplayerUsername = singleplayerUsername;
         this.statSharer = statSharer;
+    }
+
+    public SinglePlayer(){
+
+    }
+
+    /**
+     * Setting up the username.
+     * @param username
+     */
+    public void setUsername(String username){
+        this.username = username;
+        System.out.println(this.username);
     }
 
     /**
@@ -104,6 +123,8 @@ public class SinglePlayer implements Initializable {
         displayQuestion(this.questionIterator.next());
 
         progress = 0;
+
+        this.setUsername(singleplayerUsername.getUsername());
 
         //start the timer
         tm.start();
@@ -300,7 +321,7 @@ public class SinglePlayer implements Initializable {
         SingleplayerHighscoreHandler shh = null;
         try {
             shh = SingleplayerHighscoreHandler.getHighscores();
-            shh.saveNewEntry(this.statSharer.points);
+            shh.saveNewEntry(this.username, this.statSharer.points);
         } catch (FileNotFoundException e) {
             System.out.println("Game could not be recorded.");
             e.printStackTrace();
