@@ -125,7 +125,7 @@ public class Admin implements Initializable {
     /**
      * helper method to convert json to activityList
      */
-    private List<Activity> jsonToActivity(ZipFile zf ,ZipEntry ze) throws IOException {
+    private List<Activity> jsonToActivity(ZipFile zf, ZipEntry ze) throws IOException {
         //converts input stream into activityList
         ObjectMapper om = new ObjectMapper();
         om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
