@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.Objects;
 
 @Entity
 public class Activity {
@@ -42,7 +43,19 @@ public class Activity {
 
     @Override
     public String toString() {
-        return activity;
+        return "{Activity: " + this.activity + " | Power: " + this.power + " | Id: " + this.id + "}";
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Activity activity1 = (Activity) o;
+        return power == activity1.power && activity.equals(activity1.activity);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(activity, power);
+    }
 }

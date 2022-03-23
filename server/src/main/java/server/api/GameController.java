@@ -1,15 +1,15 @@
 package server.api;
 
 import commons.game.exceptions.GameAlreadyExistsException;
+import commons.game.exceptions.InvalidGameException;
 import commons.game.exceptions.NicknameTakenException;
+import commons.game.exceptions.NotFoundException;
 import commons.models.Game;
 import commons.models.GamePlay;
 import commons.models.GameStorage;
 import commons.models.Player;
-import commons.game.exceptions.InvalidGameException;
-import commons.game.exceptions.NotFoundException;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,10 +17,15 @@ import java.util.Map;
 
 @RestController
 @Slf4j
-@AllArgsConstructor
 @RequestMapping("/game")
 public class GameController {
-    private final GameService gameService = new GameService();
+
+    private final GameService gameService;
+
+    @Autowired
+    public GameController(GameService gameService) {
+        this.gameService = gameService;
+    }
 
     /**
      * Creates a new game, started by a given player. That player will be the first one put into the game.

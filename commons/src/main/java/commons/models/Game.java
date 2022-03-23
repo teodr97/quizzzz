@@ -134,6 +134,12 @@ public class Game {
     }
 
     /**
+     * Sets the current question of this game.
+     * @param question the question to be set as current
+     */
+    public void setCurQuestion(Question question) { this.curQuestion = question; }
+
+    /**
      * Gets the list of players participating in the game.
      * @return
      */
@@ -192,10 +198,15 @@ public class Game {
     public void createQuestionList(QuestionGenerator questionGenerator){
         Question[] questions = new Question[this.totalRounds];
         Activity[] answers = new Activity[this.totalRounds];
+        System.out.println("=============QUESTIONS AND ANSWERS===============");
         for(int i = 0; i < totalRounds; i++){
             questions[i] = new Question(questionGenerator.retrieveActivitySetFromServer());
             answers[i] = questions[i].getCorrectAnswer();
+            System.out.println(questions[i].toString());
+            System.out.println("Answer: " + questions[i].getCorrectAnswer());
+            //System.out.println(questions[i].toString());
         }
+        System.out.println("=================================================");
         this.answers = answers;
         this.questions = questions;
     }

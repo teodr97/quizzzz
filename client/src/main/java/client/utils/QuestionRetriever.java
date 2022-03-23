@@ -14,7 +14,7 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 public class QuestionRetriever implements Game.QuestionGenerator {
 
-    private MainCtrl mainCtrl;
+    private final MainCtrl mainCtrl;
 
     @Inject
     public QuestionRetriever(MainCtrl mainCtrl) {
