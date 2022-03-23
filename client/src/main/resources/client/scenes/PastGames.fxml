@@ -37,7 +37,8 @@
       </Text>
       <TableView fx:id="leaderboard" layoutX="546.0" layoutY="291.0" prefHeight="297.0" prefWidth="387.0" style="-fx-background-color: transparent; -fx-text-fill: white;">
         <columns>
-          <TableColumn fx:id="colDate" editable="false" prefWidth="194.0" sortable="false" style="-fx-background-color: #08223e; -fx-text-fill: #ffffff; -fx-alignment: center;" text="Date" />
+          <TableColumn fx:id="colNickname" editable="false" prefWidth="194.0" sortable="false" style="-fx-background-color: #08223e; -fx-text-fill: #ffffff; -fx-alignment: center;" text="Nickname" />
+            <TableColumn fx:id="colDate" editable="false" prefWidth="194.0" sortable="false" style="-fx-background-color: #08223e; -fx-text-fill: #ffffff; -fx-alignment: center;" text="Date" />
           <TableColumn fx:id="colPoints" editable="false" prefWidth="192.0" style="-fx-background-color: #08223e; -fx-text-fill: white; -fx-alignment: center;" text="Total points" />
         </columns>
          <columnResizePolicy>

@@ -1,23 +1,27 @@
 package client.utils;
 
-import javafx.util.Pair;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Scanner;
 
 public class SingleplayerHighscoreHandler {
 
     private static final String PATH = "data\\pastgames.data";
 
-    private Pair<String, Integer> allTimeBest;
-    private LinkedList<Pair<String, Integer>> latestGames;
+    private LeaderboardEntry allTimeBest;
+    private LinkedList<LeaderboardEntry> latestGames;
 
-    private SingleplayerHighscoreHandler(Pair<String, Integer> allTimeBest) {
+    /**
+     * Private constructor.
+     * @param allTimeBest Used when generating an SHH that has at least one entry in it and therefore has a best entry.
+     */
+    private SingleplayerHighscoreHandler(LeaderboardEntry allTimeBest) {
         this.allTimeBest = allTimeBest;
         this.latestGames = new LinkedList<>();
     }
@@ -34,20 +38,17 @@ public class SingleplayerHighscoreHandler {
 
     /**
      * Gets the entry for the best past game.
-     * @return A pair representing the best past game. The key contains the date
-     * and the entry contains the points.
+     * @return A leaderboard entry of the best score.
      */
-    public Pair<String, Integer> getAllTimeBest() {
+    public LeaderboardEntry getAllTimeBest() {
         return this.allTimeBest;
     }
 
     /**
      * Gets the entries from all games previously played.
-     * @return An iterator containing all previously played game. The iterator
-     * gives key-value pairs, where the key is the date of the game and the value
-     * is how many poitns were earned.
+     * @return An iterator containing all previously played games.
      */
-    public Iterator<Pair<String, Integer>> getEntries() {
+    public Iterator<LeaderboardEntry> getEntries() {
         return this.latestGames.iterator();
     }
 
@@ -58,9 +59,19 @@ public class SingleplayerHighscoreHandler {
      * @throws IncorrectFileFormat If the file of the format was incorrect.
      */
     public static SingleplayerHighscoreHandler getHighscores() throws FileNotFoundException, IncorrectFileFormat {
+
+//        var path = Path.of("", "data", "pastgames.data").toString();
+//        var url = SingleplayerHighscoreHandler.class.getClassLoader().getResource(path);
+//        System.out.println("file:" + url.getPath())
+//        Path p = Paths.get("src","main", "resources", "data","pastgames.data");
+
+//         Gets the filepath to the local file. Will be changed.
         System.out.println("Default Path: " + new File("").getAbsolutePath());
         String absPath = new File("").getAbsolutePath();
         Scanner scanner = new Scanner(new File(absPath + "\\" + PATH));
+
+//        Scanner scanner = new Scanner(new File(p.toUri().toString()));
+
         // The file is empty, therefore no information has been recorded yet
         if (!scanner.hasNextLine()) {
             return noPreviousData();
@@ -68,35 +79,41 @@ public class SingleplayerHighscoreHandler {
 
         SingleplayerHighscoreHandler ret;
         String firstLine = scanner.nextLine();
+
+        // The file MUST start with "Best;"
+        // All game entries should have format <nickname>;<date>;<points>
         if (!firstLine.startsWith("Best;")) {
             throw new IncorrectFileFormat("The Past Games file should start with \"Best;\"");
         } else {
             String[] parts = firstLine.split(";");
-
+            if (parts.length != 4) throw new IncorrectFileFormat("The entry on line 1 should have four arguments separated by a ';'.");
             try {
-                int bestPoints = Integer.parseInt(parts[2]);
-                ret = new SingleplayerHighscoreHandler(new Pair<>(parts[1], bestPoints));
+                int bestPoints = Integer.parseInt(parts[3]);
+                ret = new SingleplayerHighscoreHandler(new LeaderboardEntry(parts[1], parts[2], bestPoints));
             } catch (NumberFormatException e) {
-                throw new IncorrectFileFormat("The entry on line 1 should have a number as the third argument.");
+                throw new IncorrectFileFormat("The entry on line 1 should have a number as the fourth argument.");
             }
 
         }
 
-        int fileLine = 2;
-        // adds the other entries, the dates should be in descending order
+        int fileLine = 2; // Used for the exception error message
+        // Adds the other entries, the dates should be in descending order
+        // All game entries should have format <nickname>;<date>;<points>
         while (scanner.hasNextLine()) {
             String[] parts = scanner.nextLine().split(";");
-            if (parts.length != 2) throw new IncorrectFileFormat("The entry on line " + fileLine + " should have two arguments separated by a ';'.");
+            if (parts.length != 3) throw new IncorrectFileFormat(
+                    "The entry on line " + fileLine + " should have three arguments separated by a ';'.");
             try {
-                int entryPoints = Integer.parseInt(parts[1]);
-                ret.latestGames.add(new Pair<>(parts[0],entryPoints));
+                int entryPoints = Integer.parseInt(parts[2]);
+                ret.latestGames.add(new LeaderboardEntry(parts[0], parts[1], entryPoints));
             } catch (NumberFormatException e) {
-                throw new IncorrectFileFormat("The entry on line " + fileLine + " should have a number as the second argument.");
+                throw new IncorrectFileFormat("The entry on line " + fileLine + " should have a number as the third argument.");
             }
             fileLine++;
         }
 
         try {
+            // immediately writes the updated SHH to the file
             ret.writeToFile();
         } catch (IOException e) {
             e.printStackTrace();
@@ -115,24 +132,25 @@ public class SingleplayerHighscoreHandler {
             fw.close();
             return;
         }
-        fw.write("Best;" + this.allTimeBest.getKey() + ";" + this.allTimeBest.getValue());
+        fw.write("Best;" + this.allTimeBest.nickname + ";" + this.allTimeBest.date + ";" + this.allTimeBest.points);
         for (var entry : this.latestGames) {
-            fw.write("\n" + entry.getKey() + ";" + entry.getValue());
+            fw.write("\n" + entry.nickname + ";" + entry.date + ";" + entry.points);
         }
         fw.close();
     }
 
     /**
      * Saves a new game entry to the SHH and also writes it to the local file.
+     * @param nickname The nickname of the player who got the score.
      * @param points How many points were earned in the game.
      */
-    public void saveNewEntry(int points) {
+    public void saveNewEntry(String nickname, int points) {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         String curDate = dtf.format(LocalDate.now());
-        var newEntry = new Pair<>(curDate, points);
+        var newEntry = new LeaderboardEntry(nickname, curDate, points);
         this.latestGames.addFirst(newEntry);
 
-        if (this.allTimeBest == null || this.allTimeBest.getValue() < newEntry.getValue()) {
+        if (this.allTimeBest == null || this.allTimeBest.points < newEntry.points) {
             this.allTimeBest = newEntry;
         }
         try {
@@ -145,6 +163,18 @@ public class SingleplayerHighscoreHandler {
     public static class IncorrectFileFormat extends RuntimeException{
         public IncorrectFileFormat(String message) {
             super(message);
+        }
+    }
+
+    public static class LeaderboardEntry {
+        public String nickname;
+        public String date;
+        public int points;
+
+        public LeaderboardEntry(String nickname, String date, int points) {
+            this.nickname = nickname;
+            this.date = date;
+            this.points = points;
         }
     }
 }
