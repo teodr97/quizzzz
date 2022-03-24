@@ -94,6 +94,7 @@ public class Game {
      */
     public Activity[] answers;
 
+
     public Game() {
         this.curRound = 1;
         this.totalRounds = 20;

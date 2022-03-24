@@ -1,7 +1,10 @@
 package commons.models;
 
+import commons.game.Emote;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Data
@@ -30,10 +33,13 @@ public class Player {
      */
     private double timeLeft = 1;
 
-
+    /**
+     * List of emotes that have been sent to the server but not sent back to all the players.
+     */
+    private List<Emote> pendingEmotes;
 
     public Player(){
-
+        this.pendingEmotes = new ArrayList<>();
     }
 
     /**
@@ -41,6 +47,7 @@ public class Player {
      * @param nickname The nickname of the player.
      */
     public Player(String nickname) {
+        this();
         this.nickname = nickname;
         this.points = 0;
     }
@@ -99,6 +106,31 @@ public class Player {
      */
     public void setTimeLeft(double timeLeft) {
         this.timeLeft = timeLeft;
+    }
+
+    /**
+     * Adds a new emote that was sent by a player recently.
+     * @param emote The emote sent.
+     */
+    public void addEmote(Emote emote) {
+        this.pendingEmotes.add(emote);
+    }
+
+    /**
+     * Gets all emotes that have been sent from other players to the backend but not received
+     * by the client.
+     * @return The list of emotes.
+     */
+    public List<Emote> getPendingEmotes() {
+        return this.pendingEmotes;
+    }
+
+    /**
+     * Resets the pending emotes for the player. Replaces the field with a new instances
+     * so it doesn't delete the old one.
+     */
+    public void resetPendingEmotes() {
+        this.pendingEmotes = new ArrayList<>();
     }
 
     /**

@@ -59,6 +59,7 @@ public class Username implements Initializable {
      * @param event
      */
     public void switchToWaitingRoom(ActionEvent event) {
+        //TODO Check if the nickname is empty or not.
         mainCtrl.setPlayer(new Player(username.getText()));
         Response response = ClientBuilder.newClient(new ClientConfig()) //
                 .target(mainCtrl.SERVER).path("/game/connect") //

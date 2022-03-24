@@ -64,7 +64,7 @@ public class GameService {
      * @throws NotFoundException
      */
     public Player leaveGame(Player player) throws NotFoundException{
-        Game game = GameStorage.getInstance().getGames().values().stream()
+        Game game = GameStorage.getGames().values().stream()
                 .filter(it -> it.contains(player.getNickname()))
                 .findFirst().orElseThrow(() -> new NotFoundException("No player with username, " + player.getNickname() + " in the game"));
         game.removePlayer(player);

@@ -178,7 +178,7 @@ class GameTest {
      */
     @Test
     void endGame() {
-        // TO DO
+        //TODO
     }
 
     /**

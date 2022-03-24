@@ -8,8 +8,8 @@ public class NotFoundException extends Exception{
     }
 
     /**
-     *
-     * @return
+     * Gets the message for the exception.
+     * @return The exception message.
      */
     public String getMessage(){
         return message;
