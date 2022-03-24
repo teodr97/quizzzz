@@ -1,6 +1,7 @@
 package client.scenes;
 
 import client.utils.QuestionRetriever;
+import client.utils.SingleplayerHighscoreHandler;
 import client.utils.StatSharerSingleplayer;
 import com.google.inject.Inject;
 import commons.game.Activity;
@@ -14,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.text.Text;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
@@ -28,6 +30,8 @@ public class SinglePlayer implements Initializable {
      * Here it is used to set the information.
      */
     private StatSharerSingleplayer statSharer;
+
+    private SingleplayerUsername singleplayerUsername;
 
     private MainCtrl mainCtrl;
 
@@ -64,6 +68,9 @@ public class SinglePlayer implements Initializable {
     //game object to generate all questions and answers
     private Game game;
 
+    //player's username
+    private String username;
+
     //questionIterator to get the next question
     private Iterator<Question> questionIterator;
 
@@ -74,9 +81,23 @@ public class SinglePlayer implements Initializable {
     private AnimationTimer tm = new TimerMethod();
 
     @Inject
-    public SinglePlayer(StatSharerSingleplayer statSharer, MainCtrl mainCtrl) {
+    public SinglePlayer(StatSharerSingleplayer statSharer, SingleplayerUsername singleplayerUsername, MainCtrl mainCtrl) {
         this.mainCtrl = mainCtrl;
+        this.singleplayerUsername = singleplayerUsername;
         this.statSharer = statSharer;
+    }
+
+    public SinglePlayer(){
+
+    }
+
+    /**
+     * Setting up the username.
+     * @param username
+     */
+    public void setUsername(String username){
+        this.username = username;
+        System.out.println(this.username);
     }
 
     /**
@@ -102,6 +123,8 @@ public class SinglePlayer implements Initializable {
         displayQuestion(this.questionIterator.next());
 
         progress = 0;
+
+        this.setUsername(singleplayerUsername.getUsername());
 
         //start the timer
         tm.start();
@@ -287,7 +310,21 @@ public class SinglePlayer implements Initializable {
     private void loadEndscreen()  {
         tm.stop();
         this.statSharer.points = this.pointsInt;
-
         mainCtrl.switchToEndscreenSingleplayer();
+        logGame();
+    }
+
+    /**
+     * Logs the current game and writes it to a local file.
+     */
+    private void logGame() {
+        SingleplayerHighscoreHandler shh = null;
+        try {
+            shh = SingleplayerHighscoreHandler.getHighscores();
+            shh.saveNewEntry(this.username, this.statSharer.points);
+        } catch (FileNotFoundException e) {
+            System.out.println("Game could not be recorded.");
+            e.printStackTrace();
+        }
     }
 }

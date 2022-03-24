@@ -45,12 +45,12 @@ public class Splash implements Initializable {
     }
 
     /**
-     * Switches the scene to Single Player.
+     * Switches the scene to Single Player Username.
      * @param event
      * @throws IOException
      */
-    public void switchToSinglePlayer(ActionEvent event) throws IOException {
-        mainCtrl.switchToSinglePlayer();
+    public void switchToSingleplayerUsername(ActionEvent event) throws IOException {
+        mainCtrl.switchToSingleplayerUsername();
     }
 
     /**

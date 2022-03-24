@@ -52,5 +52,10 @@
             <Font size="18.0" />
          </font>
       </Text>
+        <Text fx:id="missingUser" fill="RED" layoutX="450.0" layoutY="339.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER">
+            <font>
+                <Font name="Arial" size="18.0" />
+            </font>
+        </Text>
     </children>
 </AnchorPane>
