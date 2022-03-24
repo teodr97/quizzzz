@@ -1,5 +1,7 @@
 package client.scenes;
 
+import commons.models.Game;
+import commons.models.GameStorage;
 import commons.models.Player;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
@@ -8,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 import org.glassfish.jersey.client.ClientConfig;
 
 import javax.inject.Inject;
@@ -24,6 +27,9 @@ public class Username implements Initializable {
 
     @FXML
     private TextField username;
+
+    @FXML
+    private Text missingUser;
 
     @Inject
     public Username(MainCtrl mainCtrl) {
@@ -59,15 +65,35 @@ public class Username implements Initializable {
      * @param event
      */
     public void switchToWaitingRoom(ActionEvent event) {
-        mainCtrl.setPlayer(new Player(username.getText()));
-        Response response = ClientBuilder.newClient(new ClientConfig()) //
-                .target(mainCtrl.SERVER).path("/game/connect") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .post(Entity.entity(mainCtrl.getPlayer(), APPLICATION_JSON));
-        String responsestring = response.readEntity(String.class);
-        System.out.println(responsestring);
-        mainCtrl.switchToWaitingRoom();
+        if(username.getText() == null || username.getText().equals("")){
+            missingUser.setText("please enter a username");
+        }else if(usernameTaken(username.getText())){
+            missingUser.setText("username already taken");
+        }
+        else{
+            mainCtrl.setPlayer(new Player(username.getText()));
+            Response response = ClientBuilder.newClient(new ClientConfig()) //
+                    .target(mainCtrl.SERVER).path("/game/connect") //
+                    .request(APPLICATION_JSON) //
+                    .accept(APPLICATION_JSON) //
+                    .post(Entity.entity(mainCtrl.getPlayer(), APPLICATION_JSON));
+            String responsestring = response.readEntity(String.class);
+            System.out.println(responsestring);
+            mainCtrl.switchToWaitingRoom();
+        }
+    }
+
+    /**
+     * Checks whether the username is already used by other player.
+     * @param username
+     * @return true or false
+     */
+    public boolean usernameTaken(String username){
+        Game game = GameStorage.getInstance().getGames().values().stream()
+                .filter(it -> it.contains(username))
+                .findAny().orElse(null);
+        if(game != null) return true;
+        return false;
     }
 
     /**
