@@ -54,6 +54,15 @@ public class Splash implements Initializable {
     }
 
     /**
+     * Switches the scene to the Multiplayer game screen. FOR DEBUG PURPOSES ONLY
+     * @param event
+     * @throws IOException
+     */
+    public void switchToMultiPlayer(ActionEvent event) throws IOException {
+        mainCtrl.switchToMultiplayer(); //FOR DEBUG ONLY
+    }
+
+    /**
      * Switches the scene to Username.
      * @param event
      * @throws IOException
