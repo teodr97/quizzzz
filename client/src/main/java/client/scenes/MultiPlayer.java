@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.utils.GuiUtils;
 import commons.models.Game;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -7,7 +8,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.scene.image.Image;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class MultiPlayer implements Initializable {
@@ -25,41 +27,34 @@ public class MultiPlayer implements Initializable {
     private Game game;
     private MainCtrl mainCtrl;
 
-    private final Image reactionAngry = new Image("file:///D:/Projects/Git/repository-template/client/resources/images/reactLol.png");
+    private final Image reactionAngry = new Image(Paths.get("src", "main","resources","images","reactAngry.png").toUri().toString());
+    private final Image reactionLol = new Image(Paths.get("src", "main","resources","images","reactLol.png").toUri().toString());
+    private final Image reactionClap = new Image(Paths.get("src", "main","resources","images","reactClap.png").toUri().toString());
+    private final Image reactionCool = new Image(Paths.get("src", "main","resources","images","reactCool.png").toUri().toString());
+    private final Image reactionSweaty = new Image(Paths.get("src", "main","resources","images","reactSweaty.png").toUri().toString());
 
-    @FXML
-    private ImageView jokerHG;
+    @FXML private ImageView jokerHG;
+    @FXML private ImageView joker2X;
+    @FXML private ImageView jokerMB;
+    @FXML private ImageView imgBttnReactLol;
+    @FXML private ImageView imgBttnReactAngry;
+    @FXML private ImageView imgBttnReactCool;
+    @FXML private ImageView imgBttnReactClap;
+    @FXML private ImageView imgBttnReactSweaty;
 
-    @FXML
-    private ImageView joker2X;
+    @FXML private Button answerA;
+    @FXML private Button answerB;
+    @FXML private Button answerC;
 
-    @FXML
-    private ImageView jokerMB;
+    @FXML private Text prompt;
+    @FXML private Text userpoint;
 
-    @FXML
-    private Button answerA;
-
-    @FXML
-    private Button answerB;
-
-    @FXML
-    private Button answerC;
-
-    @FXML
-    private Text prompt;
-
-    @FXML
-    private Text userpoint;
     private int pointsInt = 0;
 
-    @FXML
-    private Text questionField;
+    @FXML private Text questionField;
+    @FXML private Text qNumber;
 
-    @FXML
-    private Text qNumber;
-
-    @FXML
-    private ListView<AnchorPane> listViewReactions;
+    @FXML private ListView<AnchorPane> listViewReactions;
 
     @Inject
     public MultiPlayer(MainCtrl mainCtrl) {
@@ -76,7 +71,11 @@ public class MultiPlayer implements Initializable {
         jokerHG.setImage(new Image(hgPath.toUri().toString()));
         joker2X.setImage(new Image(twoxPath.toUri().toString()));
         jokerMB.setImage(new Image(mbPath.toUri().toString()));
-        displayReaction("TEst", reactionAngry);
+        imgBttnReactAngry.setImage(reactionAngry);
+        imgBttnReactClap.setImage(reactionClap);
+        imgBttnReactCool.setImage(reactionCool);
+        imgBttnReactSweaty.setImage(reactionSweaty);
+        imgBttnReactLol.setImage(reactionLol);
     }
 
     /**
@@ -88,20 +87,24 @@ public class MultiPlayer implements Initializable {
         mainCtrl.switchToSplash();
     }
 
+    public void displayReactionLol() { displayReaction("Test", reactionLol); }
+
+    public void displayReactionAngry() { displayReaction("Test", reactionAngry); }
+
+    public void displayReactionClap() { displayReaction("Test", reactionClap); }
+
+    public void displayReactionCool() { displayReaction("Test", reactionCool); }
+
+    public void displayReactionSweaty() { displayReaction("Test", reactionSweaty); }
+
     public void displayReaction(String username, Image reaction) {
-        ImageView reactionImg = new ImageView(reaction);
-        Text usernameText = new Text(username);
-        AnchorPane panel = new AnchorPane();
+        List<AnchorPane> reactionList = new LinkedList<>(listViewReactions.getItems());
+        GuiUtils.TimedReaction newReaction = GuiUtils.createNewReaction(username, reaction);
 
-        //usernameText.setX(400);
-        usernameText.setY(30);
-        panel.getChildren().add(reactionImg);
-        panel.getChildren().add(usernameText);
-        reactionImg.setFitHeight(40);
-        reactionImg.setFitWidth(40);
-        reactionImg.setX(175);
-        reactionImg.setY(5);
-
-        listViewReactions.setItems(FXCollections.observableArrayList(panel));
+        reactionList.add(0, newReaction.getAnchorPane());
+        if (reactionList.size() > 8) reactionList.remove(reactionList.size() - 1);
+        listViewReactions.setItems(FXCollections.observableArrayList(reactionList));
+        listViewReactions.setStyle("-fx-background-color: #000000");
+        newReaction.start();
     }
 }
