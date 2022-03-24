@@ -12,12 +12,18 @@ import javafx.scene.text.Text;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
+import org.springframework.messaging.simp.stomp.StompFrameHandler;
+import org.springframework.messaging.simp.stomp.StompHeaders;
+import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandler;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
+import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.socket.client.WebSocketClient;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
@@ -62,6 +68,9 @@ public class MultiPlayer implements Initializable {
     private Text qNumber;
     //
 
+
+    private WebSocketStompClient stompClient;
+
     @Inject
     public MultiPlayer(MainCtrl mainCtrl) {
         this.mainCtrl = mainCtrl;
@@ -86,17 +95,27 @@ public class MultiPlayer implements Initializable {
             public void run() {
                 // code goes here.
                 WebSocketClient webSocketClient = new StandardWebSocketClient();
-                WebSocketStompClient stompClient = new WebSocketStompClient(webSocketClient);
+                stompClient = new WebSocketStompClient(webSocketClient);
                 stompClient.setMessageConverter(new MappingJackson2MessageConverter());
 
                 String url = "ws://localhost:8080/hello";
                 StompSessionHandler sessionHandler = new MySessionHandler();
-                stompClient.connect(url, sessionHandler);
+                ListenableFuture<StompSession> f = stompClient.connect(url, sessionHandler);
 
-                new Scanner(System.in).nextLine(); //Don't close immediately.
+                try{
+                    StompSession sessie = f.get();
+                    subscribe(sessie);
+
+                }catch(Exception e){
+                    System.out.print("se");
+                }
+
+
 
             }
         }).start();
+
+
 
 
     }
@@ -110,5 +129,19 @@ public class MultiPlayer implements Initializable {
         mainCtrl.switchToSplash();
     }
 
+    public void subscribe(StompSession sessie){
+        sessie.subscribe("/app/topic/Greetings", new StompFrameHandler() {
 
+            public Type getPayloadType(StompHeaders stompHeaders) {
+                return byte[].class;
+            }
+
+            public void handleFrame(StompHeaders stompHeaders, Object o) {
+                System.out.println("Received greeting " + new String((byte[]) o));
+            }
+        });
+    }
 }
+
+
+
