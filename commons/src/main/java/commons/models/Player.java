@@ -2,6 +2,7 @@ package commons.models;
 
 import lombok.Data;
 
+import java.net.InetAddress;
 import java.util.Objects;
 
 @Data
@@ -33,6 +34,9 @@ public class Player {
     //this is  a temporary field will be changed when we generalized
     private int waitingroomid;
 
+    //ip address
+    private InetAddress address;
+
 
 
     public Player(){
@@ -45,6 +49,17 @@ public class Player {
      */
     public Player(String nickname) {
         this.nickname = nickname;
+        this.points = 0;
+    }
+
+    /**
+     * Player Constructor.
+     * @param nickname The nickname of the player.
+     * @param address ip address of the player
+     */
+    public Player(String nickname, InetAddress address) {
+        this.nickname = nickname;
+        this.address = address;
         this.points = 0;
     }
 

@@ -56,6 +56,10 @@ public class WaitingRoom implements Initializable {
 
     private Scene overview;
 
+    private Thread t1;
+
+    private boolean dontstop;
+
     @FXML
     private ListView lobby;
 
@@ -68,6 +72,7 @@ public class WaitingRoom implements Initializable {
     public WaitingRoom(ServerUtils server, MainCtrl mainCtrl) throws InterruptedException {
         this.server = server;
         this.mainCtrl = mainCtrl;
+        this.dontstop = true;
 
         this.players = new Text();
     }
@@ -75,14 +80,15 @@ public class WaitingRoom implements Initializable {
     //no real functionality yet
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        new Thread(new Runnable() {
+        this.t1 = new Thread(new Runnable() {
             @Override
             public void run() {
                 // code goes here.
                 longpollUpdateLobby();
 
             }
-        }).start();
+        });
+        t1.start();
     }
 
     /**
@@ -118,7 +124,7 @@ public class WaitingRoom implements Initializable {
         players.setText("connected players: " + playersstring.toString());
 
         System.out.println(playersstring.toString());
-        while(playersstring.size()>=1){
+        while(playersstring.size()>=1 && dontstop){
             playersResponse = ClientBuilder.newClient(new ClientConfig()) //
                     .target(SERVER).path("/game/getPlayers/0") //
                     .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.TRUE)//
@@ -136,6 +142,8 @@ public class WaitingRoom implements Initializable {
     }
 
     public void startGame(){
+        //stop the lobby spamming thread
+        this.dontstop = false;
         this.mainCtrl.switchToMultiplayer();
     }
 
