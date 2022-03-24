@@ -9,9 +9,7 @@ import commons.models.GamePlay;
 import commons.models.GameStorage;
 import commons.models.Player;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +29,12 @@ public class GameController {
     private final List<Player> playerStore = new ArrayList<>();
 
 
+    /**
+     * @param player create a game and add player
+     * @return
+     * @throws NotFoundException
+     * @throws GameAlreadyExistsException
+     */
     //creates game
     @PostMapping("/create")
     public ResponseEntity<Game> create(@RequestBody Player player) throws NotFoundException, GameAlreadyExistsException {
@@ -78,7 +82,12 @@ public class GameController {
     public ResponseEntity<Player> leave(@RequestBody Player player) throws NotFoundException{
         return ResponseEntity.ok(gameService.leaveGame(player));
     }
-    
+
+    /**
+     * @param playerid integer wich represent theidi of a  player
+     * @return the player with id playerid
+     * @throws InterruptedException
+     */
     //get the players in a long polling fashion
     //we keep the request open untill a new player connects in which case we
     //send the new array of all players
@@ -97,6 +106,11 @@ public class GameController {
         return keepPolling(playerid);
     }
 
+    /**
+     * @param playerid Keepolling the server with the above request
+     * @return
+     * @throws InterruptedException
+     */
     //keeppolling code
     private ResponseEntity<List<String>> keepPolling(String playerid) throws InterruptedException {
         Thread.sleep(1000);
@@ -105,6 +119,9 @@ public class GameController {
     }
 
 
+    /**
+     * @return the lastplayer stored if it exists
+     */
     private Optional<Player> lastStoredPlayer() {
         return playerStore.isEmpty() ? Optional.empty() : Optional.of(playerStore.get(playerStore.size()-1));
     }
