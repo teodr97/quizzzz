@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ListView?>
@@ -97,13 +96,63 @@
       </ImageView>
       <ImageView fx:id="jokerMB" fitHeight="150.0" fitWidth="238.0" layoutX="103.0" layoutY="553.0" pickOnBounds="true" preserveRatio="true" rotate="135.0">
          <image>
-            <Image url="@../../images/JokerMB.png" backgroundLoading="True" />
+            <Image backgroundLoading="True" url="@../../images/JokerMB.png" />
          </image>
       </ImageView>
-      <ListView fx:id="chatList" layoutX="884.0" layoutY="261.0" prefHeight="378.0" prefWidth="200.0">
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-      </ListView>
+      <ListView fx:id="listViewReactions" focusTraversable="false" layoutX="821.0" layoutY="230.0" pickOnBounds="false" prefHeight="426.0" prefWidth="250.0" />
+      <AnchorPane layoutX="594.0" layoutY="616.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="200.0">
+         <children>
+            <Text fill="WHITE" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="&lt;Username&gt;">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Text>
+            <ImageView fitHeight="40.0" fitWidth="40.0" layoutX="160.0" pickOnBounds="true" preserveRatio="true" />
+         </children>
+      </AnchorPane>
+      <Button fx:id="bttnReactLol" layoutX="1060.0" layoutY="230.0" mnemonicParsing="false" onAction="#displayReactionLol" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: transparent;">
+         <graphic>
+            <ImageView fx:id="imgBttnReactLol" fitHeight="40.0" fitWidth="40.0" layoutX="1070.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../images/reactLol.png" />
+               </image>
+            </ImageView>
+         </graphic></Button>
+      <Button fx:id="bttnReactAngry" layoutX="1060.0" layoutY="270.0" mnemonicParsing="false" onAction="#displayReactionAngry" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: transparent;">
+         <graphic>
+            <ImageView fx:id="imgBttnReactAngry" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../images/reactAngry.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button fx:id="bttnReactClap" layoutX="1060.0" layoutY="310.0" mnemonicParsing="false" onAction="#displayReactionClap" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: transparent;">
+         <graphic>
+            <ImageView fx:id="imgBttnReactClap" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../images/reactClap.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button fx:id="bttnReactCool" layoutX="1060.0" layoutY="350.0" mnemonicParsing="false" onAction="#displayReactionCool" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: transparent;">
+         <graphic>
+            <ImageView fx:id="imgBttnReactCool" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../images/reactCool.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button fx:id="bttnReactSweaty" layoutX="1060.0" layoutY="390.0" mnemonicParsing="false" onAction="#displayReactionSweaty" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: transparent;">
+         <graphic>
+            <ImageView fx:id="imgBttnReactSweaty" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../images/reactSweaty.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
     </children>
 </AnchorPane>

@@ -39,5 +39,6 @@ public class MyModule implements Module {
         binder.bind(QuestionRetriever.class).in(Scopes.SINGLETON);
         binder.bind(WaitingRoom.class).in(Scopes.SINGLETON);
         binder.bind(SingleplayerUsername.class).in(Scopes.SINGLETON);
+        binder.bind(MultiPlayer.class).in(Scopes.SINGLETON);
     }
 }
