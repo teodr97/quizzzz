@@ -33,11 +33,11 @@
       </Button>
       <TableView fx:id="tableActivity" layoutX="51.0" layoutY="212.0" prefHeight="358.0" prefWidth="690.0">
         <columns>
-          <TableColumn minWidth="0.0" prefWidth="81.60000228881836" text="AutoId" />
-            <TableColumn prefWidth="233.59999084472656" text="Title" />
-            <TableColumn minWidth="0.0" prefWidth="208.800048828125" text="Consumption_in_wh" />
-            <TableColumn prefWidth="81.5999755859375" text="Source" />
-            <TableColumn prefWidth="80.79998779296875" text="Image_path" />
+          <TableColumn fx:id="colAutoId" minWidth="0.0" prefWidth="81.60000228881836" text="AutoId" />
+            <TableColumn fx:id="colTitle" prefWidth="233.59999084472656" text="Title" />
+            <TableColumn fx:id="colConsumption" minWidth="0.0" prefWidth="208.800048828125" text="Consumption_in_wh" />
+            <TableColumn fx:id="colSource" prefWidth="81.5999755859375" text="Source" />
+            <TableColumn fx:id="colImage" prefWidth="80.79998779296875" text="Image_path" />
         </columns>
       </TableView>
    </children>
