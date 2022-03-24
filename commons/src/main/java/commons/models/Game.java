@@ -199,11 +199,15 @@ public class Game {
     public void createQuestionList(QuestionGenerator questionGenerator){
         Question[] questions = new Question[this.totalRounds];
         Activity[] answers = new Activity[this.totalRounds];
+        System.out.println("=============QUESTIONS AND ANSWERS===============");
         for(int i = 0; i < totalRounds; i++){
             questions[i] = new Question(questionGenerator.retrieveActivitySetFromServer());
             answers[i] = questions[i].getCorrectAnswer();
             System.out.println(questions[i].toString());
+            System.out.println("Answer: " + questions[i].getCorrectAnswer());
+            //System.out.println(questions[i].toString());
         }
+        System.out.println("=================================================");
         this.answers = answers;
         this.questions = questions;
     }

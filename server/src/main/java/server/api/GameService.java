@@ -80,7 +80,7 @@ public class GameService {
     public Game startGame() throws NotFoundException{
         Game game = GameStorage.getInstance().getGames().values().stream()
                 .filter(it -> it.getStatus().equals(WAITING))
-                .findFirst().orElseThrow(() -> new NotFoundException("No waiting room found!"));
+                .findAny().orElseThrow(() -> new NotFoundException("No waiting room found!"));
         game.setStatus(ONGOING);
         GameStorage.getInstance().setGame(game);
         return game;
