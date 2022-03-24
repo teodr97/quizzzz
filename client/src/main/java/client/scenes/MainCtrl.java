@@ -96,6 +96,14 @@ public class MainCtrl {
     }
 
     /**
+     * Switches the scene to the Single Player username scene where the player can enter their username.
+     */
+    public void switchToSingleplayerUsername() {
+        var overview = myFXML.load(SingleplayerUsername.class, "client", "scenes", "SingleplayerUsername.fxml");
+        setAndShowScenes(new Scene(overview.getValue()));
+    }
+
+    /**
      * Switches the scene to the Single Player scene that also starts a new Single Player game.
      */
     public void switchToSinglePlayer() {
