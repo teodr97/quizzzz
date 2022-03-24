@@ -5,14 +5,12 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -24,7 +22,7 @@ public class MultiPlayer implements Initializable {
     private Game game;
     private MainCtrl mainCtrl;
 
-    private final Image reactionAngry = new Image("file:///D:/Projects/Git/repository-template/client/resources/images/reactLolg.png");
+    private final Image reactionAngry = new Image("file:///D:/Projects/Git/repository-template/client/resources/images/reactLol.png");
 
     @FXML
     private ImageView jokerHG;
@@ -58,7 +56,7 @@ public class MultiPlayer implements Initializable {
     private Text qNumber;
 
     @FXML
-    private ListView<Text> listViewReactions;
+    private ListView<AnchorPane> listViewReactions;
 
     @Inject
     public MultiPlayer(MainCtrl mainCtrl) {
@@ -96,19 +94,15 @@ public class MultiPlayer implements Initializable {
         Text usernameText = new Text(username);
         AnchorPane panel = new AnchorPane();
 
-        usernameText.setX(400);
-        usernameText.setX(400);
+        //usernameText.setX(400);
+        usernameText.setY(30);
         panel.getChildren().add(reactionImg);
         panel.getChildren().add(usernameText);
-        reactionImg.setFitHeight(122);
-        reactionImg.setFitWidth(122);
-        reactionImg.setX(300);
-        reactionImg.setY(300);
-        Scene scene = new Scene(panel);
-        Stage stage = new Stage();
-        stage.setScene(scene);
-        stage.show();
+        reactionImg.setFitHeight(40);
+        reactionImg.setFitWidth(40);
+        reactionImg.setX(175);
+        reactionImg.setY(5);
 
-        listViewReactions.setItems(FXCollections.observableArrayList(new Text("Test"), new Text("TExt")));
+        listViewReactions.setItems(FXCollections.observableArrayList(panel));
     }
 }
