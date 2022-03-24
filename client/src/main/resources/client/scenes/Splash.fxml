@@ -22,7 +22,7 @@
             <Font name="Arial Bold" size="72.0" />
          </font>
       </Text>
-      <Button layoutX="466.0" layoutY="533.0" mnemonicParsing="false" onAction="#switchToSinglePlayer" prefHeight="74.0" prefWidth="224.0" style="-fx-background-color: #0249bd;" styleClass="buttons" text="Play Singleplayer" textAlignment="CENTER" textFill="WHITE">
+      <Button layoutX="466.0" layoutY="533.0" mnemonicParsing="false" onAction="#switchToSingleplayerUsername" prefHeight="74.0" prefWidth="224.0" style="-fx-background-color: #0249bd;" styleClass="buttons" text="Play Singleplayer" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="24.0" />
          </font>
