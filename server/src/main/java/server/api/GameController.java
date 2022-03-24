@@ -10,6 +10,7 @@ import commons.models.GameStorage;
 import commons.models.Player;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,9 +26,13 @@ import static java.lang.Integer.parseInt;
 @Slf4j
 @RequestMapping("/game")
 public class GameController {
-    private final GameService gameService = new GameService();
+    private final GameService gameService;
     private final List<Player> playerStore = new ArrayList<>();
 
+    @Autowired
+    public GameController(GameService gameService){
+        this.gameService = gameService;
+    }
 
     /**
      * @param player create a game and add player
