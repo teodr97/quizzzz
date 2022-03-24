@@ -87,24 +87,58 @@ public class MultiPlayer implements Initializable {
         mainCtrl.switchToSplash();
     }
 
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // THE USERNAME PASSED TO EACH OF THE BUTTON FUNCTIONS SHOULD BE
+    // REPLACED WITH THE ACTUAL USERNAME OF THE LOCAl PLAYER! THE
+    // USERNAME PARAMETER IS JUST A PLACEHOLDER.
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    /**
+     * Used by the button for displaying a laugh reaction on the game screen.
+     */
     public void displayReactionLol() { displayReaction("Test", reactionLol); }
 
+    /**
+     * Used by the button for displaying an angry reaction on the game screen.
+     */
     public void displayReactionAngry() { displayReaction("Test", reactionAngry); }
 
+    /**
+     * Used by the button for displaying a clapping reaction on the game screen.
+     */
     public void displayReactionClap() { displayReaction("Test", reactionClap); }
 
+    /**
+     * Used by the button for displaying a "cool" reaction on the game screen.
+     */
     public void displayReactionCool() { displayReaction("Test", reactionCool); }
 
+    /**
+     * Used by the button for displaying a "sweaty" reaction on the game screen.
+     */
     public void displayReactionSweaty() { displayReaction("Test", reactionSweaty); }
 
+    /**
+     * Displays a new reaction on the list to the right of the screen while also starting
+     * the reaction's timer. Each reaction disappears either 3 seconds after its creation,
+     * or if more new reactions have to be added to the list. This method should be used
+     * for displaying reactions sent by other players in the game to every client.
+     * @param username the username associated with the player sending the reaction
+     * @param reaction the reaction sent by the player
+     */
     public void displayReaction(String username, Image reaction) {
+        // The reactions currently in the list.
         List<AnchorPane> reactionList = new LinkedList<>(listViewReactions.getItems());
+        // Making a new reaction with given username and reaction image.
         GuiUtils.TimedReaction newReaction = GuiUtils.createNewReaction(username, reaction);
 
         reactionList.add(0, newReaction.getAnchorPane());
+        // If there are more than 8 reactions after adding the newest one, remove the oldest one from the list.
         if (reactionList.size() > 8) reactionList.remove(reactionList.size() - 1);
+        // Update the list.
         listViewReactions.setItems(FXCollections.observableArrayList(reactionList));
-        listViewReactions.setStyle("-fx-background-color: #000000");
+        //listViewReactions.setStyle("-fx-background-color: #000000");
+        // Start the display timer for the newly added reaction.
         newReaction.start();
     }
 }
