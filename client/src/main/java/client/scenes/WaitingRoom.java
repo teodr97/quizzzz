@@ -3,8 +3,7 @@ package client.scenes;
 import client.MyFXML;
 import client.MyModule;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+
 import javafx.fxml.FXML;
 
 
@@ -13,20 +12,20 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import jakarta.ws.rs.client.ClientBuilder;
 
-import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.core.Response;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 
 import jakarta.ws.rs.core.Response;
+import javafx.event.ActionEvent;
+
+
+
 
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+
 import javafx.scene.control.ListView;
 
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
+
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 
@@ -35,9 +34,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import java.net.URL;
-
-import java.util.List;
 import java.util.ResourceBundle;
 
 import static com.google.inject.Guice.createInjector;
@@ -63,7 +59,11 @@ public class WaitingRoom implements Initializable {
     private Text players;
 
 
-
+    /**Construtor of the waiting room scene class controller
+     * @param server has the server utilities
+     * @param mainCtrl the maincntrl of the application
+     * @throws InterruptedException
+     */
     @Inject
     public WaitingRoom(ServerUtils server, MainCtrl mainCtrl) throws InterruptedException {
         this.server = server;
@@ -73,6 +73,11 @@ public class WaitingRoom implements Initializable {
     }
 
     //no real functionality yet
+
+    /**
+     * @param location url we use to acces scene
+     * @param resources resources used for scene
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         new Thread(new Runnable() {
@@ -100,6 +105,9 @@ public class WaitingRoom implements Initializable {
 //        mainCtrl.switchToSplash();
     }
 
+    /**
+     * Keeps pinning the server for a new player list
+     */
     //recursive function that keeps requesting the server for new data
     //in a longpolling fashion
     public void longpollUpdateLobby(){
@@ -135,10 +143,18 @@ public class WaitingRoom implements Initializable {
 
     }
 
+
+    /**
+     * Will start the websocket connection and thus the game
+     */
     public void startGame(){
 
     }
 
+
+    /**
+     * makes you leave the game.
+     */
     public void leaveGame(){
         return;
     }

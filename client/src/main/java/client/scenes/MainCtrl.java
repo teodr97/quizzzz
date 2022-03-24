@@ -1,29 +1,28 @@
 package client.scenes;
 
 import client.MyFXML;
-import client.MyModule;
-import com.google.inject.Injector;
+
 import commons.models.Player;
-import jakarta.ws.rs.client.Client;
+
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.core.Response;
+
 import javafx.fxml.FXML;
 
-import javafx.scene.Node;
+
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ProgressBar;
+
 
 import javafx.scene.control.TextField;
-import javafx.scene.text.Text;
+
 import javafx.stage.Stage;
 import javafx.util.Pair;
-import javafx.scene.control.Button;
+
 
 import javafx.event.ActionEvent;
 import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.client.ClientProperties;
+
 import java.io.IOException;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -167,15 +166,4 @@ public class MainCtrl {
 
     }
 
-    //If the event is executed then the scene switches to Splash.fxml
-    public void leaveGame(ActionEvent event) throws IOException{
-        ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("/game/leave") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .post(Entity.entity(player, APPLICATION_JSON));
-        var overview = this.myFXML.load(Splash.class, "client", "scenes", "Splash.fxml");
-        scene = new Scene(overview.getValue());
-        setAndShowScenes(new Scene(overview.getValue()));
-    }
 }
