@@ -4,8 +4,7 @@ import client.MyFXML;
 
 import commons.models.Player;
 
-import jakarta.ws.rs.client.ClientBuilder;
-import jakarta.ws.rs.client.Entity;
+
 
 import javafx.fxml.FXML;
 
@@ -20,12 +19,11 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 
 
-import javafx.event.ActionEvent;
-import org.glassfish.jersey.client.ClientConfig;
+
 
 import java.io.IOException;
 
-import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+
 
 
 public class MainCtrl {

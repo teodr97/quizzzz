@@ -117,7 +117,7 @@ public class WaitingRoom implements Initializable {
                 .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.TRUE)//
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
-                .get();;
+                .get();
 
 
 
