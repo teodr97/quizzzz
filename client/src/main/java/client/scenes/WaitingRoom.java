@@ -7,7 +7,7 @@ import client.MyModule;
 import javafx.fxml.FXML;
 
 
-import client.utils.ServerUtils;
+
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -45,7 +45,7 @@ public class WaitingRoom implements Initializable {
     private static final MyFXML FXML = new MyFXML(INJECTOR);
     private static final String SERVER = "http://localhost:8080/";
 
-    private final ServerUtils server;
+
     private final MainCtrl mainCtrl;
 
     private Username usernameCtrl;
@@ -60,13 +60,12 @@ public class WaitingRoom implements Initializable {
 
 
     /**Construtor of the waiting room scene class controller
-     * @param server has the server utilities
      * @param mainCtrl the maincntrl of the application
      * @throws InterruptedException
      */
     @Inject
-    public WaitingRoom(ServerUtils server, MainCtrl mainCtrl) throws InterruptedException {
-        this.server = server;
+    public WaitingRoom(MainCtrl mainCtrl) throws InterruptedException {
+
         this.mainCtrl = mainCtrl;
 
         this.players = new Text();
