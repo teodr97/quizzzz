@@ -38,12 +38,12 @@ public class MyFXML {
 
     /**
      * Loads a new scene.
-     * @param c The class of the controller for the scene. Each scene should have a different controller.
+     * @param controllerClass The class of the controller for the scene. Each scene should have a different controller.
      * @param parts
      * @param <T>
      * @return
      */
-    public <T> Pair<T, Parent> load(Class<T> c, String... parts) {
+    public <T> Pair<T, Parent> load(Class<T> controllerClass, String... parts) {
         try {
             System.out.println(getLocation(parts));
             var loader = new FXMLLoader(getLocation(parts), null, null, new MyFactory(), StandardCharsets.UTF_8);

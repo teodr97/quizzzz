@@ -85,4 +85,12 @@ public class ActivityController {
         Activity act = repository.save(activity);
         return ResponseEntity.ok(act);
     }
+
+    /**
+     * Deletes all activities in the database
+     */
+    @DeleteMapping(path = "/delete/all")
+    public void deleteAll(){
+        repository.deleteAll();
+    }
 }

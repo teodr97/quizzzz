@@ -30,9 +30,9 @@ class GameTest {
         List<Activity> activityList = new LinkedList<>();
 
         MockitoAnnotations.openMocks(this);
-        activityList.add(new Activity("Test_1", 0));
-        activityList.add(new Activity("Test_2", 2314567));
-        activityList.add(new Activity("Test_3", 1010010100));
+        activityList.add(new Activity("Test_1", "Test_1", 0, "Test_2"));
+        activityList.add(new Activity("Test_2", "Test_2", 2314567, "Test_2"));
+        activityList.add(new Activity("Test_3","Test_3", 1010010100, "Test_3"));
         game = new Game();
         question = new Question(activityList);
         player = new Player("Test");
