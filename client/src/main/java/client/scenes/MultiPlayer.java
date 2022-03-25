@@ -100,15 +100,16 @@ public class MultiPlayer implements Initializable {
 
                 String url = "ws://localhost:8080/hello";
                 StompSessionHandler sessionHandler = new MySessionHandler();
-                ListenableFuture<StompSession> f = stompClient.connect(url, sessionHandler);
+                stompClient.connect(url, sessionHandler);
 
-                try{
-                    StompSession sessie = f.get();
-                    subscribe(sessie);
-
-                }catch(Exception e){
-                    System.out.print("se");
-                }
+                new Scanner(System.in).nextLine(); // Don't close immediately.
+//                try{
+//                    StompSession sessie = f.get();
+//                    subscribe(sessie);
+//
+//                }catch(Exception e){
+//                    System.out.print("se");
+//                }
 
 
 
