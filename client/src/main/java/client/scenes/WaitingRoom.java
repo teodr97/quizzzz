@@ -40,6 +40,16 @@ public class WaitingRoom implements Initializable {
         waitingPlayers.setText(game.getPlayers().size() + " players waiting");*/
     }
 
+    public void startGame(ActionEvent event) throws IOException{
+        ClientBuilder.newClient(new ClientConfig()) //
+                .target(mainCtrl.SERVER).path("/game/start") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .post(Entity.entity(mainCtrl.getPlayer(), APPLICATION_JSON));
+
+        mainCtrl.switchToMultiplayer();
+    }
+
     /**
      * If the event is executed then the scene switches to Splash.fxml
      * @param event
