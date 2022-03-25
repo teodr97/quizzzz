@@ -1,6 +1,7 @@
 package client.scenes;
 
 import client.utils.QuestionRetriever;
+import client.utils.SingleplayerHighscoreHandler;
 import client.utils.StatSharerSingleplayer;
 import com.google.inject.Inject;
 import commons.game.Activity;
@@ -14,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.text.Text;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
@@ -28,6 +30,8 @@ public class SinglePlayer implements Initializable {
      * Here it is used to set the information.
      */
     private StatSharerSingleplayer statSharer;
+
+    private SingleplayerUsername singleplayerUsername;
 
     private MainCtrl mainCtrl;
 
@@ -64,6 +68,9 @@ public class SinglePlayer implements Initializable {
     //game object to generate all questions and answers
     private Game game;
 
+    //player's username
+    private String username;
+
     //questionIterator to get the next question
     private Iterator<Question> questionIterator;
 
@@ -74,9 +81,23 @@ public class SinglePlayer implements Initializable {
     private AnimationTimer tm = new TimerMethod();
 
     @Inject
-    public SinglePlayer(StatSharerSingleplayer statSharer, MainCtrl mainCtrl) {
+    public SinglePlayer(StatSharerSingleplayer statSharer, SingleplayerUsername singleplayerUsername, MainCtrl mainCtrl) {
         this.mainCtrl = mainCtrl;
+        this.singleplayerUsername = singleplayerUsername;
         this.statSharer = statSharer;
+    }
+
+    public SinglePlayer(){
+
+    }
+
+    /**
+     * Setting up the username.
+     * @param username
+     */
+    public void setUsername(String username){
+        this.username = username;
+        System.out.println(this.username);
     }
 
     /**
@@ -103,6 +124,8 @@ public class SinglePlayer implements Initializable {
 
         progress = 0;
 
+        this.setUsername(singleplayerUsername.getUsername());
+
         //start the timer
         tm.start();
     }
@@ -122,7 +145,7 @@ public class SinglePlayer implements Initializable {
 
         //gets the amount of points to be handed, and assigns the correct answer to a variable
         int questionpoints = (int)(500 - 250*progress);
-        String correctanswer = answersIterator.next().getActivity();
+        String correctanswer = answersIterator.next().getTitle();
         System.out.println("correct answer: "+ correctanswer);
         System.out.println("your answer: "+ useranswer.getText());
 
@@ -240,7 +263,7 @@ public class SinglePlayer implements Initializable {
         //method handlee
         private void handlee(){
             //making this smaller will slow down the times
-            progress += 0.01;
+            progress += 0.0025;
             //set the new progress
             timerBar.setProgress(progress);
             //checks if the progress is 1 and will display prompt accordingly
@@ -275,9 +298,9 @@ public class SinglePlayer implements Initializable {
     public void displayQuestion(Question question){
         questionField.setText(question.getQuestion());
         qNumber.setText(game.getCurRound() + " / 20");
-        answerA.setText(question.getActivityList().get(0).getActivity());
-        answerB.setText(question.getActivityList().get(1).getActivity());
-        answerC.setText(question.getActivityList().get(2).getActivity());
+        answerA.setText(question.getActivityList().get(0).getTitle());
+        answerB.setText(question.getActivityList().get(1).getTitle());
+        answerC.setText(question.getActivityList().get(2).getTitle());
         resetGamescreen();
     }
 
@@ -287,7 +310,21 @@ public class SinglePlayer implements Initializable {
     private void loadEndscreen()  {
         tm.stop();
         this.statSharer.points = this.pointsInt;
-
         mainCtrl.switchToEndscreenSingleplayer();
+        logGame();
+    }
+
+    /**
+     * Logs the current game and writes it to a local file.
+     */
+    private void logGame() {
+        SingleplayerHighscoreHandler shh = null;
+        try {
+            shh = SingleplayerHighscoreHandler.getHighscores();
+            shh.saveNewEntry(this.username, this.statSharer.points);
+        } catch (FileNotFoundException e) {
+            System.out.println("Game could not be recorded.");
+            e.printStackTrace();
+        }
     }
 }

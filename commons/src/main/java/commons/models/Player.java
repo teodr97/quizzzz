@@ -125,14 +125,14 @@ public class Player {
 
     /**
      * The equals method of this object.
-     * @param o the object against which the instance of this class is to be compared
+     * @param other the object against which the instance of this class is to be compared
      * @return boolean that indicates whether the two objects are equal
      */
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Player player = (Player) o;
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
+        Player player = (Player) other;
         return points == player.points && nickname.equals(player.nickname);
     }
 

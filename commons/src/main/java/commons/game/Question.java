@@ -52,7 +52,7 @@ public class Question {
      * @return True or false, depending on whether the answer is correct or not
      */
     public static boolean hasCorrectAnswer(Question question, Activity answer) {
-        return answer.getActivity().equals(question.getCorrectAnswer().getActivity());
+        return answer.getTitle().equals(question.getCorrectAnswer().getTitle());
     }
 
     /**
@@ -80,7 +80,7 @@ public class Question {
                 int correctAnswerIndex = Utils.generateRandomIntSmallerThan(3);
                 // Retrieve a random activity that will serve as the correct answer using indexes 0-3
                 this.correctAnswer = activityList.get(correctAnswerIndex);
-                this.question = "How much power does the following activity use:\n\"" + correctAnswer.getActivity() + "\"";
+                this.question = "How much power does the following activity use:\n\"" + correctAnswer.getTitle() + "\"";
                 this.activityList = Utils.replaceActivitiesWithPowerDraws(activityList, correctAnswerIndex);
                 break;
         }
@@ -115,12 +115,12 @@ public class Question {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Question other = (Question) o;
-        return activityList.equals(other.getActivityList()) && question.equals(other.getQuestion()) &&
-                correctAnswer.equals(other.getCorrectAnswer());
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
+        Question question1 = (Question) other;
+        return activityList.equals(question1.getActivityList()) && question.equals(question1.getQuestion()) &&
+                correctAnswer.equals(question1.getCorrectAnswer());
     }
 
 }

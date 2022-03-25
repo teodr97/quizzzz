@@ -14,19 +14,19 @@ class QuestionTest {
     private List<Activity> activityList;
 
     /**
-     *
+     * Creates an activity list for tests
      */
     @BeforeEach
     void initTest() {
         activityList = new LinkedList<>();
-        activityList.add(new Activity("Activity_1", 1));
-        activityList.add(new Activity("Activity_2", 2));
-        activityList.add(new Activity("Activity_3", 3));
+        activityList.add(new Activity("Path_1","Activity_1", 1, "Source_1"));
+        activityList.add(new Activity("Path_2", "Activity_2", 2, "Source_2"));
+        activityList.add(new Activity("Path_3", "Activity_3", 3, "Source_3"));
         question = new Question(activityList);
     }
 
     /**
-     *
+     * tests correct answer
      */
     @Test
     void hasCorrectAnswer() {
@@ -36,7 +36,7 @@ class QuestionTest {
     }
 
     /**
-     *
+     * tests question setter
      */
     @Test
     void setQuestion() {
@@ -45,7 +45,7 @@ class QuestionTest {
     }
 
     /**
-     *
+     * tests question getter
      */
     @Test
     void getQuestion() {
@@ -53,7 +53,7 @@ class QuestionTest {
     }
 
     /**
-     *
+     * tests activitylist size
      */
     @Test
     void getActivityList() {
@@ -61,14 +61,14 @@ class QuestionTest {
     }
 
     /**
-     *
+     * test getting correct answer
      */
     @Test
     void getCorrectAnswer() {
-        String correctActivity = question.getCorrectAnswer().getActivity();
+        String correctActivity = question.getCorrectAnswer().getTitle();
         List<String> activityStringList = new LinkedList<>();
 
-        for (Activity act : activityList) activityStringList.add(act.getActivity());
+        for (Activity act : activityList) activityStringList.add(act.getTitle());
         assertTrue(activityStringList.contains(correctActivity));
     }
 
@@ -88,14 +88,14 @@ class QuestionTest {
     }
 
     /**
-     *
+     * Test equals method
      */
     @Test
     void testEquals() {
         Question question1 = new Question(activityList);
         Question question2 = new Question(activityList);
-        Activity activity1 = new Activity("Activity",1 );
-        Activity activity2 = new Activity("Activity",1 );
+        Activity activity1 = new Activity("Path", "Activity",1, "Source" );
+        Activity activity2 = new Activity("Path", "Activity",1, "Source" );
 
         question2.setQuestion(question1.getQuestion());
         question2.setCorrectAnswer(activity1);

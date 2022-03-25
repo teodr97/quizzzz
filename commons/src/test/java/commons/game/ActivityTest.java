@@ -10,78 +10,108 @@ class ActivityTest {
     Activity activity;
 
     /**
-     *
+     *Initializes activity before each test
      */
     @BeforeEach
     private void initialiseTest() {
-        activity = new Activity("Test", 1);
+        activity = new Activity("Test", "Test", 1, "Test");
     }
 
     /**
-     *
+     *test autoId setter
      */
     @Test
-    void setId() {
-        activity.setId(19);
-        assertEquals(19, activity.getId());
+    void setAutoId() {
+        activity.setAutoId(19);
+        assertEquals(19, activity.getAutoId());
     }
 
     /**
-     *
+     * test image_path setter
      */
     @Test
-    void setActivity() {
-        activity.setActivity("Activity");
-        assertEquals("Activity", activity.getActivity());
+    void setImage_path(){
+        activity.setImage_path("image_path");
+        assertEquals("image_path", activity.getImage_path());
     }
 
     /**
-     *
+     *test title setter
      */
     @Test
-    void setPower() {
-        activity.setPower(90);
-        assertEquals(90, activity.getPower());
+    void setTitle() {
+        activity.setTitle("Activity");
+        assertEquals("Activity", activity.getTitle());
     }
 
     /**
-     *
+     *test consumption_in_wh setter
      */
     @Test
-    void getId() {
-        assertEquals(0, activity.getId());
+    void setConsumption_in_wh() {
+        activity.setConsumption_in_wh(90);
+        assertEquals(90, activity.getConsumption_in_wh());
     }
 
     /**
-     *
+     * test source setter
      */
     @Test
-    void getActivity() {
-        assertEquals("Test", activity.getActivity());
+    void setSource() {
+        activity.setSource("source");
+        assertEquals("source", activity.getSource());
     }
 
     /**
-     *
+     * test autoId getter
      */
     @Test
-    void getPower() {
-        assertEquals(1, activity.getPower());
+    void getAutoId() {
+        assertEquals(0, activity.getAutoId());
     }
 
     /**
-     *
+     * test image_path getter
+     */
+    @Test
+    void getImage_path(){assertEquals("Test", activity.getImage_path());}
+
+    /**
+     * test title getter
+     */
+    @Test
+    void getTitle() {
+        assertEquals("Test", activity.getTitle());
+    }
+
+    /**
+     * test consumption_in_wh getter
+     */
+    @Test
+    void getConsumption_in_wh() {
+        assertEquals(1, activity.getConsumption_in_wh());
+    }
+
+    /**
+     * test source getter
+     */
+    @Test
+    void getSource(){assertEquals("Test", activity.getSource());}
+
+    /**
+     * test toString method
      */
     @Test
     void testToString() {
-        assertEquals("{Activity: Test | Power: 1 | Id: 0}", activity.toString());
+        assertEquals("Activity{autoId=0, image_path='Test', title='Test', consumption_in_wh=1, source='Test'}", activity.toString());
     }
 
     /**
-     *
+     * test equals method
      */
     @Test
     void testEquals() {
-        Activity activity1 = new Activity("Test", 1);
+        Activity activity1 = new Activity("Test", "Test", 1, "Test");
 
         assertEquals(activity1, activity);
     }

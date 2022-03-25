@@ -33,10 +33,13 @@ public class MyModule implements Module {
         binder.bind(Username.class).in(Scopes.SINGLETON);
         binder.bind(PastGames.class).in(Scopes.SINGLETON);
         binder.bind(SinglePlayer.class).in(Scopes.SINGLETON);
+        binder.bind(MultiPlayer.class).in(Scopes.SINGLETON);
         binder.bind(EndscreenSingleplayer.class).in(Scopes.SINGLETON);
         binder.bind(EndscreenMultiplayer.class).in(Scopes.SINGLETON);
         binder.bind(StatSharerSingleplayer.class).in(Scopes.SINGLETON);
         binder.bind(QuestionRetriever.class).in(Scopes.SINGLETON);
         binder.bind(WaitingRoom.class).in(Scopes.SINGLETON);
+        binder.bind(Admin.class).in(Scopes.SINGLETON);
+        binder.bind(SingleplayerUsername.class).in(Scopes.SINGLETON);
     }
 }
