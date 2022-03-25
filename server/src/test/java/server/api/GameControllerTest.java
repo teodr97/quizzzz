@@ -35,7 +35,7 @@ class GameControllerTest {
     @BeforeEach
     private void initializeTests() {
         MockitoAnnotations.openMocks(this);
-        controller = new GameController(gameServiceMock);
+        controller = new GameController();
         spyController = spy(controller);
         map.put("Test", new Game());
     }
