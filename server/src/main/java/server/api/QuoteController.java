@@ -76,11 +76,11 @@ public class QuoteController {
 
     /**
      *
-     * @param s
+     * @param string
      * @return
      */
-    private static boolean isNullOrEmpty(String s) {
-        return s == null || s.isEmpty();
+    private static boolean isNullOrEmpty(String string) {
+        return string == null || string.isEmpty();
     }
 
     /**

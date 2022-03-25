@@ -10,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.LinkedList;
 import java.util.List;
 
+
 class QuestionRetrieverTest {
 
     @Mock
@@ -28,7 +29,7 @@ class QuestionRetrieverTest {
     private void initialiseTests() {
         MockitoAnnotations.openMocks(this);
         questionRetriever = new QuestionRetriever(mainControllerMock);
-        activityList.add(new Activity("Test", 1));
+        activityList.add(new Activity("Test", "Test", 1, "Test"));
     }
 
     /*
@@ -37,13 +38,13 @@ class QuestionRetrieverTest {
      * THE ACTUAL METHOD WORKS AS INTENDED SO WHETHER THIS
      * TEST PASSES OR NOT RIGHT NOW DOESN'T REALLY MATTER.
      */
-    /*@Test
-    void retrieveActivitySetFromServer() {
-        when(clientMock.target(mainControllerMock.SERVER)
-                .path("/api/v1/activity/get/randomSetActivities")
-                .request(APPLICATION_JSON)
-                .accept(APPLICATION_JSON)
-                .get(new GenericType<List<Activity>>() {})).thenReturn(activityList);
-        assertEquals(new Activity("Test", 1), questionRetriever.retrieveActivitySetFromServer().get(0));
-    }*/
+//    @Test
+//    void retrieveActivitySetFromServer() {
+//        when(clientMock.target(mainControllerMock.SERVER)
+//                .path("/api/v1/activity/get/randomSetActivities")
+//                .request(APPLICATION_JSON)
+//                .accept(APPLICATION_JSON)
+//                .get(new GenericType<List<Activity>>() {})).thenReturn(activityList);
+//        assertEquals(new Activity("Test", "Test", 1, "Test"), questionRetriever.retrieveActivitySetFromServer().get(0));
+//    }
 }
