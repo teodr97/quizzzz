@@ -14,6 +14,10 @@ import org.springframework.stereotype.Controller;
 @Controller
 @Slf4j
 public class GreetingController {
+    /**
+     * @param message get messgae from server
+     * @return a message  tha tthe clinet will receive and process
+     */
     @MessageMapping("/hello")
     @SendTo("/topic/greetings")
     public Message greeting(Message message){

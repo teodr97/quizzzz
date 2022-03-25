@@ -7,16 +7,14 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.net.BindException;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
+
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-import java.net.UnknownHostException;
+
 import java.util.ArrayList;
 
-import ch.qos.logback.core.net.server.ServerListener;
+
 import commons.models.Message;
 import commons.models.Player;
 import commons.models.MessageType;
@@ -54,7 +52,7 @@ public class ServerStream {
         //boolean for stopping the thread
         private boolean exit = false;
 
-        public ServerListener(int port) throws IOException{
+        private ServerListener(int port) throws IOException{
 
             this.listener = new ServerSocket(port);
             System.out.println("server is know listening with websockets");
@@ -98,7 +96,7 @@ public class ServerStream {
         private OutputStream os;
         private ObjectOutputStream output;
 
-        public Handler(Socket socket) {
+        private Handler(Socket socket) {
             //we connect a "server socket" with a "client socket"
             //the socket attribute is the server socket connected to the
             //client socket in question
@@ -129,7 +127,7 @@ public class ServerStream {
 
                                 Message mreply = new Message();
                                 System.out.println("Server: connect message received");
-                                Player p =  new Player(incomingMsg.getUsername(), this.socket.getInetAddress());
+                                Player p = new Player(incomingMsg.getUsername(), this.socket.getInetAddress());
                                 players.add(p);
                                 playerwriters.add(this.output);
 
@@ -142,8 +140,12 @@ public class ServerStream {
                                 mreply.setNickname(incomingMsg.getUsername());
 
                                 forward(mreply);
-                                this.output.writeObject(mreply);
+                                break;
+                            default:
+                                break;
                         }
+
+
 
                     }
 
@@ -154,7 +156,8 @@ public class ServerStream {
                 }
             } catch (IOException e) {
                 // if we close the socket when kick/disconnect is received, then:
-                // when the server kicks an user, IOException is thrown because the thread which is listening, tries to read from the stream, but the socket has been closed from the other endpoint
+                // when the server kicks an user, IOException is thrown because the thread which is listening, tries to
+                // read from the stream, but the socket has been closed from the other endpoint
                 System.out.println("Errore stream ");
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
