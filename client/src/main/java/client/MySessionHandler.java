@@ -33,16 +33,31 @@ public class MySessionHandler extends StompSessionHandlerAdapter{
 
     }
 
+    /**
+     * @param session Current session
+     * @param command command set if any
+     * @param headers headers received from this subscription
+     * @param payload payload received from the subscription
+     * @param exception exception received if any
+     */
     @Override
     public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
         logger.error("Got an exception", exception);
     }
 
+    /** Set's the type of what the users wants to receive from the subscription
+     * @param headers headrs of the message from the subscription
+     * @return returns the type
+     */
     @Override
     public Type getPayloadType(StompHeaders headers) {
         return Message.class;
     }
 
+    /** This is where the message from the server gets handled
+     * @param headers headers from the subscription message
+     * @param payload payload from the subscription message
+     */
     @Override
     public void handleFrame(StompHeaders headers, Object payload) {
         Message msg = (Message) payload;
