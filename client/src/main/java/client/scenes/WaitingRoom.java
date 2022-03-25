@@ -40,6 +40,12 @@ public class WaitingRoom implements Initializable {
         waitingPlayers.setText(game.getPlayers().size() + " players waiting");*/
     }
 
+    /**
+     * Sends a request to start the game. Sends the player who started as the parameter.
+     * Game will be set to ongoing state.
+     * @param event
+     * @throws IOException
+     */
     public void startGame(ActionEvent event) throws IOException{
         ClientBuilder.newClient(new ClientConfig()) //
                 .target(mainCtrl.SERVER).path("/game/start") //
