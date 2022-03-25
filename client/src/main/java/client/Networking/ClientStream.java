@@ -9,7 +9,7 @@ import client.scenes.MainCtrl;
 import client.scenes.MultiPlayer;
 import commons.models.Message;
 import commons.models.MessageType;
-import javafx.scene.control.Alert;
+
 
 public class ClientStream {
     private MainCtrl mainCtrl;
@@ -25,6 +25,13 @@ public class ClientStream {
     private InputStream is;
     private ObjectInputStream input;
 
+    /** Construcotr for the clientstream class
+     * @param mainCtrl
+     * @param multiplayer
+     * @param address
+     * @param port
+     * @param nickname
+     */
     public ClientStream(MainCtrl mainCtrl, MultiPlayer multiplayer, String address, int port, String nickname){
         this.mainCtrl = mainCtrl;
         this.nickname = nickname;
@@ -40,7 +47,7 @@ public class ClientStream {
         private String address;
         private int port;
 
-        public ClientListener(String addres, int port){
+        private ClientListener(String addres, int port){
             this.address = address;
             this.port = port;
         }
@@ -66,10 +73,10 @@ public class ClientStream {
                     if(incomingMsg !=  null){
 
                         System.out.println("Client (" + this.getId() + "): received " + incomingMsg.toString());
-                        switch(incomingMsg.getMsgType()){
-                            case GAME_WAITING:
-                            
-                        }
+//                        switch(incomingMsg.getMsgType()){
+//                            case GAME_WAITING:
+//
+//                        }
                     }
                 }
 
@@ -97,6 +104,9 @@ public class ClientStream {
 
     }
 
+    /**
+     * @param message Send mesasge in stream
+     */
     private void sendMessage(Message message)
     {
         try {
@@ -106,25 +116,6 @@ public class ClientStream {
         }
     }
 
-    public void sendAnswer(String content)
-    {
-        Message msg = new Message(MessageType.MY_ANSWER, this.nickname, content);
-
-        // send the message
-        this.sendMessage(msg);
-
-        // do something in controller
-
-    }
-
-
-    public void sendClose()
-    {
-        Message msg = new Message(MessageType.DISCONNECT, this.nickname, "");
-
-        // send disconnect message
-        this.sendMessage(msg);
-    }
 
 
 }

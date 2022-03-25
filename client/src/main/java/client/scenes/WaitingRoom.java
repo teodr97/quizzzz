@@ -99,6 +99,9 @@ public class WaitingRoom implements Initializable {
 //        mainCtrl.switchToSplash();
     }
 
+    /**
+     * Keeps polling the lobby asking for the list of players
+     */
     //recursive function that keeps requesting the server for new data
     //in a longpolling fashion
     public void longpollUpdateLobby(){
@@ -108,7 +111,7 @@ public class WaitingRoom implements Initializable {
                 .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.TRUE)//
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
-                .get();;
+                .get();
 
 
 
@@ -134,12 +137,19 @@ public class WaitingRoom implements Initializable {
 
     }
 
+    /**
+     * start the game and switch to the mulitplayer screen
+     * Also stop polling the lobby for the player list
+     */
     public void startGame(){
         //stop the lobby spamming thread
         this.dontstop = false;
         this.mainCtrl.switchToMultiplayer();
     }
 
+    /**Leave the waiting rooom
+     *
+     */
     public void leaveGame(){
         return;
     }

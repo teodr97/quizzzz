@@ -148,19 +148,19 @@ public class MultiPlayer implements Initializable {
         mainCtrl.switchToSplash();
     }
 
-    public void subscribe(StompSession sessie){
-        sessie.subscribe("/app/topic/Greetings", new StompFrameHandler() {
-    
-
-            public Type getPayloadType(StompHeaders stompHeaders) {
-                return byte[].class;
-            }
-
-            public void handleFrame(StompHeaders stompHeaders, Object o) {
-                System.out.println("Received greeting " + new String((byte[]) o));
-            }
-        });
-    }
+//    public void subscribe(StompSession sessie){
+//        sessie.subscribe("/app/topic/Greetings", new StompFrameHandler() {
+//
+//
+//            public Type getPayloadType(StompHeaders stompHeaders) {
+//                return byte[].class;
+//            }
+//
+//            public void handleFrame(StompHeaders stompHeaders, Object o) {
+//                System.out.println("Received greeting " + new String((byte[]) o));
+//            }
+//        });
+//    }
     
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // THE USERNAME PASSED TO EACH OF THE BUTTON FUNCTIONS SHOULD BE
