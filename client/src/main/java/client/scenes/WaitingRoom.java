@@ -5,6 +5,8 @@ import client.MyModule;
 
 
 import client.MySessionHandler;
+import client.Networking.wsClient;
+import commons.models.Message;
 import javafx.fxml.FXML;
 
 
@@ -28,7 +30,9 @@ import javafx.scene.text.Text;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
+import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandler;
+import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.socket.client.WebSocketClient;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
@@ -100,24 +104,30 @@ public class WaitingRoom implements Initializable {
         this.wsclientthread = new Thread(new Runnable() {
             @Override
             public void run() {
+
+                wsClient websocketClient = new wsClient();
+                ListenableFuture<StompSession> f = websocketClient.connect();
+//                StompSession stompSession = f.get();
                 // code goes here.
-                WebSocketClient webSocketClient = new StandardWebSocketClient();
-                stompClient = new WebSocketStompClient(webSocketClient);
-                stompClient.setMessageConverter(new MappingJackson2MessageConverter());
-
-                String url = "ws://localhost:8080/hello";
-                StompSessionHandler sessionHandler = new MySessionHandler();
-                stompClient.connect(url, sessionHandler);
-
-                new Scanner(System.in).nextLine(); // Don't close immediately.
-//                try{
-//                    StompSession sessie = f.get();
-//                    subscribe(sessie);
+//                WebSocketClient webSocketClient = new StandardWebSocketClient();
+//                stompClient = new WebSocketStompClient(webSocketClient);
+//                stompClient.setMessageConverter(new MappingJackson2MessageConverter());
 //
-//                }catch(Exception e){
-//                    System.out.print("se");
-//                }
+//                String url = "ws://localhost:8080/hello";
+//                StompSessionHandler sessionHandler = new MySessionHandler();
+//                ListenableFuture<StompSession> f = stompClient.connect(url, sessionHandler);
 
+
+                try{
+                    StompSession sessie = f.get();
+                    Message incoming = websocketClient.subscribeGreetings(sessie);
+                    websocketClient.sendHello(sessie);
+                    System.out.println(incoming.toString());
+
+                }catch(Exception e){
+                    System.out.print("se");
+                }
+                //new Scanner(System.in).nextLine();
 
 
             }
