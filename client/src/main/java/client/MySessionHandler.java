@@ -1,5 +1,7 @@
 package client;
 
+import client.scenes.*;
+
 import commons.models.Message;
 import commons.models.MessageType;
 import org.apache.logging.log4j.LogManager;
@@ -11,9 +13,15 @@ import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 
 import java.lang.reflect.Type;
 
+
 public class MySessionHandler extends StompSessionHandlerAdapter{
 
+    private WaitingRoom controller;
     private Logger logger = LogManager.getLogger(MySessionHandler.class);
+
+
+
+
     @Override
     public void afterConnected(StompSession session, StompHeaders connectedHeader){
         //session.subscribe("/topic/Game", this);

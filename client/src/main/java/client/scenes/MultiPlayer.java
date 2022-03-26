@@ -106,31 +106,6 @@ public class MultiPlayer implements Initializable {
             e.printStackTrace();
         }
          */
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // code goes here.
-                WebSocketClient webSocketClient = new StandardWebSocketClient();
-                stompClient = new WebSocketStompClient(webSocketClient);
-                stompClient.setMessageConverter(new MappingJackson2MessageConverter());
-
-                String url = "ws://localhost:8080/hello";
-                StompSessionHandler sessionHandler = new MySessionHandler();
-                stompClient.connect(url, sessionHandler);
-
-                new Scanner(System.in).nextLine(); // Don't close immediately.
-//                try{
-//                    StompSession sessie = f.get();
-//                    subscribe(sessie);
-//
-//                }catch(Exception e){
-//                    System.out.print("se");
-//                }
-
-
-
-            }
-        }).start();
 
 
 
@@ -146,19 +121,6 @@ public class MultiPlayer implements Initializable {
         mainCtrl.switchToSplash();
     }
 
-//    public void subscribe(StompSession sessie){
-//        sessie.subscribe("/app/topic/Greetings", new StompFrameHandler() {
-//
-//
-//            public Type getPayloadType(StompHeaders stompHeaders) {
-//                return byte[].class;
-//            }
-//
-//            public void handleFrame(StompHeaders stompHeaders, Object o) {
-//                System.out.println("Received greeting " + new String((byte[]) o));
-//            }
-//        });
-//    }
     
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // THE USERNAME PASSED TO EACH OF THE BUTTON FUNCTIONS SHOULD BE

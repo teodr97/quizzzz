@@ -4,6 +4,7 @@ import client.MyFXML;
 import client.MyModule;
 
 
+import client.MySessionHandler;
 import javafx.fxml.FXML;
 
 
@@ -26,6 +27,11 @@ import javafx.scene.text.Text;
 
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
+import org.springframework.messaging.converter.MappingJackson2MessageConverter;
+import org.springframework.messaging.simp.stomp.StompSessionHandler;
+import org.springframework.web.socket.client.WebSocketClient;
+import org.springframework.web.socket.client.standard.StandardWebSocketClient;
+import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 
 import java.io.IOException;
@@ -33,6 +39,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import java.util.ResourceBundle;
+import java.util.Scanner;
 
 import static com.google.inject.Guice.createInjector;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -50,7 +57,10 @@ public class WaitingRoom implements Initializable {
 
     private Scene overview;
 
-    private Thread t1;
+    private Thread httpclientthread;
+    private Thread wsclientthread;
+
+    private WebSocketStompClient stompClient;
 
     private boolean dontstop;
 
@@ -73,7 +83,10 @@ public class WaitingRoom implements Initializable {
     //no real functionality yet
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.t1 = new Thread(new Runnable() {
+        //in the waiting we room we will start the longspamming thread and the websocket thread
+
+        //the httpclient thread
+        this.httpclientthread = new Thread(new Runnable() {
             @Override
             public void run() {
                 // code goes here.
@@ -81,7 +94,36 @@ public class WaitingRoom implements Initializable {
 
             }
         });
-        t1.start();
+        httpclientthread.start();
+
+        //the websocket client thread
+        this.wsclientthread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // code goes here.
+                WebSocketClient webSocketClient = new StandardWebSocketClient();
+                stompClient = new WebSocketStompClient(webSocketClient);
+                stompClient.setMessageConverter(new MappingJackson2MessageConverter());
+
+                String url = "ws://localhost:8080/hello";
+                StompSessionHandler sessionHandler = new MySessionHandler();
+                stompClient.connect(url, sessionHandler);
+
+                new Scanner(System.in).nextLine(); // Don't close immediately.
+//                try{
+//                    StompSession sessie = f.get();
+//                    subscribe(sessie);
+//
+//                }catch(Exception e){
+//                    System.out.print("se");
+//                }
+
+
+
+            }
+        });
+        this.wsclientthread.start();
+
     }
 
     /**
@@ -119,7 +161,7 @@ public class WaitingRoom implements Initializable {
 
         players.setText("connected players: " + playersstring.toString());
 
-        System.out.println(playersstring.toString());
+        //System.out.println(playersstring.toString());
         while(playersstring.size()>=1 && dontstop){
             playersResponse = ClientBuilder.newClient(new ClientConfig()) //
                     .target(SERVER).path("/game/getPlayers/0") //
@@ -129,7 +171,7 @@ public class WaitingRoom implements Initializable {
                     .get();
             playersstring = playersResponse.readEntity(ArrayList.class);
             players.setText("connected players: " + playersstring.toString());
-            System.out.println(playersstring.toString());
+            //System.out.println(playersstring.toString());
 
         }
 
