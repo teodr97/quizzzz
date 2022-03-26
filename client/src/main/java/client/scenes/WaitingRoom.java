@@ -4,9 +4,7 @@ import client.MyFXML;
 import client.MyModule;
 
 
-import client.MySessionHandler;
 import client.Networking.wsClient;
-import commons.models.Message;
 import javafx.fxml.FXML;
 
 
@@ -29,12 +27,8 @@ import javafx.scene.text.Text;
 
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
-import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompSession;
-import org.springframework.messaging.simp.stomp.StompSessionHandler;
 import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.web.socket.client.WebSocketClient;
-import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 
@@ -43,7 +37,6 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import java.util.ResourceBundle;
-import java.util.Scanner;
 
 import static com.google.inject.Guice.createInjector;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -74,6 +67,9 @@ public class WaitingRoom implements Initializable {
     @FXML
     private Text players;
 
+    @FXML
+    public Text greetings;
+
 
 
     @Inject
@@ -101,14 +97,47 @@ public class WaitingRoom implements Initializable {
         httpclientthread.start();
 
         //the websocket client thread
-        this.wsclientthread = new Thread(new Runnable() {
-            @Override
-            public void run() {
+        //the websocket runnable takes as paramter the controller so we can edit things inside
+        // the
+//        this.wsclientthread = new Thread(new WaitingRunnable(this) {
+//            WaitingRoom thiswaiting= this.getController();
+//
+//            @Override
+//            public void run() {
+//
+//                wsClient websocketClient = new wsClient(thiswaiting);
+//                ListenableFuture<StompSession> f = websocketClient.connect();
+////                StompSession stompSession = f.get();
+//                // code goes here.
+////                WebSocketClient webSocketClient = new StandardWebSocketClient();
+////                stompClient = new WebSocketStompClient(webSocketClient);
+////                stompClient.setMessageConverter(new MappingJackson2MessageConverter());
+////
+////                String url = "ws://localhost:8080/hello";
+////                StompSessionHandler sessionHandler = new MySessionHandler();
+////                ListenableFuture<StompSession> f = stompClient.connect(url, sessionHandler);
+//
+//
+//                try{
+//                    StompSession sessie = f.get();
+//                    websocketClient.subscribeGreetings(sessie);
+//                    websocketClient.sendHello(sessie);
+//
+//
+//                }catch(Exception e){
+//                    System.out.print("se");
+//                }
+//                //new Scanner(System.in).nextLine();
+//
+//
+//            }
+//        });
+//        this.wsclientthread.start();
 
-                wsClient websocketClient = new wsClient();
-                ListenableFuture<StompSession> f = websocketClient.connect();
+        wsClient websocketClient = new wsClient(this);
+        ListenableFuture<StompSession> f = websocketClient.connect();
 //                StompSession stompSession = f.get();
-                // code goes here.
+        // code goes here.
 //                WebSocketClient webSocketClient = new StandardWebSocketClient();
 //                stompClient = new WebSocketStompClient(webSocketClient);
 //                stompClient.setMessageConverter(new MappingJackson2MessageConverter());
@@ -118,21 +147,16 @@ public class WaitingRoom implements Initializable {
 //                ListenableFuture<StompSession> f = stompClient.connect(url, sessionHandler);
 
 
-                try{
-                    StompSession sessie = f.get();
-                    Message incoming = websocketClient.subscribeGreetings(sessie);
-                    websocketClient.sendHello(sessie);
-                    System.out.println(incoming.toString());
-
-                }catch(Exception e){
-                    System.out.print("se");
-                }
-                //new Scanner(System.in).nextLine();
+        try{
+            StompSession sessie = f.get();
+            websocketClient.subscribeGreetings(sessie);
+            websocketClient.sendHello(sessie);
 
 
-            }
-        });
-        this.wsclientthread.start();
+        }catch(Exception e){
+            System.out.print("se");
+        }
+        //new Scanner(System.in).nextLine();
 
     }
 

@@ -7,9 +7,14 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.concurrent.ExecutionException;
 
+import javafx.fxml.FXML;
+
+import javafx.scene.text.Text;
+
 import client.MySessionHandler;
 import client.scenes.MainCtrl;
 import client.scenes.MultiPlayer;
+import client.scenes.WaitingRoom;
 import commons.models.Message;
 import commons.models.MessageType;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
@@ -24,6 +29,8 @@ public class wsClient {
     private MainCtrl mainCtrl;
 
     private MultiPlayer multiplayer;
+    private WaitingRoom waitingroom;
+
 
 
     private String nickname;
@@ -36,6 +43,13 @@ public class wsClient {
     private Message incomingmsg;
 
     private WebSocketStompClient stompClient;
+
+    public wsClient(WaitingRoom waitingroom){
+        this.waitingroom = waitingroom;
+
+    }
+
+
 //
 //    /** Construcotr for the clientstream class
 //     * @param mainCtrl
@@ -74,7 +88,7 @@ public class wsClient {
         }
     }
 
-    public Message subscribeGreetings(StompSession stompSession) throws ExecutionException, InterruptedException {
+    public void subscribeGreetings(StompSession stompSession) throws ExecutionException, InterruptedException {
 
         stompSession.subscribe("/topic/greetings", new StompFrameHandler() {
 
@@ -84,11 +98,21 @@ public class wsClient {
 
             public void handleFrame(StompHeaders stompHeaders, Object payload) {
                 incomingmsg = (Message) payload;
-                //System.out.println("Received : " + incomingmsg.getContent() + " from : " + incomingmsg.getUsername());
+                handlePayload(incomingmsg);
+
+
             }
+
+
         });
 
-        return this.incomingmsg;
+
+
+    }
+
+    public void handlePayload(Message incomingmsg) {
+        waitingroom.greetings.setText("Received : " + incomingmsg.getContent() + " from : " + incomingmsg.getUsername());
+        System.out.println("Received : " + incomingmsg.getContent() + " from : " + incomingmsg.getUsername());
     }
 
     public void sendHello(StompSession stompSession) {
