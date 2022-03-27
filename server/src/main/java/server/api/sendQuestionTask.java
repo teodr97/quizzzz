@@ -19,7 +19,7 @@ public class sendQuestionTask extends TimerTask {
             System.out.println("Sent question");
 
         } else {
-            controller.template.convertAndSend("/topic/questions", new Message(MessageType.QUESTION, "Server", "GAME ENDED"));
+            controller.template.convertAndSend("/topic/questions", new Message(MessageType.GAME_ENDED, "Server", "GAME ENDED"));
             System.out.println("game has ended");
             this.cancel();
 

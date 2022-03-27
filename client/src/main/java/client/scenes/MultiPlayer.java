@@ -43,6 +43,7 @@ import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 import java.util.Scanner;
+import java.util.Timer;
 
 
 public class MultiPlayer implements Initializable {
@@ -70,9 +71,11 @@ public class MultiPlayer implements Initializable {
     @FXML private Button answerB;
     @FXML private Button answerC;
 
-    @FXML private ProgressBar timerBar;
+    @FXML private Button timeJoker;
 
-    @FXML private Text prompt;
+    @FXML public ProgressBar timerBar;
+
+    @FXML public Text prompt;
     @FXML private Text userpoint;
 
     private int pointsInt = 0;
@@ -84,12 +87,16 @@ public class MultiPlayer implements Initializable {
 
     private double progress;
 
+    public double progressInc = 0.001;
+
     private static final double EPSILON = 0.00001;
 
 
     private WebSocketStompClient stompClient;
 
     private Message incomingmsg;
+
+    public boolean gamended;
 
     @Inject
     public MultiPlayer(MainCtrl mainCtrl) {
@@ -124,10 +131,37 @@ public class MultiPlayer implements Initializable {
                             System.out.println("Gotten question");
                             questionField.setText(incomingmsg.getContent());
                         }
+                        if(incomingmsg.getMsgType() == MessageType.GAME_ENDED){
+                            gamended = true;
+                            questionField.setText(incomingmsg.getContent());
+
+                        }
                     }
                 });
+
+        this.mainCtrl.sessie.subscribe("/topic/jokers", new StompFrameHandler() {
+
+            public Type getPayloadType(StompHeaders stompHeaders) {
+                return Message.class;
+            }
+
+            public void handleFrame(StompHeaders stompHeaders, Object payload) {
+                incomingmsg = (Message) payload;
+                progressInc = 0.002;
+            }
+        });
         Message retrieveQ = new Message(MessageType.QUESTION, "client", "gib me question");
         this.mainCtrl.sessie.send("/app/getquestions", retrieveQ);
+
+        Timer bartimer = new Timer();
+        //CODE FOR MAKING THE TIMER BAR MOVE
+        //we sync the server timer and the client timer with by just making sure that the timer bar is full after 10
+        //seconds
+        bartimer.scheduleAtFixedRate(new increaseTimerBar(this), 0, 10);
+        if(gamended){
+            timerBar.setProgress(0);
+
+        }
     }
 
         /*
@@ -222,6 +256,13 @@ public class MultiPlayer implements Initializable {
 
         return;
     }
+
+    public void senddecreaseTimeForAll(){
+        //disable the button if  clicked
+        timeJoker.setDisable(true);
+        mainCtrl.sessie.send("/app/clickedJoker", new Message(MessageType.TIME_JOKER, "client", "someone clicked the timer joker"));
+    }
+
 
     //HANDLES the timebar
     private class TimerMethod extends AnimationTimer {

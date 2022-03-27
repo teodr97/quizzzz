@@ -10,13 +10,11 @@ import org.springframework.messaging.handler.annotation.SendTo;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Timer;
-import java.util.TimerTask;
 
 
 @Controller
@@ -86,13 +84,16 @@ public class GreetingController {
     public void sendQuestion(){
         Timer qtimer = new Timer();
         qtimer.scheduleAtFixedRate(new sendQuestionTask(this), 0, 10000 );
-
-
-
+    }
+    @MessageMapping("/clickedJoker")
+    @SendTo("/topic/jokers")
+    public Message handleJoker(Message message){
+        return new Message(message.getMsgType(), "Server", message.getContent());
 
 
 
     }
+
 
 
 
