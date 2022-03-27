@@ -39,14 +39,14 @@ public class GameService {
      * @throws NotFoundException
      */
     public Game connectToWaitingRoom(Player player) throws NicknameTakenException, NotFoundException{
-        Map<String, Game> games = GameStorage.getGames();
-        if(games != null){
-            for(Game g : games.values()){
-                if(g.contains(player.getNickname())){
-                    throw new NicknameTakenException("Nickname already taken!");
-                }
-            }
-        }
+//        Map<String, Game> games = GameStorage.getGames();
+//        if(games != null){
+//            for(Game g : games.values()){
+//                if(g.contains(player.getNickname())){
+//                    throw new NicknameTakenException("Nickname already taken!");
+//                }
+//            }
+//        }
         Game game = GameStorage.getInstance().getGames().values().stream()
                 .filter(it -> it.getStatus().equals(WAITING))
                 .findAny().orElse(null);
