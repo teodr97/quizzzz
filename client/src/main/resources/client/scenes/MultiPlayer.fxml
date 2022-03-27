@@ -39,7 +39,7 @@
             <Font name="Arial Bold" size="48.0" />
          </font>
       </Text>
-      <Text fx:id="questionField" fill="WHITE" layoutX="676.0" layoutY="231.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="497.83019945468277">
+      <Text fx:id="questionField" fill="WHITE" layoutX="300.0" layoutY="344.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="497.83019945468277">
          <font>
             <Font name="Arial Bold" size="30.0" />
          </font>

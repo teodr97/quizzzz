@@ -4,20 +4,26 @@ import client.utils.GuiUtils;
 
 import client.MySessionHandler;
 import commons.models.Game;
+import commons.models.Message;
+import commons.models.MessageType;
+import javafx.animation.AnimationTimer;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
+import javax.swing.*;
 import java.io.IOException;
 
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -28,6 +34,8 @@ import java.util.ResourceBundle;
 
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 
+import org.springframework.messaging.simp.stomp.StompFrameHandler;
+import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSessionHandler;
 
 import org.springframework.web.socket.client.WebSocketClient;
@@ -41,6 +49,7 @@ public class MultiPlayer implements Initializable {
 
     private Game game;
     private MainCtrl mainCtrl;
+
 
     private final Image reactionAngry = new Image(Paths.get("src", "main","resources","images","reactAngry.png").toUri().toString());
     private final Image reactionLol = new Image(Paths.get("src", "main","resources","images","reactLol.png").toUri().toString());
@@ -61,6 +70,8 @@ public class MultiPlayer implements Initializable {
     @FXML private Button answerB;
     @FXML private Button answerC;
 
+    @FXML private ProgressBar timerBar;
+
     @FXML private Text prompt;
     @FXML private Text userpoint;
 
@@ -71,8 +82,14 @@ public class MultiPlayer implements Initializable {
 
     @FXML private ListView<AnchorPane> listViewReactions;
 
+    private double progress;
+
+    private static final double EPSILON = 0.00001;
+
 
     private WebSocketStompClient stompClient;
+
+    private Message incomingmsg;
 
     @Inject
     public MultiPlayer(MainCtrl mainCtrl) {
@@ -94,6 +111,25 @@ public class MultiPlayer implements Initializable {
         imgBttnReactCool.setImage(reactionCool);
         imgBttnReactSweaty.setImage(reactionSweaty);
         imgBttnReactLol.setImage(reactionLol);
+
+        this.mainCtrl.sessie.subscribe("/topic/questions", new StompFrameHandler() {
+
+                    public Type getPayloadType(StompHeaders stompHeaders) {
+                        return Message.class;
+                    }
+
+                    public void handleFrame(StompHeaders stompHeaders, Object payload) {
+                        incomingmsg = (Message) payload;
+                        if (incomingmsg.getMsgType() == MessageType.QUESTION) {
+                            System.out.println("Gotten question");
+                            questionField.setText(incomingmsg.getContent());
+                        }
+                    }
+                });
+        Message retrieveQ = new Message(MessageType.QUESTION, "client", "gib me question");
+        this.mainCtrl.sessie.send("/app/getquestions", retrieveQ);
+    }
+
         /*
         File j2x = new File("./client/src/main/resources/images/Joker2X.png");
         File jHg = new File("./client/src/main/resources/images/JokerHG.png");
@@ -110,7 +146,7 @@ public class MultiPlayer implements Initializable {
 
 
 
-    }
+
 
     /**
      * switches to the splash screen, for the leave button
@@ -175,7 +211,55 @@ public class MultiPlayer implements Initializable {
         // Start the display timer for the newly added reaction.
         newReaction.start();
     }
+
+    /**
+     * Disables all answer buttons.
+     */
+    public void disableAnswers(){
+        answerA.setDisable(true);
+        answerB.setDisable(true);
+        answerC.setDisable(true);
+
+        return;
+    }
+
+    //HANDLES the timebar
+    private class TimerMethod extends AnimationTimer {
+        //define the handle method
+        @Override
+        public void handle(long now) {
+            //call the method
+            handlee();
+        }
+        //method handlee
+        private void handlee(){
+            //making this smaller will slow down the times
+            progress += 0.0025;
+            //set the new progress
+            timerBar.setProgress(progress);
+            //checks if the progress is 1 and will display prompt accordingly
+            // will also disable the buttons if the timer ends
+            if((timerBar.getProgress() + EPSILON > 1 && timerBar.getProgress() - EPSILON <1)){
+                //update the current round + 1
+                game.setCurRound(game.getCurRound()+1);
+                if(prompt != null){
+                    if(prompt.getText().equals("")){
+                        prompt.setText("Timer over");
+                    }
+                }
+                //when timer ends and game hasn't ended we want to display the next question
+                disableAnswers();
+            }
+            if((timerBar.getProgress() + EPSILON > 1.5 && timerBar.getProgress() - EPSILON <1.5)){
+                //when timer ends and game hasn't ended we want to display the next question;
+
+                //when timer ends and game hasn't ended we want to display the next question;
+            }
+        }
+    }
 }
+
+
 
 
 
