@@ -2,6 +2,7 @@ package client.scenes;
 
 import client.MyFXML;
 
+import client.Networking.wsClient;
 import commons.models.Game;
 import commons.models.Player;
 
@@ -16,8 +17,7 @@ import javafx.scene.Scene;
 
 import javafx.stage.Stage;
 import javafx.util.Pair;
-
-
+import org.springframework.messaging.simp.stomp.StompSession;
 
 
 import java.io.IOException;
@@ -35,6 +35,11 @@ public class MainCtrl {
     private Stage primaryStage;
     private Stage stage;
     private Scene scene;
+
+    public StompSession sessie;
+
+    public wsClient wsclient;
+
 
 
 
@@ -135,8 +140,11 @@ public class MainCtrl {
      * Switches to the multiplayer scene after the add name button is clicked
      */
     public void switchToMultiplayer() {
+
         var overview = myFXML.load(MultiPlayer.class, "client", "scenes", "MultiPlayer.fxml");
+
         setAndShowScenes(new Scene(overview.getValue()));
+        System.out.println("switching to multiplayer");
     }
 
 

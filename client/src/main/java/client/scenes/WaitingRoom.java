@@ -5,6 +5,9 @@ import client.MyModule;
 
 
 import client.Networking.wsClient;
+import commons.models.Message;
+import commons.models.MessageType;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 
 
@@ -27,12 +30,15 @@ import javafx.scene.text.Text;
 
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
+import org.springframework.messaging.simp.stomp.StompFrameHandler;
+import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -47,8 +53,10 @@ public class WaitingRoom implements Initializable {
     private static final MyFXML FXML = new MyFXML(INJECTOR);
     private static final String SERVER = "http://localhost:8080/";
 
-
+    private final MultiPlayer multiplayer;
     private final MainCtrl mainCtrl;
+
+
 
     private Username usernameCtrl;
 
@@ -60,6 +68,9 @@ public class WaitingRoom implements Initializable {
     private WebSocketStompClient stompClient;
 
     private boolean dontstop;
+    public boolean gamestarted;
+    private Message incomingmsg;
+
 
     @FXML
     private ListView lobby;
@@ -73,16 +84,21 @@ public class WaitingRoom implements Initializable {
 
 
     @Inject
-    public WaitingRoom( MainCtrl mainCtrl) throws InterruptedException {
+    public WaitingRoom( MainCtrl mainCtrl, MultiPlayer multiplayer) throws InterruptedException {
         this.mainCtrl = mainCtrl;
         this.dontstop = true;
+        this.multiplayer = multiplayer;
 
         this.players = new Text();
+
+        this.gamestarted = false;
     }
 
     //no real functionality yet
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+
         //in the waiting we room we will start the longspamming thread and the websocket thread
 
         //the httpclient thread
@@ -99,43 +115,59 @@ public class WaitingRoom implements Initializable {
         //the websocket client thread
         //the websocket runnable takes as paramter the controller so we can edit things inside
         // the
-//        this.wsclientthread = new Thread(new WaitingRunnable(this) {
-//            WaitingRoom thiswaiting= this.getController();
-//
-//            @Override
-//            public void run() {
-//
-//                wsClient websocketClient = new wsClient(thiswaiting);
-//                ListenableFuture<StompSession> f = websocketClient.connect();
-////                StompSession stompSession = f.get();
-//                // code goes here.
-////                WebSocketClient webSocketClient = new StandardWebSocketClient();
-////                stompClient = new WebSocketStompClient(webSocketClient);
-////                stompClient.setMessageConverter(new MappingJackson2MessageConverter());
-////
-////                String url = "ws://localhost:8080/hello";
-////                StompSessionHandler sessionHandler = new MySessionHandler();
-////                ListenableFuture<StompSession> f = stompClient.connect(url, sessionHandler);
-//
-//
-//                try{
-//                    StompSession sessie = f.get();
-//                    websocketClient.subscribeGreetings(sessie);
-//                    websocketClient.sendHello(sessie);
-//
-//
-//                }catch(Exception e){
-//                    System.out.print("se");
-//                }
-//                //new Scanner(System.in).nextLine();
-//
-//
-//            }
-//        });
-//        this.wsclientthread.start();
+        this.wsclientthread = new Thread(new WaitingRunnable(this) {
+            WaitingRoom thiswaiting= this.getController();
 
-        wsClient websocketClient = new wsClient(this);
-        ListenableFuture<StompSession> f = websocketClient.connect();
+            @Override
+            public void run() {
+
+                thiswaiting.mainCtrl.wsclient = new wsClient(thiswaiting);
+                ListenableFuture<StompSession> f = thiswaiting.mainCtrl.wsclient.connect();
+//                StompSession stompSession = f.get();
+                // code goes here.
+//                WebSocketClient webSocketClient = new StandardWebSocketClient();
+//                stompClient = new WebSocketStompClient(webSocketClient);
+//                stompClient.setMessageConverter(new MappingJackson2MessageConverter());
+//
+//                String url = "ws://localhost:8080/hello";
+//                StompSessionHandler sessionHandler = new MySessionHandler();
+//                ListenableFuture<StompSession> f = stompClient.connect(url, sessionHandler);
+
+
+                try{
+                    thiswaiting.mainCtrl.sessie = f.get();
+                    thiswaiting.mainCtrl.sessie.subscribe("/topic/greetings", new StompFrameHandler() {
+
+                        public Type getPayloadType(StompHeaders stompHeaders) {
+                            return Message.class;
+                        }
+
+                        public void handleFrame(StompHeaders stompHeaders, Object payload) {
+                            incomingmsg = (Message) payload;
+                            if(incomingmsg.getMsgType() == MessageType.GAME_STARTED){
+                                System.out.println("gamestarted message type");
+                                startGame();
+                            }
+
+
+                        }
+
+
+                    });
+
+
+                }catch(Exception e){
+                    System.out.print(e.getMessage());
+                }
+                //new Scanner(System.in).nextLine();
+
+
+            }
+        });
+        this.wsclientthread.start();
+
+//        this.mainCtrl.wsclient = new wsClient(this, multiplayer);
+//        ListenableFuture<StompSession> f = this.mainCtrl.wsclient.connect();
 //                StompSession stompSession = f.get();
         // code goes here.
 //                WebSocketClient webSocketClient = new StandardWebSocketClient();
@@ -147,17 +179,41 @@ public class WaitingRoom implements Initializable {
 //                ListenableFuture<StompSession> f = stompClient.connect(url, sessionHandler);
 
 
-        try{
-            StompSession sessie = f.get();
-            websocketClient.subscribeGreetings(sessie);
-            websocketClient.sendHello(sessie);
-
-
-        }catch(Exception e){
-            System.out.print("se");
-        }
+//        try{
+//            this.mainCtrl.sessie = f.get();
+//            this.mainCtrl.sessie.subscribe("/topic/greetings", new StompFrameHandler() {
+//
+//                public Type getPayloadType(StompHeaders stompHeaders) {
+//                    return Message.class;
+//                }
+//
+//                public void handleFrame(StompHeaders stompHeaders, Object payload) {
+//                    incomingmsg = (Message) payload;
+//                    handlePayload(incomingmsg);
+//
+//
+//                }
+//
+//
+//            });
+////            this.mainCtrl.wsclient.subscribeGreetings(this.mainCtrl.sessie);
+////            this.mainCtrl.wsclient.sendHello(this.mainCtrl.sessie);
+//
+//
+//        }catch(Exception e){
+//            System.out.print("se");
+//        }
         //new Scanner(System.in).nextLine();
 
+    }
+
+    public void handlePayload(Message incomingmsg) {
+        greetings.setText("Received : " + incomingmsg.getContent() + " from : " + incomingmsg.getUsername());
+        if(incomingmsg.getMsgType() == MessageType.GAME_STARTED){
+            System.out.println("gamestarted message type");
+            startGame();
+        }
+        //System.out.println("Received : " + incomingmsg.getContent() + " from : " + incomingmsg.getUsername());
     }
 
     /**
@@ -217,11 +273,24 @@ public class WaitingRoom implements Initializable {
      * start the game and switch to the mulitplayer screen
      * Also stop polling the lobby for the player list
      */
-    public void startGame(){
+    public void sendstartGame(){
         //stop the lobby spamming thread
+        //notify other players that we gon start the game;
         this.dontstop = false;
+        Message startgamemsg = new Message(MessageType.GAME_STARTED, "", "someone started the game");
+
+        this.mainCtrl.sessie.send("/topic/greetings", startgamemsg);
+
+
+
+    }
+
+    public void startGame(){
+        System.out.println("move to next screen plax");
         this.mainCtrl.switchToMultiplayer();
     }
+
+
 
     /**Leave the waiting rooom
      *

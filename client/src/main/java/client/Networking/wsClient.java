@@ -24,12 +24,15 @@ import org.springframework.web.socket.client.WebSocketClient;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
+import javax.inject.Inject;
+
 
 public class wsClient {
     private MainCtrl mainCtrl;
 
-    private MultiPlayer multiplayer;
+//    private MultiPlayer multiplayer;
     private WaitingRoom waitingroom;
+
 
 
 
@@ -44,10 +47,16 @@ public class wsClient {
 
     private WebSocketStompClient stompClient;
 
+    @Inject
     public wsClient(WaitingRoom waitingroom){
         this.waitingroom = waitingroom;
+        //this.multiplayer =multiplayer;
+
+
 
     }
+
+
 
 
 //
@@ -112,7 +121,11 @@ public class wsClient {
 
     public void handlePayload(Message incomingmsg) {
         waitingroom.greetings.setText("Received : " + incomingmsg.getContent() + " from : " + incomingmsg.getUsername());
-        System.out.println("Received : " + incomingmsg.getContent() + " from : " + incomingmsg.getUsername());
+        if(incomingmsg.getMsgType() == MessageType.GAME_STARTED){
+            System.out.println("gamestarted message type");
+            waitingroom.startGame();
+        }
+        //System.out.println("Received : " + incomingmsg.getContent() + " from : " + incomingmsg.getUsername());
     }
 
     public void sendHello(StompSession stompSession) {
