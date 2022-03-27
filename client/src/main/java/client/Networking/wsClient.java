@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.concurrent.ExecutionException;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 
 import javafx.scene.text.Text;
@@ -123,8 +124,14 @@ public class wsClient {
         waitingroom.greetings.setText("Received : " + incomingmsg.getContent() + " from : " + incomingmsg.getUsername());
         if(incomingmsg.getMsgType() == MessageType.GAME_STARTED){
             System.out.println("gamestarted message type");
+
+            //java fx thread need to be edited after the current websocket thread
+
             waitingroom.startGame();
+
         }
+
+
         //System.out.println("Received : " + incomingmsg.getContent() + " from : " + incomingmsg.getUsername());
     }
 

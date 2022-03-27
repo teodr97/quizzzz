@@ -7,9 +7,7 @@ import commons.models.Game;
 import commons.models.Player;
 
 
-
-
-
+import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 
@@ -142,9 +140,23 @@ public class MainCtrl {
     public void switchToMultiplayer() {
 
         var overview = myFXML.load(MultiPlayer.class, "client", "scenes", "MultiPlayer.fxml");
+        try{
+            // in the meantime we created a websocket thread which where we try to call the swithtoMultplayer function from
+            //since java fx needs to be run in it's own thread w
+            // e need the Playform.runlater block
+            Platform.runLater(new Runnable() {
 
-        setAndShowScenes(new Scene(overview.getValue()));
-        System.out.println("switching to multiplayer");
+                @Override
+                public void run() {
+                    setAndShowScenes(new Scene(overview.getValue()));
+                }
+            });
+
+        }catch(Exception e){
+
+            System.out.println(e.getMessage());
+        }
+
     }
 
 

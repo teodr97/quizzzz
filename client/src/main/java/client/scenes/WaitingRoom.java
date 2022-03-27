@@ -148,12 +148,18 @@ public class WaitingRoom implements Initializable {
                                 System.out.println("gamestarted message type");
                                 startGame();
                             }
+                            if(incomingmsg.getMsgType() == MessageType.CONNECTED){
+                                System.out.println("You;ve joined the waiting room");
+                                greetings.setText("You;ve joined the waiting room");
+                            }
 
 
                         }
 
 
                     });
+                    Message greetingsMsg = new Message(MessageType.CONNECT, "client", "Hello server");
+                    thiswaiting.mainCtrl.sessie.send("/app/hello", greetingsMsg);
 
 
                 }catch(Exception e){
@@ -276,6 +282,7 @@ public class WaitingRoom implements Initializable {
     public void sendstartGame(){
         //stop the lobby spamming thread
         //notify other players that we gon start the game;
+        //send game started message to all other clients subscribed to "/topic/greetings"
         this.dontstop = false;
         Message startgamemsg = new Message(MessageType.GAME_STARTED, "", "someone started the game");
 
