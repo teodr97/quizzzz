@@ -70,7 +70,7 @@
             <Font name="Arial Bold" size="36.0" />
          </font>
       </Text>
-      <ProgressBar fx:id="timerBar" layoutX="-3.0" layoutY="168.0" prefHeight="18.0" prefWidth="1125.0" progress="0.0" />
+      <ProgressBar fx:id="timerBar" layoutX="-3.0" layoutY="168.0" prefHeight="18.0" prefWidth="1125.0" progress="0.14" />
       <Text fx:id="userpoint" fill="WHITE" layoutX="853.0" layoutY="147.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="238.0">
          <font>
             <Font name="Arial Bold" size="36.0" />

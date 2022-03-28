@@ -1,5 +1,7 @@
 package client.scenes;
 
+import javafx.application.Platform;
+
 import java.util.TimerTask;
 
 public class increaseTimerBar extends TimerTask {
@@ -24,6 +26,11 @@ public class increaseTimerBar extends TimerTask {
                 }
             }
             progress = 0;
+            multiplayer.progressInc = 0.001;
+            multiplayer.timerBar.setProgress(progress);
+            multiplayer.timerBar.setStyle("-fx-accent: lightblue");
+
+
 
             //when timer ends and game hasn't ended we want to display the next question
             //disableAnswers();

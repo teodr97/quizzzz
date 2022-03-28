@@ -7,6 +7,7 @@ import commons.models.Game;
 import commons.models.Message;
 import commons.models.MessageType;
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -118,6 +119,7 @@ public class MultiPlayer implements Initializable {
         imgBttnReactCool.setImage(reactionCool);
         imgBttnReactSweaty.setImage(reactionSweaty);
         imgBttnReactLol.setImage(reactionLol);
+        System.out.println(timerBar.getStyle());
 
         this.mainCtrl.sessie.subscribe("/topic/questions", new StompFrameHandler() {
 
@@ -130,6 +132,8 @@ public class MultiPlayer implements Initializable {
                         if (incomingmsg.getMsgType() == MessageType.QUESTION) {
                             System.out.println("Gotten question");
                             questionField.setText(incomingmsg.getContent());
+                            timerBar.setStyle("-fx-accent: lightblue");
+                            timerBar.setProgress(0);
                         }
                         if(incomingmsg.getMsgType() == MessageType.GAME_ENDED){
                             gamended = true;
@@ -147,9 +151,17 @@ public class MultiPlayer implements Initializable {
 
             public void handleFrame(StompHeaders stompHeaders, Object payload) {
                 incomingmsg = (Message) payload;
+                System.out.println("someone clicked a joker");
                 progressInc = 0.002;
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        timerBar.setStyle("-fx-accent: red");
+                    }
+                });
             }
         });
+
         Message retrieveQ = new Message(MessageType.QUESTION, "client", "gib me question");
         this.mainCtrl.sessie.send("/app/getquestions", retrieveQ);
 
@@ -260,7 +272,7 @@ public class MultiPlayer implements Initializable {
     public void senddecreaseTimeForAll(){
         //disable the button if  clicked
         timeJoker.setDisable(true);
-        mainCtrl.sessie.send("/app/clickedJoker", new Message(MessageType.TIME_JOKER, "client", "someone clicked the timer joker"));
+        mainCtrl.sessie.send("/topic/jokers", new Message(MessageType.TIME_JOKER, "client", "someone clicked the timer joker"));
     }
 
 
