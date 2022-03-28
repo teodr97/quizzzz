@@ -56,5 +56,6 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
+      <Button layoutX="14.0" layoutY="741.0" mnemonicParsing="false" onAction="#switchToMultiPlayer" text="MultiplayerScreenTest" />
    </children>
 </AnchorPane>

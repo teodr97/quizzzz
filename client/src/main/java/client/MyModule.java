@@ -39,7 +39,7 @@ public class MyModule implements Module {
         binder.bind(StatSharerSingleplayer.class).in(Scopes.SINGLETON);
         binder.bind(QuestionRetriever.class).in(Scopes.SINGLETON);
         binder.bind(WaitingRoom.class).in(Scopes.SINGLETON);
-        binder.bind(SingleplayerUsername.class).in(Scopes.SINGLETON);
         binder.bind(Admin.class).in(Scopes.SINGLETON);
+        binder.bind(SingleplayerUsername.class).in(Scopes.SINGLETON);
     }
 }
