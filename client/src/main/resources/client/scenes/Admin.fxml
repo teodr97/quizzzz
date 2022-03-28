@@ -16,13 +16,13 @@
             <Font name="Arial Bold" size="72.0" />
          </font>
       </Text>
-      <Label fx:id="fileText" layoutX="804.0" layoutY="349.0" text="Zip file to be unpacked" textFill="WHITE">
+      <Label fx:id="fileText" layoutX="804.0" layoutY="310.0" text="Zip file to be unpacked" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="Arial" size="25.0" />
          </font>
       </Label>
-      <Button fx:id="fileBtn" layoutX="892.0" layoutY="413.0" mnemonicParsing="false" onAction="#uploadFile" text="Upload File" />
-      <Button fx:id="dbBtn" layoutX="845.0" layoutY="476.0" mnemonicParsing="false" onAction="#uploadToDatabase" prefHeight="65.0" prefWidth="170.0" text="Add to Database" />
+      <Button fx:id="fileBtn" layoutX="892.0" layoutY="366.0" mnemonicParsing="false" onAction="#uploadFile" text="Upload File" textAlignment="CENTER" />
+      <Button fx:id="dbBtn" layoutX="845.0" layoutY="415.0" mnemonicParsing="false" onAction="#uploadToDatabase" prefHeight="65.0" prefWidth="170.0" text="Add to Database" textAlignment="CENTER" />
       <Button layoutX="51.0" layoutY="638.0" mnemonicParsing="false" onAction="#switchToSplash" prefHeight="74.0" prefWidth="224.0" style="-fx-background-color: #0249bd;" styleClass="buttons" text="Back to Menu" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="24.0" />

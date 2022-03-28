@@ -9,14 +9,20 @@ import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.Response;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.TilePane;
 import javafx.stage.FileChooser;
+import javafx.stage.Popup;
+import javafx.stage.PopupWindow;
 import javafx.stage.Stage;
 import org.glassfish.jersey.client.ClientConfig;
 
@@ -44,6 +50,15 @@ public class Admin implements Initializable {
 
     @FXML
     private Label fileText;
+
+    @FXML
+    private Button addBtn;
+
+    @FXML
+    private Button updateBtn;
+
+    @FXML
+    private Button deleteBtn;
 
     @FXML
     private TableView<ActivityEntry> tableActivity;
@@ -179,22 +194,30 @@ public class Admin implements Initializable {
     /**
      * fetches the entries via get request
      */
-    public static void fetchActivities() {
+    public void fetchActivities() {
         List<Activity> activityList = ClientBuilder.newClient(new ClientConfig())
                 .target("http://localhost:8080").path("/api/v1/activity")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<>() {});
 
+        List<ActivityEntry> entries = new ArrayList<>();
         for(Activity activity : activityList){
-            continue;
+            entries.add(new ActivityEntry(Integer.toString(activity.getAutoId()),
+                    activity.getTitle(),
+                    activity.getSource(),
+                    activity.getImage_path(),
+                    Long.toString(activity.getConsumption_in_wh())));
         }
+
+        tableActivity.setItems(FXCollections.observableList(entries));
+
     }
 
     /**
      * class for entries
      */
-    private class ActivityEntry{
+    private static class ActivityEntry{
         String autoId;
         String title;
         String source;
@@ -208,6 +231,5 @@ public class Admin implements Initializable {
             this.image_path = image_path;
             this.consumption_in_wh = consumption_in_wh;
         }
-
     }
 }
