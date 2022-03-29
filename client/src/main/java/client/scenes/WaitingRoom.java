@@ -19,8 +19,6 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import jakarta.ws.rs.client.ClientBuilder;
 
-import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.core.Response;
 import javafx.event.ActionEvent;
 
 
@@ -31,10 +29,6 @@ import javafx.scene.Scene;
 
 import javafx.scene.control.ListView;
 
-import javafx.scene.text.Text;
-import javafx.stage.Stage;
-
-import javafx.fxml.Initializable;
 import javafx.scene.text.Text;
 
 
@@ -120,16 +114,7 @@ public class WaitingRoom implements Initializable {
 
         //in the waiting we room we will start the longspamming thread and the websocket thread
 
-        //the httpclient thread
-        this.httpclientthread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // code goes here.
-                longpollUpdateLobby();
 
-            }
-        });
-        httpclientthread.start();
 
         //the websocket client thread
         //the websocket runnable takes as paramter the controller so we can edit things inside
@@ -206,46 +191,6 @@ public class WaitingRoom implements Initializable {
             }
         });
         this.wsclientthread.start();
-
-//        this.mainCtrl.wsclient = new wsClient(this, multiplayer);
-//        ListenableFuture<StompSession> f = this.mainCtrl.wsclient.connect();
-//                StompSession stompSession = f.get();
-        // code goes here.
-//                WebSocketClient webSocketClient = new StandardWebSocketClient();
-//                stompClient = new WebSocketStompClient(webSocketClient);
-//                stompClient.setMessageConverter(new MappingJackson2MessageConverter());
-//
-//                String url = "ws://localhost:8080/hello";
-//                StompSessionHandler sessionHandler = new MySessionHandler();
-//                ListenableFuture<StompSession> f = stompClient.connect(url, sessionHandler);
-
-
-//        try{
-//            this.mainCtrl.sessie = f.get();
-//            this.mainCtrl.sessie.subscribe("/topic/greetings", new StompFrameHandler() {
-//
-//                public Type getPayloadType(StompHeaders stompHeaders) {
-//                    return Message.class;
-//                }
-//
-//                public void handleFrame(StompHeaders stompHeaders, Object payload) {
-//                    incomingmsg = (Message) payload;
-//                    handlePayload(incomingmsg);
-//
-//
-//                }
-//
-//
-//            });
-////            this.mainCtrl.wsclient.subscribeGreetings(this.mainCtrl.sessie);
-////            this.mainCtrl.wsclient.sendHello(this.mainCtrl.sessie);
-//
-//
-//        }catch(Exception e){
-//            System.out.print("se");
-//        }
-        //new Scanner(System.in).nextLine();
-
     }
 
 
@@ -280,6 +225,9 @@ public class WaitingRoom implements Initializable {
         mainCtrl.switchToSplash();
     }
 
+    /** keep Asking the server for the player list
+     * @param player
+     */
     //recursive function that keeps requesting the server for new data
     //in a longpolling fashion
     public void longpollUpdateLobby(Player player){
@@ -309,12 +257,7 @@ public class WaitingRoom implements Initializable {
     }
 
 
-    /**
-     * Will start the websocket connection and thus the game
-     */
-    public void startGame(){
 
-    }
 
     /**
      * Updates the text displaying the list of players currently in lobby.

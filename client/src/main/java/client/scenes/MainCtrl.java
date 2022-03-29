@@ -1,31 +1,34 @@
 package client.scenes;
 
 import client.MyFXML;
-import client.MyModule;
-import com.google.inject.Injector;
+
+import client.Networking.WsClient;
+
+import commons.models.Game;
 import commons.models.Player;
-import jakarta.ws.rs.client.Client;
+
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.core.Response;
-import javafx.fxml.FXML;
 
-import javafx.scene.Node;
+import javafx.application.Platform;
+
+
+
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 
-import javafx.scene.control.TextField;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-import javafx.scene.control.Button;
+
 
 import javafx.event.ActionEvent;
 import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.client.ClientProperties;
+
+import org.springframework.messaging.simp.stomp.StompSession;
+
 import java.io.IOException;
 
-
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 
 public class MainCtrl {
@@ -40,6 +43,12 @@ public class MainCtrl {
     private Scene scene;
 
     public StompSession sessie;
+
+    public WsClient wsclient;
+
+    private WaitingRoom room;
+    private Scene waitingRoom;
+
 
 
     public MainCtrl() {
@@ -196,6 +205,10 @@ public class MainCtrl {
         room.longpollUpdateLobby(player);
     }
 
+    /**Leaves the games and remoes the player from the game
+     * @param event
+     * @throws IOException
+     */
     //If the event is executed then the scene switches to Splash.fxml
     public void leaveGame(ActionEvent event) throws IOException{
         ClientBuilder.newClient(new ClientConfig()) //
@@ -208,6 +221,9 @@ public class MainCtrl {
         setAndShowScenes(new Scene(overview.getValue()));
     }
 
+    /**
+     * Stops the thread
+     */
     public void stopThread(){
         room.leaveGame();
     }

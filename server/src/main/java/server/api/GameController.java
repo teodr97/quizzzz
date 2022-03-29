@@ -111,22 +111,14 @@ public class GameController {
     //get the players in a long polling fashion
     //we keep the request open untill a new player connects in which case we
     //send the new array of all players
-    @GetMapping("/getPlayers/{id}")
-    public ResponseEntity<List<String>> getPlayers(@PathVariable("id") String playerid) throws InterruptedException {
-        int playeridint = parseInt(playerid);
-        if (lastStoredPlayer().isPresent() && lastStoredPlayer().get().getWaitingRoomId() > playeridint) {
-            List<String> output = new ArrayList<>();
-            for (int index = playeridint; index < playerStore.size(); index++) {
-                output.add(playerStore.get(index).getNickname());
-            }
-            return ResponseEntity.ok(output);
-        }
+    @GetMapping("/getPlayers/")
+    public ResponseEntity<List<Player>> getPlayers(@PathVariable("id") String player) throws InterruptedException, NotFoundException {
         System.out.println("poll:");
         return ResponseEntity.ok(gameService.getPlayers(player));
     }
 
     //keeppolling code
-    private ResponseEntity<List<String>> keepPolling(String playerid) throws InterruptedException {
+    private ResponseEntity<List<Player>> keepPolling(String playerid) throws InterruptedException, NotFoundException {
         Thread.sleep(1000);
         return getPlayers(playerid);
 
