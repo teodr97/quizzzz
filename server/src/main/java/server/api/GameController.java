@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.lang.Integer.parseInt;
 
 @RestController
 @Slf4j
@@ -103,38 +102,17 @@ public class GameController {
     }
 
     /**
-     * @param playerid integer wich represent theidi of a  player
+     * @param player
      * @return the player with id playerid
      * @throws InterruptedException
      */
     //get the players in a long polling fashion
     //we keep the request open untill a new player connects in which case we
     //send the new array of all players
-    @GetMapping("/getPlayers/{id}")
-    public ResponseEntity<List<String>> getPlayers(@PathVariable("id") String playerid) throws InterruptedException {
-        int playeridint = parseInt(playerid);
-        if (lastStoredPlayer().isPresent() && lastStoredPlayer().get().getWaitingRoomId() > playeridint) {
-            List<String> output = new ArrayList<>();
-            for (int index = playeridint; index < playerStore.size(); index++) {
-                output.add(playerStore.get(index).getNickname());
-            }
-            return ResponseEntity.ok(output);
-        }
+    @GetMapping("/getPlayers")
+    public ResponseEntity<List<Player>> getPlayers(@RequestParam String player) throws InterruptedException, NotFoundException {
         System.out.println("poll:");
-
-        return keepPolling(playerid);
-    }
-
-    /**
-     * @param playerid Keepolling the server with the above request
-     * @return
-     * @throws InterruptedException
-     */
-    //keeppolling code
-    private ResponseEntity<List<String>> keepPolling(String playerid) throws InterruptedException {
-        Thread.sleep(1000);
-        return getPlayers(playerid);
-
+        return ResponseEntity.ok(gameService.getPlayers(player));
     }
 
 

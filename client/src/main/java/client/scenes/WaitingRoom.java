@@ -4,7 +4,9 @@ import client.MyFXML;
 import client.MyModule;
 
 
+import commons.models.Player;
 import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.GenericType;
 import javafx.fxml.FXML;
 
 
@@ -14,7 +16,6 @@ import com.google.inject.Injector;
 import jakarta.ws.rs.client.ClientBuilder;
 
 
-import jakarta.ws.rs.core.Response;
 import javafx.event.ActionEvent;
 
 
@@ -37,6 +38,8 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static com.google.inject.Guice.createInjector;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -46,6 +49,7 @@ public class WaitingRoom implements Initializable {
     private static final Injector INJECTOR = createInjector(new MyModule());
     private static final MyFXML FXML = new MyFXML(INJECTOR);
     private static final String SERVER = "http://localhost:8080/";
+    private static final ExecutorService EXEC = Executors.newSingleThreadExecutor();
 
 
     private final MainCtrl mainCtrl;
@@ -81,14 +85,7 @@ public class WaitingRoom implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // code goes here.
-                longpollUpdateLobby();
 
-            }
-        }).start();
     }
 
     /**
@@ -127,35 +124,30 @@ public class WaitingRoom implements Initializable {
      */
     //recursive function that keeps requesting the server for new data
     //in a longpolling fashion
-    public void longpollUpdateLobby(){
+    public void longpollUpdateLobby(Player player){
         //this get requests gets all the players that are connected/connecting to the server
-        Response playersResponse = ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("/game/getPlayers/0") //
-                .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.TRUE)//
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .get();
+        EXEC.submit(() -> {
+            while(!Thread.interrupted()){
+                ArrayList<Player> playersResponse = ClientBuilder.newClient(new ClientConfig()) //
+                        .target(SERVER).path("/game/getPlayers") //
+                        .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.TRUE)
+                        .queryParam("player", player.getNickname())//
+                        .request(APPLICATION_JSON) //
+                        .accept(APPLICATION_JSON) //
+                        .get(new GenericType<ArrayList<Player>>() {});
 
-        ArrayList<String> playersstring = playersResponse.readEntity(ArrayList.class);
-
-        updatePlayerListText(playersstring, players);
-
-        System.out.println(playersstring.toString());
-        while(playersstring.size()>=1){
-            playersResponse = ClientBuilder.newClient(new ClientConfig()) //
-                    .target(SERVER).path("/game/getPlayers/0") //
-                    .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.TRUE)//
-                    .request(APPLICATION_JSON) //
-                    .accept(APPLICATION_JSON) //
-                    .get();
-            playersstring = playersResponse.readEntity(ArrayList.class);
-            updatePlayerListText(playersstring, players);
-            System.out.println(playersstring.toString());
-
-        }
-
-
-
+                updatePlayerListText(playersResponse, players);
+                System.out.println("Hello");
+                System.out.println(playersResponse.toString());
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    EXEC.shutdownNow();
+                    e.printStackTrace();
+                }
+            }
+            System.out.println(Thread.currentThread().getState());
+        });
     }
 
 
@@ -171,11 +163,11 @@ public class WaitingRoom implements Initializable {
      * @param playersString the list of the usernames of players waiting in the lobby
      * @param playersText the text displaying the list of player usernames
      */
-    private void updatePlayerListText(ArrayList<String> playersString, Text playersText) {
+    private void updatePlayerListText(ArrayList<Player> playersString, Text playersText) {
         String output = "Players in lobby:\n";
 
-        for (String username : playersString) {
-            output += "\u2022 " + username + "\n";
+        for (Player player : playersString) {
+            output += "\u2022 " + player.getNickname() + "\n";
         }
         playersText.setTextAlignment(TextAlignment.LEFT);
         playersText.setText(output);
@@ -186,6 +178,13 @@ public class WaitingRoom implements Initializable {
      */
     public void leaveGame(){
         return;
+    }
+
+    /**
+     * Stops thread
+     */
+    public void stop() {
+        EXEC.shutdownNow();
     }
 
     //renders the lobby in fxml fil
