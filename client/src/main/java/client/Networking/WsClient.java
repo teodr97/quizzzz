@@ -2,19 +2,15 @@ package client.Networking;
 
 import java.io.*;
 import java.lang.reflect.Type;
-import java.net.ConnectException;
-import java.net.Socket;
-import java.net.SocketException;
+
+
 import java.util.concurrent.ExecutionException;
 
-import javafx.application.Platform;
-import javafx.fxml.FXML;
 
-import javafx.scene.text.Text;
 
 import client.MySessionHandler;
 import client.scenes.MainCtrl;
-import client.scenes.MultiPlayer;
+
 import client.scenes.WaitingRoom;
 import commons.models.Message;
 import commons.models.MessageType;
@@ -28,7 +24,7 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
 import javax.inject.Inject;
 
 
-public class wsClient {
+public class WsClient {
     private MainCtrl mainCtrl;
 
 //    private MultiPlayer multiplayer;
@@ -49,7 +45,7 @@ public class wsClient {
     private WebSocketStompClient stompClient;
 
     @Inject
-    public wsClient(WaitingRoom waitingroom){
+    public WsClient(WaitingRoom waitingroom){
         this.waitingroom = waitingroom;
         //this.multiplayer =multiplayer;
 
@@ -78,6 +74,9 @@ public class wsClient {
 //
 //    }
 
+    /**
+     * @return Makes a stompsession from the websocket client
+     */
     public ListenableFuture<StompSession> connect() {
 
         WebSocketClient webSocketClient = new StandardWebSocketClient();
@@ -87,10 +86,13 @@ public class wsClient {
         String url = "ws://localhost:8080/hello";
         StompSessionHandler sessionHandler = new MySessionHandler();
 
-        return stompClient.connect(url, new connectionHandler());
+        return stompClient.connect(url, new ConnectionHandler());
     }
 
-    public class connectionHandler extends StompSessionHandlerAdapter {
+    /**
+     * Connection handler
+     */
+    public class ConnectionHandler extends StompSessionHandlerAdapter {
         @Override
         public void afterConnected(StompSession session, StompHeaders connectedHeader) {
             System.out.println("Nice you connected");
@@ -98,14 +100,29 @@ public class wsClient {
         }
     }
 
+    /** Subscribes stompsessino to greetings endpoint
+     * @param stompSession stompsession of current ws client
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
     public void subscribeGreetings(StompSession stompSession) throws ExecutionException, InterruptedException {
 
         stompSession.subscribe("/topic/greetings", new StompFrameHandler() {
 
+
+            /**
+             * @param stompHeaders
+             * @return Sets the payload type
+             */
             public Type getPayloadType(StompHeaders stompHeaders) {
                 return Message.class;
             }
 
+
+            /** Function that handels the payload of received message from the greetings endpoint
+             * @param stompHeaders
+             * @param payload paload received
+             */
             public void handleFrame(StompHeaders stompHeaders, Object payload) {
                 incomingmsg = (Message) payload;
                 handlePayload(incomingmsg);
@@ -120,6 +137,10 @@ public class wsClient {
 
     }
 
+
+    /**Auxillary handle payload message (probably gonna delete)s
+     * @param incomingmsg handle a message
+     */
     public void handlePayload(Message incomingmsg) {
         waitingroom.greetings.setText("Received : " + incomingmsg.getContent() + " from : " + incomingmsg.getUsername());
         if(incomingmsg.getMsgType() == MessageType.GAME_STARTED){
@@ -135,11 +156,17 @@ public class wsClient {
         //System.out.println("Received : " + incomingmsg.getContent() + " from : " + incomingmsg.getUsername());
     }
 
+    /**Make the client send hello to the endpoint /app/hello
+     * @param stompSession session used to send this hello message
+     */
     public void sendHello(StompSession stompSession) {
         Message outgoingmsg = new Message(MessageType.CONNECT, "Jordano", "Hello");
         stompSession.send("/app/hello", outgoingmsg);
     }
 
+    /**
+     * @return the incoming msg of the wsclient
+     */
     public Message getIncomingmsg(){
         return this.incomingmsg;
     }

@@ -37,8 +37,7 @@ public class GreetingController {
 
 
 
-    private String HardcodedQ = "Nuclear physicist whet?";
-    private String HardcodedQ1 = "Nuclear reactors huuh?";
+
 
     //probably will be replaced wiht game model class atritbute
     public boolean gamestarted = false;

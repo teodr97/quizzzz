@@ -1,7 +1,6 @@
 package client.scenes;
 
-import javafx.fxml.Initializable;
-import org.springframework.stereotype.Controller;
+
 
 import javax.inject.Inject;
 
@@ -13,10 +12,16 @@ public class WaitingRunnable implements Runnable{
 
     }
 
+    /**
+     * Runs this thing
+     */
     public void run(){
 
     }
 
+    /**
+     * @return the controller of this runnnable
+     */
     public WaitingRoom getController(){
         return this.controller;
     }

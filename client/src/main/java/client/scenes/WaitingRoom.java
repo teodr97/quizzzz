@@ -4,10 +4,9 @@ import client.MyFXML;
 import client.MyModule;
 
 
-import client.Networking.wsClient;
+import client.Networking.WsClient;
 import commons.models.Message;
 import commons.models.MessageType;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 
 
@@ -121,7 +120,7 @@ public class WaitingRoom implements Initializable {
             @Override
             public void run() {
 
-                thiswaiting.mainCtrl.wsclient = new wsClient(thiswaiting);
+                thiswaiting.mainCtrl.wsclient = new WsClient(thiswaiting);
                 ListenableFuture<StompSession> f = thiswaiting.mainCtrl.wsclient.connect();
 //                StompSession stompSession = f.get();
                 // code goes here.
@@ -229,14 +228,6 @@ public class WaitingRoom implements Initializable {
 
     }
 
-    public void handlePayload(Message incomingmsg) {
-        greetings.setText("Received : " + incomingmsg.getContent() + " from : " + incomingmsg.getUsername());
-        if(incomingmsg.getMsgType() == MessageType.GAME_STARTED){
-            System.out.println("gamestarted message type");
-            startGame();
-        }
-        //System.out.println("Received : " + incomingmsg.getContent() + " from : " + incomingmsg.getUsername());
-    }
 
     /**
      * If the event is executed then the scene switches to Splash.fxml
@@ -309,6 +300,9 @@ public class WaitingRoom implements Initializable {
 
     }
 
+    /**
+     * Starts the game and switches the screen to the multiplayer screen
+     */
     public void startGame(){
         System.out.println("move to next screen plax");
         this.mainCtrl.switchToMultiplayer();

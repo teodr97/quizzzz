@@ -5,9 +5,9 @@ import commons.models.MessageType;
 
 import java.util.TimerTask;
 
-public class sendQuestionTask extends TimerTask {
+public class SendQuestionTask extends TimerTask {
     private GreetingController controller;
-    public sendQuestionTask(GreetingController controller){
+    public SendQuestionTask(GreetingController controller){
         this.controller = controller;
     }
 

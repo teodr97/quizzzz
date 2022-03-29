@@ -1,6 +1,7 @@
 package commons.models;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 //question class extends from the mesasge class
 //always has as type MessageType.Question
@@ -82,6 +83,9 @@ public class Question extends Message{
         return this.fakeAnswers;
     }
 
+    /** Set the question for this question
+     * @param question question to be set as a string
+     */
     public void setQuestion(String question){
         super.setContent(question);
     }
@@ -118,9 +122,21 @@ public class Question extends Message{
      */
     public String toString()
     {
-        return super.toString();
+        return super.toString() +" "+ this.answer.toString()+" "+this.fakeAnswers.toString();
     }
 
+    /**
+     * @param other object to check equality with
+     * @return true if attributes equal false otherwise
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
+        Question question = (Question) other;
+        return Objects.equals(content, question.content) && Objects.equals(answer, question.answer)
+                && Objects.equals(fakeAnswers, question.fakeAnswers);
+    }
 
 
 }

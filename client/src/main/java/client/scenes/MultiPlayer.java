@@ -2,10 +2,9 @@ package client.scenes;
 
 import client.utils.GuiUtils;
 
-import client.MySessionHandler;
+
 import commons.models.*;
-import javafx.animation.AnimationTimer;
-import javafx.application.Platform;
+
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,7 +18,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
-import javax.swing.*;
+
 import java.io.IOException;
 
 import java.lang.reflect.Type;
@@ -31,17 +30,16 @@ import java.util.List;
 
 import java.util.ResourceBundle;
 
-import org.springframework.messaging.converter.MappingJackson2MessageConverter;
+
 
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
-import org.springframework.messaging.simp.stomp.StompSessionHandler;
 
-import org.springframework.web.socket.client.WebSocketClient;
-import org.springframework.web.socket.client.standard.StandardWebSocketClient;
+
+
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
-import java.util.Scanner;
+
 import java.util.Timer;
 
 
@@ -206,13 +204,16 @@ public class MultiPlayer implements Initializable {
         mainCtrl.switchToSplash();
     }
 
+    /**
+     * Starts the timer bar sheduled task for displaying the progressbar
+     */
     public void startBar(){
         timerBar.setStyle("-fx-accent: blue");
         progressInc = 0.001;
         progress = 0;
         timerBar.setProgress(progress);
         bartimer = new Timer();
-        bartimer.scheduleAtFixedRate(new increaseTimerBar(this), 0, 10);
+        bartimer.scheduleAtFixedRate(new IncreaseTimerBar(this), 0, 10);
     }
 
     
@@ -281,6 +282,9 @@ public class MultiPlayer implements Initializable {
         return;
     }
 
+    /**
+     * Send that the timer joker has been used to all clients subscriped to the /topic/joker endpoint
+     */
     public void senddecreaseTimeForAll(){
         //disable the button if  clicked
         timeJoker.setDisable(true);

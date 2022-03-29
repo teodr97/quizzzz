@@ -2,7 +2,7 @@ package client.scenes;
 
 import client.MyFXML;
 
-import client.Networking.wsClient;
+import client.Networking.WsClient;
 import commons.models.Game;
 import commons.models.Player;
 
@@ -36,7 +36,7 @@ public class MainCtrl {
 
     public StompSession sessie;
 
-    public wsClient wsclient;
+    public WsClient wsclient;
 
 
 

@@ -2,10 +2,10 @@ package client.scenes;
 
 import javafx.application.Platform;
 
-import javax.inject.Inject;
+
 import java.util.TimerTask;
 
-public class increaseTimerBar extends TimerTask {
+public class IncreaseTimerBar extends TimerTask {
 
     private final MultiPlayer  multiplayer;
     // if the epsilon is too small there is a chance the thread won't stop at progress  = 1;
@@ -15,7 +15,7 @@ public class increaseTimerBar extends TimerTask {
 
 
 
-    public increaseTimerBar(MultiPlayer multiplayer){
+    public IncreaseTimerBar(MultiPlayer multiplayer){
         this.multiplayer = multiplayer;
     }
 
