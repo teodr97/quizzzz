@@ -3,6 +3,8 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
@@ -14,13 +16,13 @@
             <Font name="Arial Bold" size="72.0" />
          </font>
       </Text>
-      <Label fx:id="fileText" layoutX="397.0" layoutY="248.0" text="Zip file to be unpacked" textFill="WHITE">
+      <Label fx:id="fileText" layoutX="804.0" layoutY="310.0" text="Zip file to be unpacked" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="Arial" size="25.0" />
          </font>
       </Label>
-      <Button fx:id="fileBtn" layoutX="485.0" layoutY="285.0" mnemonicParsing="false" onAction="#uploadFile" text="Upload File" />
-      <Button fx:id="dbBtn" layoutX="437.0" layoutY="392.0" mnemonicParsing="false" onAction="#uploadToDatabase" prefHeight="65.0" prefWidth="170.0" text="Add to Database" />
+      <Button fx:id="fileBtn" layoutX="892.0" layoutY="366.0" mnemonicParsing="false" onAction="#uploadFile" text="Upload File" textAlignment="CENTER" />
+      <Button fx:id="dbBtn" layoutX="845.0" layoutY="415.0" mnemonicParsing="false" onAction="#uploadToDatabase" prefHeight="65.0" prefWidth="170.0" text="Add to Database" textAlignment="CENTER" />
       <Button layoutX="51.0" layoutY="638.0" mnemonicParsing="false" onAction="#switchToSplash" prefHeight="74.0" prefWidth="224.0" style="-fx-background-color: #0249bd;" styleClass="buttons" text="Back to Menu" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="24.0" />
@@ -29,5 +31,14 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
+      <TableView fx:id="tableActivity" layoutX="51.0" layoutY="212.0" prefHeight="358.0" prefWidth="690.0">
+        <columns>
+          <TableColumn fx:id="colAutoId" minWidth="0.0" prefWidth="81.60000228881836" text="AutoId" />
+            <TableColumn fx:id="colTitle" prefWidth="233.59999084472656" text="Title" />
+            <TableColumn fx:id="colConsumption" minWidth="0.0" prefWidth="208.800048828125" text="Consumption_in_wh" />
+            <TableColumn fx:id="colSource" prefWidth="81.5999755859375" text="Source" />
+            <TableColumn fx:id="colImage" prefWidth="80.79998779296875" text="Image_path" />
+        </columns>
+      </TableView>
    </children>
 </AnchorPane>

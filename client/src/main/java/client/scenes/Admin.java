@@ -6,12 +6,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import commons.game.Activity;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.Response;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.glassfish.jersey.client.ClientConfig;
@@ -41,6 +46,33 @@ public class Admin implements Initializable {
     @FXML
     private Label fileText;
 
+    @FXML
+    private Button addBtn;
+
+    @FXML
+    private Button updateBtn;
+
+    @FXML
+    private Button deleteBtn;
+
+    @FXML
+    private TableView<ActivityEntry> tableActivity;
+
+    @FXML
+    private TableColumn<ActivityEntry,String> colAutoId;
+
+    @FXML
+    private TableColumn<ActivityEntry,String> colTitle;
+
+    @FXML
+    private TableColumn<ActivityEntry,String> colConsumption;
+
+    @FXML
+    private TableColumn<ActivityEntry,String> colImage;
+
+    @FXML
+    private TableColumn<ActivityEntry,String> colSource;
+
     private Stage stage;
 
     private File file;
@@ -51,7 +83,15 @@ public class Admin implements Initializable {
     }
 
     @Override
-    public void initialize(URL location, ResourceBundle resources){}
+    public void initialize(URL location, ResourceBundle resources){
+        colAutoId.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().autoId));
+        colTitle.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().title));
+        colConsumption.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().consumption_in_wh));
+        colSource.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().source));
+        colImage.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().image_path));
+
+        fetchActivities();
+    }
 
 
     /**
@@ -144,5 +184,47 @@ public class Admin implements Initializable {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .post(Entity.entity(activity, APPLICATION_JSON));
+    }
+
+    /**
+     * fetches the entries via get request
+     */
+    public void fetchActivities() {
+        List<Activity> activityList = ClientBuilder.newClient(new ClientConfig())
+                .target("http://localhost:8080").path("/api/v1/activity")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<>() {});
+
+        List<ActivityEntry> entries = new ArrayList<>();
+        for(Activity activity : activityList){
+            entries.add(new ActivityEntry(Integer.toString(activity.getAutoId()),
+                    activity.getTitle(),
+                    activity.getSource(),
+                    activity.getImage_path(),
+                    Long.toString(activity.getConsumption_in_wh())));
+        }
+
+        tableActivity.setItems(FXCollections.observableList(entries));
+
+    }
+
+    /**
+     * class for entries
+     */
+    private static class ActivityEntry{
+        String autoId;
+        String title;
+        String source;
+        String image_path;
+        String consumption_in_wh;
+
+        ActivityEntry(String autoId, String title, String source, String image_path, String consumption_in_wh){
+            this.autoId = autoId;
+            this.title = title;
+            this.source = source;
+            this.image_path = image_path;
+            this.consumption_in_wh = consumption_in_wh;
+        }
     }
 }
