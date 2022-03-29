@@ -26,6 +26,7 @@ import javafx.scene.control.ListView;
 
 import javafx.scene.text.Text;
 
+import javafx.scene.text.TextAlignment;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 
@@ -134,11 +135,9 @@ public class WaitingRoom implements Initializable {
                 .accept(APPLICATION_JSON) //
                 .get();
 
-
-
         ArrayList<String> playersstring = playersResponse.readEntity(ArrayList.class);
 
-        players.setText("connected players: " + playersstring.toString());
+        updatePlayerListText(playersstring, players);
 
         System.out.println(playersstring.toString());
         while(playersstring.size()>=1){
@@ -149,7 +148,7 @@ public class WaitingRoom implements Initializable {
                     .accept(APPLICATION_JSON) //
                     .get();
             playersstring = playersResponse.readEntity(ArrayList.class);
-            players.setText("connected players: " + playersstring.toString());
+            updatePlayerListText(playersstring, players);
             System.out.println(playersstring.toString());
 
         }
@@ -166,6 +165,20 @@ public class WaitingRoom implements Initializable {
 
     }
 
+    /**
+     * Updates the text displaying the list of players currently in lobby.
+     * @param playersString the list of the usernames of players waiting in the lobby
+     * @param playersText the text displaying the list of player usernames
+     */
+    private void updatePlayerListText(ArrayList<String> playersString, Text playersText) {
+        String output = "Players in lobby:\n";
+
+        for (String username : playersString) {
+            output += "\u2022 " + username + "\n";
+        }
+        playersText.setTextAlignment(TextAlignment.LEFT);
+        playersText.setText(output);
+    }
 
     /**
      * makes you leave the game.
