@@ -4,6 +4,7 @@ import client.MyFXML;
 import client.MyModule;
 
 
+import jakarta.ws.rs.client.Entity;
 import javafx.fxml.FXML;
 
 
@@ -112,13 +113,13 @@ public class WaitingRoom implements Initializable {
      * @throws IOException
      */
     public void leaveGame(ActionEvent event) throws IOException {
-//        ClientBuilder.newClient(new ClientConfig()) //
-//                .target(SERVER).path("/game/leave") //
-//                .request(APPLICATION_JSON) //
-//                .accept(APPLICATION_JSON) //
-//                .post(Entity.entity(mainCtrl.getPlayer(), APPLICATION_JSON));
-//
-//        mainCtrl.switchToSplash();
+        ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/game/leave")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+               .post(Entity.entity(mainCtrl.getPlayer(), APPLICATION_JSON));
+
+        mainCtrl.switchToSplash();
     }
 
     /**
