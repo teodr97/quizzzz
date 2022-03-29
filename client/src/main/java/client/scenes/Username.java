@@ -67,8 +67,6 @@ public class Username implements Initializable {
     public void switchToWaitingRoom(ActionEvent event) {
         if(username.getText() == null || username.getText().equals("")){
             missingUser.setText("please enter a username");
-        }else if(usernameTaken(username.getText())){
-            missingUser.setText("username already taken");
         }
         else{
             mainCtrl.setPlayer(new Player(username.getText()));
@@ -79,7 +77,12 @@ public class Username implements Initializable {
                     .post(Entity.entity(mainCtrl.getPlayer(), APPLICATION_JSON));
             String responsestring = response.readEntity(String.class);
             System.out.println(responsestring);
-            mainCtrl.switchToWaitingRoom();
+            System.out.println(response.getStatus());
+            if(response.getStatus() == 500){
+                missingUser.setText("Username is already taken");
+            }else{
+                mainCtrl.switchToWaitingRoom();
+            }
         }
     }
 
