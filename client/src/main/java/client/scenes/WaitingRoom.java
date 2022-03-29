@@ -122,6 +122,10 @@ public class WaitingRoom implements Initializable {
         this.mainCtrl.switchToSplash();
     }
 
+    /**
+     * Checks if a game was started if yes switches screen.
+     * @param player
+     */
     public void joinGame(Player player){
         //checks if the game the player is in is started or not
         EXEC2.submit(() -> {
