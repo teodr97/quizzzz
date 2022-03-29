@@ -8,15 +8,14 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.Response;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.glassfish.jersey.client.ClientConfig;
@@ -47,31 +46,37 @@ public class Admin implements Initializable {
     private Label fileText;
 
     @FXML
-    private Button addBtn;
-
-    @FXML
     private Button updateBtn;
 
     @FXML
-    private Button deleteBtn;
+    private TextField textTitle;
 
     @FXML
-    private TableView<ActivityEntry> tableActivity;
+    private TextField textConsumption;
 
     @FXML
-    private TableColumn<ActivityEntry,String> colAutoId;
+    private TextField textSource;
 
     @FXML
-    private TableColumn<ActivityEntry,String> colTitle;
+    private TextArea textConsole;
 
     @FXML
-    private TableColumn<ActivityEntry,String> colConsumption;
+    private TableView<Activity> tableActivity;
 
     @FXML
-    private TableColumn<ActivityEntry,String> colImage;
+    private TableColumn<Activity,Integer> colAutoId;
 
     @FXML
-    private TableColumn<ActivityEntry,String> colSource;
+    private TableColumn<Activity,String> colTitle;
+
+    @FXML
+    private TableColumn<Activity,Long> colConsumption;
+
+    @FXML
+    private TableColumn<Activity,String> colImage;
+
+    @FXML
+    private TableColumn<Activity,String> colSource;
 
     private Stage stage;
 
@@ -84,11 +89,11 @@ public class Admin implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources){
-        colAutoId.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().autoId));
-        colTitle.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().title));
-        colConsumption.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().consumption_in_wh));
-        colSource.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().source));
-        colImage.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().image_path));
+        colAutoId.setCellValueFactory(q -> new SimpleIntegerProperty(q.getValue().getAutoId()).asObject());
+        colTitle.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().getTitle()));
+        colConsumption.setCellValueFactory(q -> new SimpleLongProperty(q.getValue().getConsumption_in_wh()).asObject());
+        colSource.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().getSource()));
+        colImage.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().getImage_path()));
 
         fetchActivities();
     }
@@ -158,6 +163,7 @@ public class Admin implements Initializable {
         }
 
         fileText.setText("Importing Complete");
+
         this.file = null;
 
     }
@@ -190,41 +196,53 @@ public class Admin implements Initializable {
      * fetches the entries via get request
      */
     public void fetchActivities() {
+        //fetches all the activities
         List<Activity> activityList = ClientBuilder.newClient(new ClientConfig())
                 .target("http://localhost:8080").path("/api/v1/activity")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<>() {});
 
-        List<ActivityEntry> entries = new ArrayList<>();
-        for(Activity activity : activityList){
-            entries.add(new ActivityEntry(Integer.toString(activity.getAutoId()),
-                    activity.getTitle(),
-                    activity.getSource(),
-                    activity.getImage_path(),
-                    Long.toString(activity.getConsumption_in_wh())));
-        }
 
-        tableActivity.setItems(FXCollections.observableList(entries));
-
+        tableActivity.setItems(FXCollections.observableList(activityList));
     }
 
     /**
-     * class for entries
+     * updates the activity by taking from the text field
      */
-    private static class ActivityEntry{
-        String autoId;
-        String title;
-        String source;
-        String image_path;
-        String consumption_in_wh;
-
-        ActivityEntry(String autoId, String title, String source, String image_path, String consumption_in_wh){
-            this.autoId = autoId;
-            this.title = title;
-            this.source = source;
-            this.image_path = image_path;
-            this.consumption_in_wh = consumption_in_wh;
+    public void updateActivity(){
+        //first needs to check if an activity is selected
+        Activity activity = tableActivity.getSelectionModel().getSelectedItem();
+        if(activity == null){
+            textConsole.setText("Please select an activity from the table to edit");
+            return;
         }
+        //check each field, update activity object
+        if(textTitle.getText() != null && textTitle.getText().equals("")) {
+            activity.setTitle(textTitle.getText());
+        }
+
+        if(textConsumption.getText() != null && textConsumption.getText().equals("")){
+            activity.setConsumption_in_wh(Long.parseLong(textConsumption.getText()));
+        }
+
+        if(textSource.getText() != null && textSource.getText().equals("")){
+            activity.setSource(textSource.getText());
+        }
+
+        //update request to server
+        Response r = ClientBuilder.newClient(new ClientConfig())
+                .target("http://localhost:8080/api/v1/activity/update")
+                .request(APPLICATION_JSON).accept(APPLICATION_JSON)
+                .post(Entity.entity(activity, APPLICATION_JSON));
+
+        //change entry on table
+        tableActivity.refresh();
+
+        //check setText
+        textConsole.setText("Activity data has been changed");
     }
+
+
+
 }
