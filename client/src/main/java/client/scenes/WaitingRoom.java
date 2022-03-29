@@ -4,6 +4,7 @@ import client.MyFXML;
 import client.MyModule;
 
 
+import commons.models.Game;
 import commons.models.Player;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
@@ -42,6 +43,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static com.google.inject.Guice.createInjector;
+import static commons.models.GameStatus.ONGOING;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 public class WaitingRoom implements Initializable {
@@ -50,6 +52,7 @@ public class WaitingRoom implements Initializable {
     private static final MyFXML FXML = new MyFXML(INJECTOR);
     private static final String SERVER = "http://localhost:8080/";
     private static final ExecutorService EXEC = Executors.newSingleThreadExecutor();
+    private static final ExecutorService EXEC2 = Executors.newSingleThreadExecutor();
 
 
     private final MainCtrl mainCtrl;
@@ -99,9 +102,9 @@ public class WaitingRoom implements Initializable {
                 .target(mainCtrl.SERVER).path("/game/start") //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
-                .post(Entity.entity(mainCtrl.getPlayer(), APPLICATION_JSON));
+                .post(Entity.entity(this.mainCtrl.getPlayer(), APPLICATION_JSON));
 
-        mainCtrl.switchToMultiplayer();
+        this.mainCtrl.switchToMultiplayer();
     }
 
     /**
@@ -116,7 +119,32 @@ public class WaitingRoom implements Initializable {
                 .accept(APPLICATION_JSON)
                .post(Entity.entity(mainCtrl.getPlayer(), APPLICATION_JSON));
 
-        mainCtrl.switchToSplash();
+        this.mainCtrl.switchToSplash();
+    }
+
+    public void joinGame(Player player){
+        //checks if the game the player is in is started or not
+        EXEC2.submit(() -> {
+            while(!Thread.interrupted()){
+                Game game = ClientBuilder.newClient(new ClientConfig()) //
+                        .target(SERVER).path("/game/getGame") //
+                        .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.TRUE)
+                        .queryParam("player", player.getNickname())//
+                        .request(APPLICATION_JSON) //
+                        .accept(APPLICATION_JSON) //
+                        .get(new GenericType<Game>() {});
+                if(game.getStatus().equals(ONGOING)){
+                    System.out.println("Heyho" + player.getNickname());
+                    this.mainCtrl.switchToMultiplayer();
+                }
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    EXEC2.shutdownNow();
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     /**
@@ -137,7 +165,7 @@ public class WaitingRoom implements Initializable {
                         .get(new GenericType<ArrayList<Player>>() {});
 
                 updatePlayerListText(playersResponse, players);
-                System.out.println("Hello");
+                System.out.println(player.getNickname() + "!!!!!!!!!!!!!!");
                 System.out.println(playersResponse.toString());
                 try {
                     Thread.sleep(500);
@@ -184,6 +212,7 @@ public class WaitingRoom implements Initializable {
      * Stops thread
      */
     public void stop() {
+        EXEC2.shutdownNow();
         EXEC.shutdownNow();
     }
 

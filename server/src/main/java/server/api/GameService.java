@@ -99,6 +99,13 @@ public class GameService {
         return game.getPlayers();
     }
 
+    public Game getGame(String username) throws NotFoundException{
+        Game game = GameStorage.getInstance().getGames().values().stream()
+                .filter(it -> it.contains(username))
+                .findAny().orElseThrow(() -> new NotFoundException("No player with username, " + username + " in the game"));
+        return game;
+    }
+
     /**
      * NOT FULLY IMPLEMENTED YET
      * Should check what gamestate is the game in.

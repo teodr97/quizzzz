@@ -2,10 +2,11 @@ package client.scenes;
 
 import client.MyFXML;
 
+import commons.models.Game;
 import commons.models.Player;
 
 
-
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 
 
@@ -31,6 +32,7 @@ public class MainCtrl {
     public static final String SERVER = "http://localhost:8080/";
     private static MyFXML myFXML;
     private Player player;
+    private Game game;
 
     private Stage primaryStage;
     private Stage stage;
@@ -61,6 +63,21 @@ public class MainCtrl {
         return this.player;
     }
 
+    /**
+     * Sets the game object.
+     * @param game The game that will be set through Username class.
+     */
+    public void setGame(Game game) {
+        this.game = game;
+    }
+
+    /**
+     * Gets the player object.
+     * @return
+     */
+    public Game getGame() {
+        return this.game;
+    }
 
     /**
      * Initialises the starting stage of the application.
@@ -144,7 +161,22 @@ public class MainCtrl {
      */
     public void switchToMultiplayer() {
         var overview = myFXML.load(MultiPlayer.class, "client", "scenes", "MultiPlayer.fxml");
-        setAndShowScenes(new Scene(overview.getValue()));
+        try{
+            // in the meantime we created a websocket thread which where we try to call the swithtoMultplayer function from
+            //since java fx needs to be run in it's own thread w
+            // e need the Playform.runlater block
+            Platform.runLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    setAndShowScenes(new Scene(overview.getValue()));
+                }
+            });
+
+        }catch(Exception e){
+
+            System.out.println(e.getMessage());
+        }
     }
 
 
@@ -177,6 +209,7 @@ public class MainCtrl {
      * Starts the long polling in waitingroom.
      */
     public void startLongPolling(){
+        room.joinGame(player);
         room.longpollUpdateLobby(player);
     }
 
