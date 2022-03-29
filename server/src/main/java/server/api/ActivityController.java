@@ -93,4 +93,18 @@ public class ActivityController {
     public void deleteAll(){
         repository.deleteAll();
     }
+
+    /**
+     * updates an activity using fields of a given activity
+     */
+    @PostMapping(path = "/update")
+    public ResponseEntity<Activity> update(Activity activity){
+        Activity repoActivity = repository.findById(activity.getAutoId()).get();
+        repoActivity.setTitle(activity.getTitle());
+        repoActivity.setConsumption_in_wh(activity.getConsumption_in_wh());
+        repoActivity.setSource(activity.getSource());
+        repository.save(repoActivity);
+        return ResponseEntity.ok(repoActivity);
+
+    }
 }
