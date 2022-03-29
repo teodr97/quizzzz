@@ -10,6 +10,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 
 import java.util.ArrayList;
@@ -29,13 +30,15 @@ public class GreetingController {
     @Autowired
     public SimpMessagingTemplate template;
 
+    public Timer qtimer;
+
 
 
     private String HardcodedQ = "Nuclear physicist whet?";
     private String HardcodedQ1 = "Nuclear reactors huuh?";
 
     //probably will be replaced wiht game model class atritbute
-    public boolean gameended = false;
+    public boolean gamestarted = false;
 
     public GreetingController(){questionList.add("Nuclear reactors huuh?");
         questionList.add("Nuclear physicist whet?");
@@ -45,6 +48,7 @@ public class GreetingController {
         questionList.add("Bitcoin green?");
 
         questionIterator = questionList.iterator();
+        qtimer = new Timer();
 
 
 
@@ -63,27 +67,38 @@ public class GreetingController {
     @SendTo("/topic/greetings")
     public Message greeting(Message message){
         System.out.println(message.toString());
+
         return new Message(MessageType.CONNECTED, "Server", "We see you have connected, ");
+
     }
 
-//    /**
-//     * @param message get message user sends to endpoint "/app/hello"
-//     * @return send a message to the client
-//     */
-////    @MessageMapping("/getquestions")
-////    @SendTo("/topic/questions")
-////    public Message getQuestion(Message message){
-////        System.out.println(message.toString());
-////        return new Message(MessageType.QUESTION, "Server", HardcodedQ);
-////    }
+    /**
+     * @param message get message user sends to endpoint "/app/start" which indicates that a player has clicked
+     * on the start game button in the waiting room
+     * @return send a message to the client
+     */
+    @MessageMapping("/start")
+    @SendTo("/topic/gamestate")
+    public Message start(Message message){
+        System.out.println(message.toString());
+        gamestarted = true;
+        return new Message(MessageType.GAME_STARTED, "Server", "Someone started the game");
 
-    //sending a message to "/getquestions" triggers the server to send  the questions every 10 seconds
-    // so we make a timer whihc has as task to send the next question in the question iterator
-    @MessageMapping("/getquestions")
-    @SendTo("/topic/questions")
+    }
+
+
+    /**After someone clicked the startgame button we start sending every questoin to the client every 10 seconds
+     *
+     */
+    @Scheduled(fixedRate = 10000)
     public void sendQuestion(){
-        Timer qtimer = new Timer();
-        qtimer.scheduleAtFixedRate(new sendQuestionTask(this), 0, 10000 );
+        if(gamestarted){
+            this.template.convertAndSend("/topic/questions", new Message(MessageType.QUESTION, "Server", this.questionIterator.next()));
+        }
+
+
+        //Timer qtimer = new Timer();
+
     }
     @MessageMapping("/clickedJoker")
     @SendTo("/topic/jokers")

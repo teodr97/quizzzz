@@ -86,7 +86,10 @@ public class MultiPlayer implements Initializable {
 
     @FXML private ListView<AnchorPane> listViewReactions;
 
-    private double progress;
+
+    public Timer bartimer;
+
+    public double progress;
 
     public double progressInc = 0.001;
 
@@ -132,14 +135,30 @@ public class MultiPlayer implements Initializable {
                         if (incomingmsg.getMsgType() == MessageType.QUESTION) {
                             System.out.println("Gotten question");
                             questionField.setText(incomingmsg.getContent());
-                            timerBar.setStyle("-fx-accent: lightblue");
-                            timerBar.setProgress(0);
-                        }
-                        if(incomingmsg.getMsgType() == MessageType.GAME_ENDED){
-                            gamended = true;
-                            questionField.setText(incomingmsg.getContent());
+                            startBar();
 
+
+
+
+
+                    //        CODE FOR MAKING THE TIMER BAR MOVE
+                    //        we sync the server timer and the client timer with by just making sure that the timer bar is full after 10
+                    //        seconds
+
+
+
+
+//                            timerBar.setStyle("-fx-accent: lightblue");
+//                            timerBar.setProgress(0);
+//                            progressInc = 0.001;
                         }
+//                        if(incomingmsg.getMsgType() == MessageType.GAME_ENDED){
+//                            gamended = true;
+//                            timerBar.setProgress(0);
+//                            questionField.setText(incomingmsg.getContent());
+//                            bartimer.cancel();
+//
+//                        }
                     }
                 });
 
@@ -153,27 +172,21 @@ public class MultiPlayer implements Initializable {
                 incomingmsg = (Message) payload;
                 System.out.println("someone clicked a joker");
                 progressInc = 0.002;
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        timerBar.setStyle("-fx-accent: red");
-                    }
-                });
+
+                timerBar.setStyle("-fx-accent: red");
+
+
             }
         });
 
         Message retrieveQ = new Message(MessageType.QUESTION, "client", "gib me question");
         this.mainCtrl.sessie.send("/app/getquestions", retrieveQ);
 
-        Timer bartimer = new Timer();
-        //CODE FOR MAKING THE TIMER BAR MOVE
-        //we sync the server timer and the client timer with by just making sure that the timer bar is full after 10
-        //seconds
-        bartimer.scheduleAtFixedRate(new increaseTimerBar(this), 0, 10);
-        if(gamended){
-            timerBar.setProgress(0);
-
-        }
+//        bartimer = new Timer();
+////        CODE FOR MAKING THE TIMER BAR MOVE
+////        we sync the server timer and the client timer with by just making sure that the timer bar is full after 10
+////        seconds
+//        bartimer.scheduleAtFixedRate(new increaseTimerBar(this), 0, 10);
     }
 
         /*
@@ -201,6 +214,15 @@ public class MultiPlayer implements Initializable {
      */
     public void switchToSplash(ActionEvent event) throws IOException {
         mainCtrl.switchToSplash();
+    }
+
+    public void startBar(){
+        timerBar.setStyle("-fx-accent: blue");
+        progressInc = 0.001;
+        progress = 0;
+        timerBar.setProgress(progress);
+        bartimer = new Timer();
+        bartimer.scheduleAtFixedRate(new increaseTimerBar(this), 0, 10);
     }
 
     

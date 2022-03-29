@@ -144,10 +144,6 @@ public class WaitingRoom implements Initializable {
 
                         public void handleFrame(StompHeaders stompHeaders, Object payload) {
                             incomingmsg = (Message) payload;
-                            if(incomingmsg.getMsgType() == MessageType.GAME_STARTED){
-                                System.out.println("gamestarted message type");
-                                startGame();
-                            }
                             if(incomingmsg.getMsgType() == MessageType.CONNECTED){
                                 System.out.println("You;ve joined the waiting room");
                                 greetings.setText("You;ve joined the waiting room");
@@ -160,6 +156,26 @@ public class WaitingRoom implements Initializable {
                     });
                     Message greetingsMsg = new Message(MessageType.CONNECT, "client", "Hello server");
                     thiswaiting.mainCtrl.sessie.send("/app/hello", greetingsMsg);
+                    thiswaiting.mainCtrl.sessie.subscribe("/topic/gamestate", new StompFrameHandler() {
+
+                        public Type getPayloadType(StompHeaders stompHeaders) {
+                            return Message.class;
+                        }
+
+                        public void handleFrame(StompHeaders stompHeaders, Object payload) {
+                            incomingmsg = (Message) payload;
+                            if(incomingmsg.getMsgType() == MessageType.GAME_STARTED){
+                                System.out.println("someone started the game so we starting");
+                                startGame();
+                            }
+
+
+                        }
+
+
+                    });
+
+
 
 
                 }catch(Exception e){
@@ -284,9 +300,10 @@ public class WaitingRoom implements Initializable {
         //notify other players that we gon start the game;
         //send game started message to all other clients subscribed to "/topic/greetings"
         this.dontstop = false;
+        gamestarted = true;
         Message startgamemsg = new Message(MessageType.GAME_STARTED, "", "someone started the game");
 
-        this.mainCtrl.sessie.send("/topic/greetings", startgamemsg);
+        this.mainCtrl.sessie.send("/app/start", startgamemsg);
 
 
 
