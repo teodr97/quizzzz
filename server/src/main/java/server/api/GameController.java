@@ -10,6 +10,7 @@ import commons.models.GameStorage;
 import commons.models.Player;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,18 +20,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.lang.Integer.parseInt;
 
 @RestController
 @Slf4j
 @RequestMapping("/game")
 public class GameController {
-    private final GameService gameService = new GameService();
+    private final GameService gameService;
     private final List<Player> playerStore = new ArrayList<>();
 
+    @Autowired
+    public GameController(GameService gameService){
+        this.gameService = gameService;
+    }
 
     /**
-     * @param player creaets a new game
+     * @param player create a game and add player
      * @return
      * @throws NotFoundException
      * @throws GameAlreadyExistsException
@@ -98,16 +102,15 @@ public class GameController {
     public ResponseEntity<Player> leave(@RequestBody Player player) throws NotFoundException{
         return ResponseEntity.ok(gameService.leaveGame(player));
     }
-    
+
+    /**
+     * @param player
+     * @return the player with id playerid
+     * @throws InterruptedException
+     */
     //get the players in a long polling fashion
     //we keep the request open untill a new player connects in which case we
     //send the new array of all players
-
-    /**
-     * @param playerid takes the player id and ask the server if there is this player id in the a certain game
-     * @return
-     * @throws InterruptedException
-     */
     @GetMapping("/getPlayers/{id}")
     public ResponseEntity<List<String>> getPlayers(@PathVariable("id") String playerid) throws InterruptedException {
         int playeridint = parseInt(playerid);
@@ -119,16 +122,10 @@ public class GameController {
             return ResponseEntity.ok(output);
         }
         System.out.println("poll:");
-
-        return keepPolling(playerid);
+        return ResponseEntity.ok(gameService.getPlayers(player));
     }
 
-
-    /**
-     * @param playerid if the server doesn't have that id for a player recursively request the server every second
-     * @return
-     * @throws InterruptedException
-     */
+    //keeppolling code
     private ResponseEntity<List<String>> keepPolling(String playerid) throws InterruptedException {
         Thread.sleep(1000);
         return getPlayers(playerid);

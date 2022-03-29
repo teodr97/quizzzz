@@ -7,6 +7,10 @@ import client.MyModule;
 import client.Networking.WsClient;
 import commons.models.Message;
 import commons.models.MessageType;
+
+import commons.models.Player;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.GenericType;
 import javafx.fxml.FXML;
 
 
@@ -15,9 +19,11 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import jakarta.ws.rs.client.ClientBuilder;
 
-
+import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.Response;
 import javafx.event.ActionEvent;
+
+
 
 
 import javafx.fxml.Initializable;
@@ -26,7 +32,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
+import javafx.fxml.Initializable;
+import javafx.scene.text.Text;
+
+
+import javafx.scene.text.TextAlignment;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
@@ -42,6 +54,8 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static com.google.inject.Guice.createInjector;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -51,6 +65,7 @@ public class WaitingRoom implements Initializable {
     private static final Injector INJECTOR = createInjector(new MyModule());
     private static final MyFXML FXML = new MyFXML(INJECTOR);
     private static final String SERVER = "http://localhost:8080/";
+    private static final ExecutorService EXEC = Executors.newSingleThreadExecutor();
 
     private final MultiPlayer multiplayer;
     private final MainCtrl mainCtrl;
@@ -94,6 +109,11 @@ public class WaitingRoom implements Initializable {
     }
 
     //no real functionality yet
+
+    /**
+     * @param location url we use to acces scene
+     * @param resources resources used for scene
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -230,56 +250,85 @@ public class WaitingRoom implements Initializable {
 
 
     /**
+     * Sends a request to start the game. Sends the player who started as the parameter.
+     * Game will be set to ongoing state.
+     * @param event
+     * @throws IOException
+     */
+    public void startGame(ActionEvent event) throws IOException{
+        ClientBuilder.newClient(new ClientConfig()) //
+                .target(mainCtrl.SERVER).path("/game/start") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .post(Entity.entity(mainCtrl.getPlayer(), APPLICATION_JSON));
+
+        mainCtrl.switchToMultiplayer();
+    }
+
+    /**
      * If the event is executed then the scene switches to Splash.fxml
      * @param event
      * @throws IOException
      */
     public void leaveGame(ActionEvent event) throws IOException {
-//        ClientBuilder.newClient(new ClientConfig()) //
-//                .target(SERVER).path("/game/leave") //
-//                .request(APPLICATION_JSON) //
-//                .accept(APPLICATION_JSON) //
-//                .post(Entity.entity(mainCtrl.getPlayer(), APPLICATION_JSON));
-//
-//        mainCtrl.switchToSplash();
+        ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/game/leave")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+               .post(Entity.entity(mainCtrl.getPlayer(), APPLICATION_JSON));
+
+        mainCtrl.switchToSplash();
+    }
+
+    //recursive function that keeps requesting the server for new data
+    //in a longpolling fashion
+    public void longpollUpdateLobby(Player player){
+        //this get requests gets all the players that are connected/connecting to the server
+        EXEC.submit(() -> {
+            while(!Thread.interrupted()){
+                ArrayList<Player> playersResponse = ClientBuilder.newClient(new ClientConfig()) //
+                        .target(SERVER).path("/game/getPlayers") //
+                        .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.TRUE)
+                        .queryParam("player", player.getNickname())//
+                        .request(APPLICATION_JSON) //
+                        .accept(APPLICATION_JSON) //
+                        .get(new GenericType<ArrayList<Player>>() {});
+
+                updatePlayerListText(playersResponse, players);
+                System.out.println("Hello");
+                System.out.println(playersResponse.toString());
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    EXEC.shutdownNow();
+                    e.printStackTrace();
+                }
+            }
+            System.out.println(Thread.currentThread().getState());
+        });
+    }
+
+
+    /**
+     * Will start the websocket connection and thus the game
+     */
+    public void startGame(){
+
     }
 
     /**
-     * Keeps polling the lobby asking for the list of players
+     * Updates the text displaying the list of players currently in lobby.
+     * @param playersString the list of the usernames of players waiting in the lobby
+     * @param playersText the text displaying the list of player usernames
      */
-    //recursive function that keeps requesting the server for new data
-    //in a longpolling fashion
-    public void longpollUpdateLobby(){
-        //this get requests gets all the players that are connected/connecting to the server
-        Response playersResponse = ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("/game/getPlayers/0") //
-                .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.TRUE)//
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .get();
+    private void updatePlayerListText(ArrayList<Player> playersString, Text playersText) {
+        String output = "Players in lobby:\n";
 
-
-
-        ArrayList<String> playersstring = playersResponse.readEntity(ArrayList.class);
-
-        players.setText("connected players: " + playersstring.toString());
-
-        //System.out.println(playersstring.toString());
-        while(playersstring.size()>=1 && dontstop){
-            playersResponse = ClientBuilder.newClient(new ClientConfig()) //
-                    .target(SERVER).path("/game/getPlayers/0") //
-                    .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.TRUE)//
-                    .request(APPLICATION_JSON) //
-                    .accept(APPLICATION_JSON) //
-                    .get();
-            playersstring = playersResponse.readEntity(ArrayList.class);
-            players.setText("connected players: " + playersstring.toString());
-            //System.out.println(playersstring.toString());
-
+        for (Player player : playersString) {
+            output += "\u2022 " + player.getNickname() + "\n";
         }
-
-
-
+        playersText.setTextAlignment(TextAlignment.LEFT);
+        playersText.setText(output);
     }
 
     /**
@@ -315,6 +364,13 @@ public class WaitingRoom implements Initializable {
      */
     public void leaveGame(){
         return;
+    }
+
+    /**
+     * Stops thread
+     */
+    public void stop() {
+        EXEC.shutdownNow();
     }
 
     //renders the lobby in fxml fil

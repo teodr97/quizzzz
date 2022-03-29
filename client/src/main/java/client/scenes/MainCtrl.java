@@ -1,23 +1,28 @@
 package client.scenes;
 
 import client.MyFXML;
-
-import client.Networking.WsClient;
-import commons.models.Game;
+import client.MyModule;
+import com.google.inject.Injector;
 import commons.models.Player;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.Response;
+import javafx.fxml.FXML;
 
-
-import javafx.application.Platform;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 
-
-
+import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-import org.springframework.messaging.simp.stomp.StompSession;
+import javafx.scene.control.Button;
 
-
+import javafx.event.ActionEvent;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientProperties;
 import java.io.IOException;
 
 
@@ -35,10 +40,6 @@ public class MainCtrl {
     private Scene scene;
 
     public StompSession sessie;
-
-    public WsClient wsclient;
-
-
 
 
     public MainCtrl() {
@@ -66,9 +67,12 @@ public class MainCtrl {
      * @param overview Overview of the Splash scene.
      * @param myFXML The FXML injector used throughout the lifespan of the app.
      */
-    public void initialize(Stage primaryStage, Pair<Splash, Parent> overview, MyFXML myFXML) {
+    public void initialize(Stage primaryStage, Pair<WaitingRoom, Parent> waitingRoom, Pair<Splash, Parent> overview, MyFXML myFXML) {
         this.primaryStage = primaryStage;
         MainCtrl.myFXML = myFXML;
+
+        this.room = waitingRoom.getKey();
+        this.waitingRoom = new Scene(waitingRoom.getValue());
 
         primaryStage.setTitle("QUIZZ");
         primaryStage.setScene(new Scene(overview.getValue()));
@@ -182,15 +186,31 @@ public class MainCtrl {
      * Switches the scene to the waiting room scene for multiplayer.
      */
     public void switchToWaitingRoom(){
-
-        var overview = myFXML.load(WaitingRoom.class, "client", "scenes", "WaitingRoom.fxml");
-        setAndShowScenes(new Scene(overview.getValue()));
-
-
-
+        setAndShowScenes(waitingRoom);
     }
 
+    /**
+     * Starts the long polling in waitingroom.
+     */
+    public void startLongPolling(){
+        room.longpollUpdateLobby(player);
+    }
 
+    //If the event is executed then the scene switches to Splash.fxml
+    public void leaveGame(ActionEvent event) throws IOException{
+        ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("/game/leave") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .post(Entity.entity(player, APPLICATION_JSON));
+        var overview = this.myFXML.load(Splash.class, "client", "scenes", "Splash.fxml");
+        scene = new Scene(overview.getValue());
+        setAndShowScenes(new Scene(overview.getValue()));
+    }
+
+    public void stopThread(){
+        room.leaveGame();
+    }
     /**
      * Switches the scene to the admin panel
      */
