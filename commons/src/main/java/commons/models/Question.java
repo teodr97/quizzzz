@@ -122,7 +122,7 @@ public class Question extends Message{
      */
     public String toString()
     {
-        return super.toString() +" "+ this.answer.toString()+" "+this.fakeAnswers.toString();
+        return super.toString();
     }
 
     /**

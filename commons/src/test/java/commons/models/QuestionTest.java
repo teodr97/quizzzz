@@ -98,8 +98,7 @@ class QuestionTest {
      */
     @Test
     void testToString() {
-        String s = "server(QUESTION): Test"+" "+ question.getAnswer().toString()+" "
-                +question.getFakeAnswers().toString();
+        String s = "server(QUESTION): Test";
         assertEquals(s, question.toString());
     }
 }
