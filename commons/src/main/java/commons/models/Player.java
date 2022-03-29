@@ -30,6 +30,9 @@ public class Player {
      */
     private double timeLeft = 1;
 
+    //this is  a temporary field will be changed when we generalized
+    private int waitingroomid;
+
 
 
     public Player(){
@@ -100,6 +103,10 @@ public class Player {
     public void setTimeLeft(double timeLeft) {
         this.timeLeft = timeLeft;
     }
+
+    public int getWaitingRoomId(){return this.waitingroomid;}
+
+    public void setWaitingRoomId(int id){this.waitingroomid = id;}
 
     /**
      * The equals method of this object.

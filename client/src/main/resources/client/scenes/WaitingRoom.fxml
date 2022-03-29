@@ -10,7 +10,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="783.0" prefWidth="1119.0" style="-fx-background-color: linear-gradient(#02274f, #101b25);" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.WaitingRoom">
     <children>
-        <Button fx:id="toWaitingRoom" layoutX="415.0" layoutY="392.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="261.0" style="-fx-background-color: #0249bd;" text="Start Game" textAlignment="CENTER" textFill="WHITE">
+        <Button fx:id="toMultiplayer" layoutX="415.0" layoutY="392.0" mnemonicParsing="false" onAction="#startGame" prefHeight="55.0" prefWidth="261.0" style="-fx-background-color: #0249bd;" text="Start Game" textAlignment="CENTER" textFill="WHITE">
             <font>
                 <Font size="24.0" />
             </font>
@@ -43,5 +43,10 @@
             </font>
         </Text>
       <ListView layoutX="27.0" layoutY="292.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent;" />
+      <Text fx:id="players" fill="WHITE" layoutX="43.0" layoutY="237.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="215.96484375">
+         <font>
+            <Font name="Arial Bold" size="18.0" />
+         </font>
+      </Text>
     </children>
 </AnchorPane>

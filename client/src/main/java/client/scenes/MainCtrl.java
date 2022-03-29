@@ -1,13 +1,29 @@
 package client.scenes;
 
 import client.MyFXML;
+
 import commons.models.Player;
+
+
+
+import javafx.fxml.FXML;
+
+
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+
+
+import javafx.scene.control.TextField;
+
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
+
+
+
 import java.io.IOException;
+
+
 
 
 public class MainCtrl {
@@ -17,6 +33,15 @@ public class MainCtrl {
     private Player player;
 
     private Stage primaryStage;
+    private Stage stage;
+    private Scene scene;
+
+    @FXML
+    private TextField username;
+
+    private WaitingRoom room;
+    private Scene waitingRoom;
+
 
     public MainCtrl() {
     }
@@ -43,9 +68,12 @@ public class MainCtrl {
      * @param overview Overview of the Splash scene.
      * @param myFXML The FXML injector used throughout the lifespan of the app.
      */
-    public void initialize(Stage primaryStage, Pair<Splash, Parent> overview, MyFXML myFXML) {
+    public void initialize(Stage primaryStage, Pair<WaitingRoom, Parent> waitingRoom, Pair<Splash, Parent> overview, MyFXML myFXML) {
         this.primaryStage = primaryStage;
         MainCtrl.myFXML = myFXML;
+
+        this.room = waitingRoom.getKey();
+        this.waitingRoom = new Scene(waitingRoom.getValue());
 
         primaryStage.setTitle("QUIZZ");
         primaryStage.setScene(new Scene(overview.getValue()));
@@ -141,9 +169,22 @@ public class MainCtrl {
     /**
      * Switches the scene to the waiting room scene for multiplayer.
      */
-    public void switchToWaitingRoom() {
-        var overview = myFXML.load(WaitingRoom.class, "client", "scenes", "WaitingRoom.fxml");
-        setAndShowScenes(new Scene(overview.getValue()));
+    public void switchToWaitingRoom(){
+        setAndShowScenes(waitingRoom);
+    }
+
+    /**
+     * Starts the long polling in waitingroom.
+     */
+    public void startLongPolling(){
+        room.longpollUpdateLobby(player);
+    }
+
+    /**
+     * Stops the thread in waitingroom when application is closed.
+     */
+    public void stopThread(){
+        room.leaveGame();
     }
 
     /**
