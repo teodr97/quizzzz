@@ -1,104 +1,126 @@
 package commons.models;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
-public class Question {
-
-    String question;
-
-    String Answer;
-
-    ArrayList<String> fakeAnswers;
+//question class extends from the mesasge class
+//always has as type MessageType.Question
+//content is now called question
+// we retrieve content by calling this.getQuestion.
+public class Question extends Message{
 
 
+    private String content;
+    private String answer;
+    private ArrayList<String> fakeAnswers;
 
 
-    /** Constructor for the question class
-     * @param question The actual question as a string
-     * @param Answer The answer of the questino as a string
-     * @param fakeAnswers an ArrayList of wrongAnswers as strings (2 fake answers)
+
+
+    public Question(){
+
+    }
+
+    public Question(String content, String answer){
+        super(MessageType.QUESTION, "server", content);
+        this.answer = answer;
+    }
+
+    /** Constructtor of the message object
+     * is extends from class message and we give is message type question
+     *
+     * @param content content of the message object
      */
-    public Question(String question, String Answer, ArrayList<String> fakeAnswers){
-        this.question = question;
-        this.Answer = Answer;
+    public Question(String content, String answer, ArrayList<String> fakeAnswers){
+        super(MessageType.QUESTION, "server", content);
+        this.answer = answer;
         this.fakeAnswers = fakeAnswers;
-
     }
 
-    /** Getter of the question string
-     * @return returns the aactual question as a string
+//    /** Constructtor of the message object
+//     * @param type message type as type type
+//     * @param username username of the person sending message
+//     * @param content content of the message object
+//     */
+//    public Question(MessageType type, String username, String content)
+//    {
+//        this.msgType = type;
+//
+//        this.username = username;
+//        this.content = content;
+//    }
+
+
+    /**
+     * @return Getter for the message type returns it as a Messagetype object
      */
-    public String getQuestion() {
-        return question;
+    public MessageType getMsgType() {return super.getMsgType();}
+
+
+    /**
+     * @param msgType Setter for the msg type
+     */
+    public void setMsgType(MessageType msgType) {super.setMsgType(msgType);}
+
+
+    /**
+     * @return returns the username of the person that sends the message as a string
+     */
+    public String getUsername() {return super.getUsername();}
+
+
+    /**
+     * @return the answer of this question as a string
+     */
+    public String getAnswer(){
+        return this.answer;
+    }
+
+    /**
+     * @return returns the arraylist with fake answers usually two fake answers
+     */
+    public ArrayList<String> getFakeAnswers(){
+        return this.fakeAnswers;
+    }
+
+    public void setQuestion(String question){
+        super.setContent(question);
     }
 
 
     /**
-     * @return the answer corresponding to the question as a string
-     */
-    public String getAnswer() {
-        return Answer;
-    }
-
-
-    /**
-     * @return the fake answers as an arraylist of strings to the questions
-     */
-    public ArrayList<String> getFakeAnswers() {
-        return fakeAnswers;
-    }
-
-
-    /**
-     * @param question Set the question of the class
-     */
-    public void setQuestion(String question) {
-        this.question = question;
-    }
-
-    /**
-     * @param answer set the answer of the class
+     * @param answer Sets the answers to this question
      */
     public void setAnswer(String answer) {
-        Answer = answer;
+        this.answer = answer;
     }
 
     /**
-     * @param fakeAnswers set the fake answers of the class
+     * @param fakeAnswers Sets the array of fake asnwers to this question
      */
     public void setFakeAnswers(ArrayList<String> fakeAnswers) {
         this.fakeAnswers = fakeAnswers;
     }
 
-
     /**
-     * @param o Other object for which we want to check equality
-     * @return true if this' attributes are is equal to O and false otherwise
+     * @return returns the content of the messge as a string
      */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Question question1 = (Question) o;
-        return Objects.equals(question, question1.question) && Objects.equals(Answer, question1.Answer) && Objects.equals(fakeAnswers, question1.fakeAnswers);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(question, Answer, fakeAnswers);
-    }
+    public String getQuestion() {return super.getContent();}
 
 
     /**
-     * @return The question and all it's attributes in human readable string format
+     * @param content Sets the content of the messgage
      */
-    @Override
-    public String toString() {
-        return "Question{" +
-                "question='" + question + '\'' +
-                ", Answer='" + Answer + '\'' +
-                ", fakeAnswers=" + fakeAnswers +
-                '}';
+    public void setContent(String content) {super.setContent(content);}
+
+
+    /**
+     * @return returns the message object as a readable string
+     */
+    public String toString()
+    {
+        return super.toString();
     }
+
+
+
 }

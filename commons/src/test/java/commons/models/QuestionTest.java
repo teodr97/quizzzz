@@ -47,7 +47,7 @@ class QuestionTest {
      */
     @Test
     void testgetFakeAnswers() {
-        assertEquals(fakeAnswers, question.getQuestion());
+        assertEquals(fakeAnswers, question.getFakeAnswers());
     }
 
 

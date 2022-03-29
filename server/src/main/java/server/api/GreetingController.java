@@ -3,6 +3,8 @@ package server.api;
 
 import commons.models.Message;
 import commons.models.MessageType;
+import commons.models.Question;
+import commons.models.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -25,6 +27,7 @@ public class GreetingController {
 
 
     private ArrayList<String> questionList  = new ArrayList<>();
+    private ArrayList<String> answerList  = new ArrayList<>();
    public Iterator<String> questionIterator;
 
     @Autowired
@@ -46,6 +49,10 @@ public class GreetingController {
         questionList.add("Edison BOO");
         questionList.add("Elon to the moon?");
         questionList.add("Bitcoin green?");
+
+        answerList.add("40");
+        answerList.add("30");
+        answerList.add("20");
 
         questionIterator = questionList.iterator();
         qtimer = new Timer();
@@ -92,14 +99,25 @@ public class GreetingController {
      */
     @Scheduled(fixedRate = 10000)
     public void sendQuestion(){
+        //the game started reference will probably be a game class attribute
+
         if(gamestarted){
-            this.template.convertAndSend("/topic/questions", new Message(MessageType.QUESTION, "Server", this.questionIterator.next()));
+
+            //this.template.convertAndSend("/topic/questions", new Message(MessageType.QUESTION, "server", this.questionIterator.next()));
+            this.template.convertAndSend("/topic/questions", new Question(this.questionIterator.next(), "Answersee"));
+            System.out.println("sent a question");
         }
 
 
         //Timer qtimer = new Timer();
 
     }
+
+
+    /**
+     * @param message Get message send to the url "/app/clickedJoker"
+     * @return returns the same messgae to the clients subscribed to /topic/jokers
+     */
     @MessageMapping("/clickedJoker")
     @SendTo("/topic/jokers")
     public Message handleJoker(Message message){

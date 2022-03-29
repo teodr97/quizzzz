@@ -3,9 +3,7 @@ package client.scenes;
 import client.utils.GuiUtils;
 
 import client.MySessionHandler;
-import commons.models.Game;
-import commons.models.Message;
-import commons.models.MessageType;
+import commons.models.*;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -100,6 +98,8 @@ public class MultiPlayer implements Initializable {
 
     private Message incomingmsg;
 
+    private Question incomingq;
+
     public boolean gamended;
 
     @Inject
@@ -127,28 +127,48 @@ public class MultiPlayer implements Initializable {
         this.mainCtrl.sessie.subscribe("/topic/questions", new StompFrameHandler() {
 
                     public Type getPayloadType(StompHeaders stompHeaders) {
-                        return Message.class;
+                        return Question.class;
                     }
 
                     public void handleFrame(StompHeaders stompHeaders, Object payload) {
-                        incomingmsg = (Message) payload;
-                        if (incomingmsg.getMsgType() == MessageType.QUESTION) {
-                            System.out.println("Gotten question");
-                            questionField.setText(incomingmsg.getContent());
-                            startBar();
+                        incomingq= (Question) payload;
 
-                        }
-                        if(incomingmsg.getMsgType() == MessageType.GAME_ENDED){
-                            //variable will probably be replaced by a game class atrribute
-                            gamended = false;
-                            timerBar.setProgress(0);
-                            questionField.setText(incomingmsg.getContent());
+                        System.out.println(incomingq.toString());
+                        questionField.setText(incomingq.getQuestion());
+                        startBar();
 
 
-                        }
-//
+
                     }
                 });
+
+//        this.mainCtrl.sessie.subscribe("/topic/questions", new StompFrameHandler() {
+//
+//            public Type getPayloadType(StompHeaders stompHeaders) {
+//                return Message.class;
+//            }
+//
+//            public void handleFrame(StompHeaders stompHeaders, Object payload) {
+//                incomingmsg = (Message) payload;
+//                if (incomingmsg.getMsgType() == MessageType.QUESTION) {
+//                    System.out.println("Gotten question");
+//                    questionField.setText(incomingmsg.getContent());
+//                    startBar();
+//
+//                }
+//                if(incomingmsg.getMsgType() == MessageType.GAME_ENDED){
+//                    //variable will probably be replaced by a game class atrribute
+//                    gamended = false;
+//                    timerBar.setProgress(0);
+//                    questionField.setText(incomingmsg.getContent());
+//
+//
+//                }
+//
+//            }
+//        });
+
+//
 
         this.mainCtrl.sessie.subscribe("/topic/jokers", new StompFrameHandler() {
 
@@ -167,8 +187,8 @@ public class MultiPlayer implements Initializable {
             }
         });
 
-        Message retrieveQ = new Message(MessageType.QUESTION, "client", "gib me question");
-        this.mainCtrl.sessie.send("/app/getquestions", retrieveQ);
+//        Message retrieveQ = new Message(MessageType.QUESTION, "client", "gib me question");
+//        this.mainCtrl.sessie.send("/app/getquestions", retrieveQ);
 
 //        bartimer = new Timer();
 ////        CODE FOR MAKING THE TIMER BAR MOVE
@@ -176,24 +196,6 @@ public class MultiPlayer implements Initializable {
 ////        seconds
 //        bartimer.scheduleAtFixedRate(new increaseTimerBar(this), 0, 10);
     }
-
-        /*
-        File j2x = new File("./client/src/main/resources/images/Joker2X.png");
-        File jHg = new File("./client/src/main/resources/images/JokerHG.png");
-        File jMb = new File("./client/src/main/resources/images/JokerMB.png");
-        try {
-            joker2X.setImage(new Image(j2x.getCanonicalPath()));
-            jokerHG.setImage(new Image(jHg.getCanonicalPath()));
-            jokerMB.setImage(new Image(jMb.getCanonicalPath()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-         */
-
-
-
-
-
 
     /**
      * switches to the splash screen, for the leave button
@@ -286,40 +288,8 @@ public class MultiPlayer implements Initializable {
     }
 
 
-    //HANDLES the timebar
-    private class TimerMethod extends AnimationTimer {
-        //define the handle method
-        @Override
-        public void handle(long now) {
-            //call the method
-            handlee();
-        }
-        //method handlee
-        private void handlee(){
-            //making this smaller will slow down the times
-            progress += 0.0025;
-            //set the new progress
-            timerBar.setProgress(progress);
-            //checks if the progress is 1 and will display prompt accordingly
-            // will also disable the buttons if the timer ends
-            if((timerBar.getProgress() + EPSILON > 1 && timerBar.getProgress() - EPSILON <1)){
-                //update the current round + 1
-                game.setCurRound(game.getCurRound()+1);
-                if(prompt != null){
-                    if(prompt.getText().equals("")){
-                        prompt.setText("Timer over");
-                    }
-                }
-                //when timer ends and game hasn't ended we want to display the next question
-                disableAnswers();
-            }
-            if((timerBar.getProgress() + EPSILON > 1.5 && timerBar.getProgress() - EPSILON <1.5)){
-                //when timer ends and game hasn't ended we want to display the next question;
 
-                //when timer ends and game hasn't ended we want to display the next question;
-            }
-        }
-    }
+
 }
 
 

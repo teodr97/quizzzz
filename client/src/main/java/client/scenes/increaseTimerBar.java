@@ -34,7 +34,7 @@ public class increaseTimerBar extends TimerTask {
             //multiplayer.disableAnswers();
 
         }
-        System.out.println(multiplayer.progress);
+        //System.out.println(multiplayer.progress);
 
         multiplayer.progress += multiplayer.progressInc;
         Platform.runLater(new Runnable() {
