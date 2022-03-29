@@ -1,13 +1,29 @@
 package client.scenes;
 
 import client.MyFXML;
+
 import commons.models.Player;
+
+
+
+import javafx.fxml.FXML;
+
+
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+
+
+import javafx.scene.control.TextField;
+
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
+
+
+
 import java.io.IOException;
+
+
 
 
 public class MainCtrl {
@@ -17,6 +33,12 @@ public class MainCtrl {
     private Player player;
 
     private Stage primaryStage;
+    private Stage stage;
+    private Scene scene;
+
+    @FXML
+    private TextField username;
+
 
     public MainCtrl() {
     }
@@ -141,9 +163,13 @@ public class MainCtrl {
     /**
      * Switches the scene to the waiting room scene for multiplayer.
      */
-    public void switchToWaitingRoom() {
+    public void switchToWaitingRoom(){
+
         var overview = myFXML.load(WaitingRoom.class, "client", "scenes", "WaitingRoom.fxml");
         setAndShowScenes(new Scene(overview.getValue()));
+
+
+
     }
 
     /**

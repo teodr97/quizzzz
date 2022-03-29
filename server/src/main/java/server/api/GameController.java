@@ -9,27 +9,33 @@ import commons.models.GamePlay;
 import commons.models.GameStorage;
 import commons.models.Player;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
+import static java.lang.Integer.parseInt;
 
 @RestController
 @Slf4j
 @RequestMapping("/game")
 public class GameController {
-
     private final GameService gameService;
+    private final List<Player> playerStore = new ArrayList<>();
 
     @Autowired
-    public GameController(GameService gameService) {
+    public GameController(GameService gameService){
         this.gameService = gameService;
     }
 
     /**
-     * Creates a new game, started by a given player. That player will be the first one put into the game.
-     * @param player
+     * @param player create a game and add player
      * @return
      * @throws NotFoundException
      * @throws GameAlreadyExistsException
@@ -64,6 +70,10 @@ public class GameController {
     @PostMapping("/connect")
     public ResponseEntity<Game> connect(@RequestBody Player player) throws NicknameTakenException, NotFoundException, GameAlreadyExistsException {
         //log.info("connect random {}", player);
+        System.out.println("player: "+player.getNickname()+  " connected");
+
+        player.setWaitingRoomId(playerStore.size()+1);
+        playerStore.add(player);
         return ResponseEntity.ok(gameService.connectToWaitingRoom(player));
     }
 
@@ -87,10 +97,56 @@ public class GameController {
      * @return
      * @throws NotFoundException
      */
-    @PostMapping("/leave")
+     @PostMapping("/leave")
     public ResponseEntity<Player> leave(@RequestBody Player player) throws NotFoundException{
         return ResponseEntity.ok(gameService.leaveGame(player));
     }
+
+    /**
+     * @param playerid integer wich represent theidi of a  player
+     * @return the player with id playerid
+     * @throws InterruptedException
+     */
+    //get the players in a long polling fashion
+    //we keep the request open untill a new player connects in which case we
+    //send the new array of all players
+    @GetMapping("/getPlayers/{id}")
+    public ResponseEntity<List<String>> getPlayers(@PathVariable("id") String playerid) throws InterruptedException {
+        int playeridint = parseInt(playerid);
+        if (lastStoredPlayer().isPresent() && lastStoredPlayer().get().getWaitingRoomId() > playeridint) {
+            List<String> output = new ArrayList<>();
+            for (int index = playeridint; index < playerStore.size(); index++) {
+                output.add(playerStore.get(index).getNickname());
+            }
+            return ResponseEntity.ok(output);
+        }
+        System.out.println("poll:");
+
+        return keepPolling(playerid);
+    }
+
+    /**
+     * @param playerid Keepolling the server with the above request
+     * @return
+     * @throws InterruptedException
+     */
+    //keeppolling code
+    private ResponseEntity<List<String>> keepPolling(String playerid) throws InterruptedException {
+        Thread.sleep(1000);
+        return getPlayers(playerid);
+
+    }
+
+
+    /**
+     * @return the lastplayer stored if it exists
+     */
+    private Optional<Player> lastStoredPlayer() {
+        return playerStore.isEmpty() ? Optional.empty() : Optional.of(playerStore.get(playerStore.size()-1));
+    }
+
+
+    
 
     /**
      * Starts a game.
