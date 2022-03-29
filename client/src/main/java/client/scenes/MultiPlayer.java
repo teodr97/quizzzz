@@ -137,28 +137,16 @@ public class MultiPlayer implements Initializable {
                             questionField.setText(incomingmsg.getContent());
                             startBar();
 
-
-
-
-
-                    //        CODE FOR MAKING THE TIMER BAR MOVE
-                    //        we sync the server timer and the client timer with by just making sure that the timer bar is full after 10
-                    //        seconds
-
-
-
-
-//                            timerBar.setStyle("-fx-accent: lightblue");
-//                            timerBar.setProgress(0);
-//                            progressInc = 0.001;
                         }
-//                        if(incomingmsg.getMsgType() == MessageType.GAME_ENDED){
-//                            gamended = true;
-//                            timerBar.setProgress(0);
-//                            questionField.setText(incomingmsg.getContent());
-//                            bartimer.cancel();
+                        if(incomingmsg.getMsgType() == MessageType.GAME_ENDED){
+                            //variable will probably be replaced by a game class atrribute
+                            gamended = false;
+                            timerBar.setProgress(0);
+                            questionField.setText(incomingmsg.getContent());
+
+
+                        }
 //
-//                        }
                     }
                 });
 

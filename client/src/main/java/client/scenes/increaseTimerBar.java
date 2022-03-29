@@ -43,7 +43,7 @@ public class increaseTimerBar extends TimerTask {
                 multiplayer.timerBar.setProgress(multiplayer.progress);
             }
         });
-        multiplayer.timerBar.setProgress(multiplayer.progress);
+
 
 
     }
