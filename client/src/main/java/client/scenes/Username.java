@@ -82,6 +82,7 @@ public class Username implements Initializable {
                 missingUser.setText("Username is already taken");
             }else{
                 mainCtrl.switchToWaitingRoom();
+                mainCtrl.startLongPolling();
             }
         }
     }

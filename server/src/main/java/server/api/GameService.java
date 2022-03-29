@@ -87,6 +87,19 @@ public class GameService {
     }
 
     /**
+     * Gets a list of players based on username;
+     * @param username The player's username that requested.
+     * @return Returns a list of players in the game.
+     * @throws NotFoundException
+     */
+    public List<Player> getPlayers(String username) throws NotFoundException{
+        Game game = GameStorage.getInstance().getGames().values().stream()
+                .filter(it -> it.contains(username))
+                .findAny().orElseThrow(() -> new NotFoundException("No player with username, " + username + " in the game"));
+        return game.getPlayers();
+    }
+
+    /**
      * NOT FULLY IMPLEMENTED YET
      * Should check what gamestate is the game in.
      * @param gamePlay Gets a gamePlay object.
