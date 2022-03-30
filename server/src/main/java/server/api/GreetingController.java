@@ -16,7 +16,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor;
 import org.springframework.stereotype.Controller;
 
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Timer;
@@ -131,6 +131,9 @@ public class GreetingController {
 
     }
 
+    /**
+     * Stops sending quesitons every 10 seconds
+     */
     public void stopSending(){
         postProcessor.postProcessBeforeDestruction(this, "");
     }
