@@ -67,6 +67,10 @@ public class MultiPlayer implements Initializable {
     //joker buttons
     @FXML private Button timeJoker;
     @FXML private Button removeJoker;
+    @FXML private Button doubleJoker;
+
+    private int scoreMultiplier = 1;
+
 
 
     @FXML public ProgressBar timerBar;
@@ -133,6 +137,9 @@ public class MultiPlayer implements Initializable {
                     }
 
                     public void handleFrame(StompHeaders stompHeaders, Object payload) {
+                        // if we get new question we reset the score multiplier to 1
+                        //since someone could have clicked a double points joker in the previous round
+                        scoreMultiplier = 1;
                         try{
                             bartimer.cancel();
                         }catch(Exception e){
@@ -171,12 +178,17 @@ public class MultiPlayer implements Initializable {
 
 
                 if(incomingmsg.getMsgType() == MessageType.TIME_JOKER){
+                    prompt.setText("Timer joker used");
                     progressInc = 0.002;
 
                     timerBar.setStyle("-fx-accent: red");
                 }
                 if(incomingmsg.getMsgType() == MessageType.REMOVE_JOKER){
                     handleRemovalJoker();
+                }
+
+                if(incomingmsg.getMsgType() == MessageType.DOUBLE_JOKER){
+                    handleDoubleJoker();
                 }
 
 
@@ -187,9 +199,32 @@ public class MultiPlayer implements Initializable {
 
 
     /**
-     * disables the button corresponding to the wrong answer
+     * Send that the double points joker has been used to all clients subscriped to the /topic/joker endpoint
      */
+    //this joker can be handled fully on client since it doens't effect the other players
+    public void handleDoubleJoker(){
+        prompt.setText("Double joker used");
+        //disable the button if  clicked
+
+        doubleJoker.setDisable(true);
+        handleDoubleJoker();
+        //we do send a message to the server for stat tracking
+        //mainCtrl.sessie.send("/app/clickedJoker", new Message(MessageType.DOUBLE_JOKER, "client", "someone clicked the double points joker"));
+    }
+
+
+    /**
+     * Send that the removal joker has been used to all clients subscriped to the /topic/joker endpoint
+     */
+    //this joker can be handled fully on client since it doens't effect the other players
     public void handleRemovalJoker(){
+        //disable the button if  clicked
+
+        removeJoker.setDisable(true);
+
+        //we do send a message to the server for stat tracking
+        //mainCtrl.sessie.send("/app/clickedJoker", new Message(MessageType.REMOVE_JOKER, "client", "someone clicked the remove joker"));
+        prompt.setText("removal joker used");
         System.out.println("handling removal");
         int randomindex= new Random().nextInt(2);
         String toremove = incomingq.getFakeAnswers().get(randomindex);
@@ -266,7 +301,7 @@ public class MultiPlayer implements Initializable {
         Button useranswer = (Button) event.getTarget();
 
         //gets the amount of points to be handed, and assigns the correct answer to a variable
-        int questionpoints = (int)(500 - 250*progress);
+        int questionpoints = (int)((500 - 250*progress)*scoreMultiplier);
         String correctanswer = incomingq.getAnswer();
         System.out.println("correct answer: "+ correctanswer);
         System.out.println("your answer: "+ useranswer.getText());
@@ -414,19 +449,16 @@ public class MultiPlayer implements Initializable {
      * Send that the timer joker has been used to all clients subscriped to the /topic/joker endpoint
      */
     public void senddecreaseTimeForAll(){
+
         //disable the button if  clicked
         timeJoker.setDisable(true);
+
+        //we need to send that someone clicked this joker to every player
         mainCtrl.sessie.send("/topic/jokers", new Message(MessageType.TIME_JOKER, "client", "someone clicked the timer joker"));
     }
-    /**
-     * Send that the timer joker has been used to all clients subscriped to the /topic/joker endpoint
-     */
-    public void sendRemoveFake(){
-        //disable the button if  clicked
 
-        removeJoker.setDisable(true);
-        mainCtrl.sessie.send("/app/clickedJoker", new Message(MessageType.REMOVE_JOKER, "client", "someone clicked the remove joker"));
-    }
+
+
 
 
 
