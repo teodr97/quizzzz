@@ -25,11 +25,7 @@ import java.lang.reflect.Type;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.LinkedList;
-import java.util.List;
-
-import java.util.ResourceBundle;
-
+import java.util.*;
 
 
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
@@ -38,9 +34,6 @@ import org.springframework.messaging.simp.stomp.StompHeaders;
 
 
 import org.springframework.web.socket.messaging.WebSocketStompClient;
-
-
-import java.util.Timer;
 
 
 public class MultiPlayer implements Initializable {
@@ -67,6 +60,8 @@ public class MultiPlayer implements Initializable {
     @FXML private Button answerA;
     @FXML private Button answerB;
     @FXML private Button answerC;
+
+    private ArrayList<Button> buttons;
 
     @FXML private Button timeJoker;
 
@@ -108,6 +103,11 @@ public class MultiPlayer implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources){
 
+        buttons = new ArrayList<>();
+        buttons.add(answerA);
+        buttons.add(answerB);
+        buttons.add(answerC);
+
         Path hgPath = Paths.get("src", "main","resources","images","JokerHG.png");
         Path twoxPath = Paths.get("src", "main","resources","images","Joker2X.png");
         Path mbPath = Paths.get("src", "main","resources","images","JokerMB.png");
@@ -133,6 +133,10 @@ public class MultiPlayer implements Initializable {
 
                         System.out.println(incomingq.toString());
                         questionField.setText(incomingq.getQuestion());
+
+                        displayQuestion(Question incomingq);
+
+
                         startBar();
 
 
@@ -194,6 +198,127 @@ public class MultiPlayer implements Initializable {
 ////        seconds
 //        bartimer.scheduleAtFixedRate(new increaseTimerBar(this), 0, 10);
     }
+
+
+
+    /**
+     * displays the question and answers on the window and resets the game
+     * @param question: a Question entity to display
+     */
+    public void displayQuestion(Question question){
+        questionField.setText(question.getQuestion());
+        qNumber.setText(game.getCurRound() + " / 20");
+        answerA.setText(question.getActivityList().get(0).getTitle());
+        answerB.setText(question.getActivityList().get(1).getTitle());
+        answerC.setText(question.getActivityList().get(2).getTitle());
+        resetGamescreen();
+    }
+
+    /**
+     * Resets the game screen for the next round.
+     */
+    public void resetGamescreen(){
+        //resetting the answer buttons
+        //color and clickability, the timer bar and the text prompt
+
+        //buttons
+        answerA.setStyle("-fx-background-color: #0249bd;");
+        answerB.setStyle("-fx-background-color: #0249bd;");
+        answerC.setStyle("-fx-background-color: #0249bd;");
+        enableAnswers();
+
+        //timerbar
+        //we don't have to set the progress of the timer bar
+        //because the animation timer continually does that
+        progress = 0;
+
+        //prompt
+        prompt.setText("");
+
+        return;
+    }
+
+    /**
+     * Enables all answer buttons.
+     */
+    public void enableAnswers(){
+        answerA.setDisable(false);
+        answerB.setDisable(false);
+        answerC.setDisable(false);
+
+        return;
+    }
+
+    /**
+     * Checks if the answer in singleplayer is correct
+     * @param event
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public void checkAnswer(ActionEvent event) throws IOException, InterruptedException {
+        //check answer will also have to call a function:
+        //disableAnswers so the uses can't click the answers after already choosing one
+
+        //get the button clicked from the event parameter
+        Button useranswer = (Button) event.getTarget();
+
+        //gets the amount of points to be handed, and assigns the correct answer to a variable
+        int questionpoints = (int)(500 - 250*progress);
+        String correctanswer = incomingq.getAnswer();
+        System.out.println("correct answer: "+ correctanswer);
+        System.out.println("your answer: "+ useranswer.getText());
+
+        //since we made an iterator of the answers the program checks if  the users button clicked is the right corresponding click
+        //this function should definitely be tested
+
+        //make the buttons there "correct colors" green for right answer red for the wrong answers
+        for(Button answerbutton: buttons){
+            //the one corresponding with he next answers entry is the correct answer and  becomes green
+            if(answerbutton.getText().equals(correctanswer)){
+                answerbutton.setStyle("-fx-background-color: #309500;");
+            }else{ //we make it red
+                answerbutton.setStyle("-fx-background-color: #BD0000;");
+            }
+        }
+
+        //after accordingly change the buttons colors
+        //we retrieve the current style of all the buttons and add a border to the user chosen button
+        for(Button answerbutton: buttons){
+
+            String currentstyle = answerbutton.getStyle();
+            StringBuilder currentstylebuilder = new StringBuilder(currentstyle);
+            //adding the border style
+            currentstylebuilder.append("-fx-border-color: black; -fx-border-width: 3px;");
+            String newstyle = currentstylebuilder.toString();
+
+            if(answerbutton == useranswer){
+                answerbutton.setStyle(newstyle);
+            }
+        }
+        //after that we have to prompt of if the user was correct or not
+        //user got the answer correct
+        if(correctanswer.equals(useranswer.getText())){
+            int currentpoints = Integer.parseInt(userpoint.getText());
+            int newpoints = currentpoints + questionpoints;
+            this.pointsInt = newpoints;
+            userpoint.setText(String.valueOf(newpoints));
+            prompt.setText("Correct");
+            //this.statSharer.correctAnswers++;
+        } else{
+            prompt.setText("Incorrect");
+        }
+
+        //change scene state to the one where someone has answered the question
+        //in which case the buttons should be disabled and change colors
+        disableAnswers();
+
+        return;
+    }
+
+
+
+
+
 
     /**
      * switches to the splash screen, for the leave button

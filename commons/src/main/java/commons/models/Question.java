@@ -138,5 +138,13 @@ public class Question extends Message{
                 && Objects.equals(fakeAnswers, question.fakeAnswers);
     }
 
+    public ArrayList<String> getShuffledAnswers(){
+        ArrayList<String> newarray = new ArrayList<>();
+        newarray.add(this.answer);
+        for(String fake: fakeAnswers){
+            newarray.add(fake);
+        }
+    }
+
 
 }
