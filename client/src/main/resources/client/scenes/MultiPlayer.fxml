@@ -39,7 +39,7 @@
             <Font name="Arial Bold" size="48.0" />
          </font>
       </Text>
-      <Text fx:id="questionField" fill="WHITE" layoutX="676.0" layoutY="231.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="497.83019945468277">
+      <Text fx:id="questionField" fill="WHITE" layoutX="300.0" layoutY="344.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="497.83019945468277">
          <font>
             <Font name="Arial Bold" size="30.0" />
          </font>
@@ -153,6 +153,14 @@
                </image>
             </ImageView>
          </graphic>
+      </Button>
+      <Button fx:id="timeJoker" layoutX="451.0" layoutY="674.0" mnemonicParsing="false" onAction="#senddecreaseTimeForAll" prefHeight="55.0" prefWidth="174.0" style="-fx-background-color: #f73444;" text="timerJoker" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
       </Button>
     </children>
 </AnchorPane>

@@ -69,6 +69,8 @@ public class GameController {
     @PostMapping("/connect")
     public ResponseEntity<Game> connect(@RequestBody Player player) throws NicknameTakenException, NotFoundException, GameAlreadyExistsException {
         //log.info("connect random {}", player);
+
+
         System.out.println("player: "+player.getNickname()+  " connected");
 
         player.setWaitingRoomId(playerStore.size()+1);
@@ -109,15 +111,22 @@ public class GameController {
     //get the players in a long polling fashion
     //we keep the request open untill a new player connects in which case we
     //send the new array of all players
-    @GetMapping("/getPlayers")
-    public ResponseEntity<List<Player>> getPlayers(@RequestParam String player) throws InterruptedException, NotFoundException {
+    @GetMapping("/getPlayers/")
+    public ResponseEntity<List<Player>> getPlayers(@PathVariable("id") String player) throws InterruptedException, NotFoundException {
         System.out.println("poll:");
         return ResponseEntity.ok(gameService.getPlayers(player));
     }
 
+    //keeppolling code
+    private ResponseEntity<List<Player>> keepPolling(String playerid) throws InterruptedException, NotFoundException {
+        Thread.sleep(1000);
+        return getPlayers(playerid);
+
+    }
+
 
     /**
-     * @return the lastplayer stored if it exists
+     * @return returns last stored player in the playerstore arraylist if it exists
      */
     private Optional<Player> lastStoredPlayer() {
         return playerStore.isEmpty() ? Optional.empty() : Optional.of(playerStore.get(playerStore.size()-1));

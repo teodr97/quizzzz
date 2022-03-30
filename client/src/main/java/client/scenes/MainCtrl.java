@@ -2,28 +2,33 @@ package client.scenes;
 
 import client.MyFXML;
 
+import client.Networking.WsClient;
+
+import commons.models.Game;
 import commons.models.Player;
 
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
 
+import javafx.application.Platform;
 
-import javafx.fxml.FXML;
 
 
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 
-
-import javafx.scene.control.TextField;
-
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
 
+import javafx.event.ActionEvent;
+import org.glassfish.jersey.client.ClientConfig;
 
+import org.springframework.messaging.simp.stomp.StompSession;
 
 import java.io.IOException;
 
-
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 
 public class MainCtrl {
@@ -31,16 +36,19 @@ public class MainCtrl {
     public static final String SERVER = "http://localhost:8080/";
     private static MyFXML myFXML;
     private Player player;
+    private Game game;
 
     private Stage primaryStage;
     private Stage stage;
     private Scene scene;
 
-    @FXML
-    private TextField username;
+    public StompSession sessie;
+
+    public WsClient wsclient;
 
     private WaitingRoom room;
     private Scene waitingRoom;
+
 
 
     public MainCtrl() {
@@ -143,8 +151,25 @@ public class MainCtrl {
      * Switches to the multiplayer scene after the add name button is clicked
      */
     public void switchToMultiplayer() {
+
         var overview = myFXML.load(MultiPlayer.class, "client", "scenes", "MultiPlayer.fxml");
-        setAndShowScenes(new Scene(overview.getValue()));
+        try{
+            // in the meantime we created a websocket thread which where we try to call the swithtoMultplayer function from
+            //since java fx needs to be run in it's own thread w
+            // e need the Playform.runlater block
+            Platform.runLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    setAndShowScenes(new Scene(overview.getValue()));
+                }
+            });
+
+        }catch(Exception e){
+
+            System.out.println(e.getMessage());
+        }
+
     }
 
 
@@ -180,13 +205,28 @@ public class MainCtrl {
         room.longpollUpdateLobby(player);
     }
 
+    /**Leaves the games and remoes the player from the game
+     * @param event
+     * @throws IOException
+     */
+    //If the event is executed then the scene switches to Splash.fxml
+    public void leaveGame(ActionEvent event) throws IOException{
+        ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("/game/leave") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .post(Entity.entity(player, APPLICATION_JSON));
+        var overview = this.myFXML.load(Splash.class, "client", "scenes", "Splash.fxml");
+        scene = new Scene(overview.getValue());
+        setAndShowScenes(new Scene(overview.getValue()));
+    }
+
     /**
-     * Stops the thread in waitingroom when application is closed.
+     * Stops the thread
      */
     public void stopThread(){
         room.leaveGame();
     }
-
     /**
      * Switches the scene to the admin panel
      */

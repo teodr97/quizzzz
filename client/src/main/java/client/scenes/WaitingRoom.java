@@ -4,6 +4,10 @@ import client.MyFXML;
 import client.MyModule;
 
 
+import client.Networking.WsClient;
+import commons.models.Message;
+import commons.models.MessageType;
+
 import commons.models.Player;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
@@ -14,7 +18,6 @@ import javafx.fxml.FXML;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import jakarta.ws.rs.client.ClientBuilder;
-
 
 import javafx.event.ActionEvent;
 
@@ -28,12 +31,19 @@ import javafx.scene.control.ListView;
 
 import javafx.scene.text.Text;
 
+
 import javafx.scene.text.TextAlignment;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
+import org.springframework.messaging.simp.stomp.StompFrameHandler;
+import org.springframework.messaging.simp.stomp.StompHeaders;
+import org.springframework.messaging.simp.stomp.StompSession;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -51,12 +61,24 @@ public class WaitingRoom implements Initializable {
     private static final String SERVER = "http://localhost:8080/";
     private static final ExecutorService EXEC = Executors.newSingleThreadExecutor();
 
-
+    private final MultiPlayer multiplayer;
     private final MainCtrl mainCtrl;
+
+
 
     private Username usernameCtrl;
 
     private Scene overview;
+
+    private Thread httpclientthread;
+    private Thread wsclientthread;
+
+    private WebSocketStompClient stompClient;
+
+    private boolean dontstop;
+    public boolean gamestarted;
+    private Message incomingmsg;
+
 
     @FXML
     private ListView lobby;
@@ -64,17 +86,20 @@ public class WaitingRoom implements Initializable {
     @FXML
     private Text players;
 
+    @FXML
+    public Text greetings;
 
-    /**Construtor of the waiting room scene class controller
-     * @param mainCtrl the maincntrl of the application
-     * @throws InterruptedException
-     */
+
+
     @Inject
-    public WaitingRoom(MainCtrl mainCtrl) throws InterruptedException {
-
+    public WaitingRoom( MainCtrl mainCtrl, MultiPlayer multiplayer) throws InterruptedException {
         this.mainCtrl = mainCtrl;
+        this.dontstop = true;
+        this.multiplayer = multiplayer;
 
         this.players = new Text();
+
+        this.gamestarted = false;
     }
 
     //no real functionality yet
@@ -86,7 +111,88 @@ public class WaitingRoom implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+
+        //in the waiting we room we will start the longspamming thread and the websocket thread
+
+
+
+        //the websocket client thread
+        //the websocket runnable takes as paramter the controller so we can edit things inside
+        // the
+        this.wsclientthread = new Thread(new WaitingRunnable(this) {
+            WaitingRoom thiswaiting= this.getController();
+
+            @Override
+            public void run() {
+
+                thiswaiting.mainCtrl.wsclient = new WsClient(thiswaiting);
+                ListenableFuture<StompSession> f = thiswaiting.mainCtrl.wsclient.connect();
+//                StompSession stompSession = f.get();
+                // code goes here.
+//                WebSocketClient webSocketClient = new StandardWebSocketClient();
+//                stompClient = new WebSocketStompClient(webSocketClient);
+//                stompClient.setMessageConverter(new MappingJackson2MessageConverter());
+//
+//                String url = "ws://localhost:8080/hello";
+//                StompSessionHandler sessionHandler = new MySessionHandler();
+//                ListenableFuture<StompSession> f = stompClient.connect(url, sessionHandler);
+
+
+                try{
+                    thiswaiting.mainCtrl.sessie = f.get();
+                    thiswaiting.mainCtrl.sessie.subscribe("/topic/greetings", new StompFrameHandler() {
+
+                        public Type getPayloadType(StompHeaders stompHeaders) {
+                            return Message.class;
+                        }
+
+                        public void handleFrame(StompHeaders stompHeaders, Object payload) {
+                            incomingmsg = (Message) payload;
+                            if(incomingmsg.getMsgType() == MessageType.CONNECTED){
+                                System.out.println("You;ve joined the waiting room");
+                                greetings.setText("You;ve joined the waiting room");
+                            }
+
+
+                        }
+
+
+                    });
+                    Message greetingsMsg = new Message(MessageType.CONNECT, "client", "Hello server");
+                    thiswaiting.mainCtrl.sessie.send("/app/hello", greetingsMsg);
+                    thiswaiting.mainCtrl.sessie.subscribe("/topic/gamestate", new StompFrameHandler() {
+
+                        public Type getPayloadType(StompHeaders stompHeaders) {
+                            return Message.class;
+                        }
+
+                        public void handleFrame(StompHeaders stompHeaders, Object payload) {
+                            incomingmsg = (Message) payload;
+                            if(incomingmsg.getMsgType() == MessageType.GAME_STARTED){
+                                System.out.println("someone started the game so we starting");
+                                startGame();
+                            }
+
+
+                        }
+
+
+                    });
+
+
+
+
+                }catch(Exception e){
+                    System.out.print(e.getMessage());
+                }
+                //new Scanner(System.in).nextLine();
+
+
+            }
+        });
+        this.wsclientthread.start();
     }
+
 
     /**
      * Sends a request to start the game. Sends the player who started as the parameter.
@@ -119,8 +225,8 @@ public class WaitingRoom implements Initializable {
         mainCtrl.switchToSplash();
     }
 
-    /**
-     * Keeps pinning the server for a new player list
+    /** keep Asking the server for the player list
+     * @param player
      */
     //recursive function that keeps requesting the server for new data
     //in a longpolling fashion
@@ -151,12 +257,7 @@ public class WaitingRoom implements Initializable {
     }
 
 
-    /**
-     * Will start the websocket connection and thus the game
-     */
-    public void startGame(){
 
-    }
 
     /**
      * Updates the text displaying the list of players currently in lobby.
@@ -174,7 +275,35 @@ public class WaitingRoom implements Initializable {
     }
 
     /**
-     * makes you leave the game.
+     * start the game and switch to the mulitplayer screen
+     * Also stop polling the lobby for the player list
+     */
+    public void sendstartGame(){
+        //stop the lobby spamming thread
+        //notify other players that we gon start the game;
+        //send game started message to all other clients subscribed to "/topic/greetings"
+        this.dontstop = false;
+        gamestarted = true;
+        Message startgamemsg = new Message(MessageType.GAME_STARTED, "", "someone started the game");
+
+        this.mainCtrl.sessie.send("/app/start", startgamemsg);
+
+
+
+    }
+
+    /**
+     * Starts the game and switches the screen to the multiplayer screen
+     */
+    public void startGame(){
+        System.out.println("move to next screen plax");
+        this.mainCtrl.switchToMultiplayer();
+    }
+
+
+
+    /**Leave the waiting rooom
+     *
      */
     public void leaveGame(){
         return;

@@ -15,22 +15,38 @@
  */
 package server;
 
-import org.springframework.context.annotation.Bean;
+import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+
+
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Random;
+
+import org.springframework.web.socket.config.annotation.*;
+
+
+
+
 
 @Configuration
-public class Config {
+@EnableWebSocketMessageBroker
+public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer {
 
-    private static Random random = new Random();
 
-    /**
-     * Gets a reusable instance of Random.
-     * @return A one-off instance of Random.
-     */
-    @Bean
-    public Random getRandom() {
-        return random;
+    @Override
+    public void configureMessageBroker(MessageBrokerRegistry config) {
+        config.enableSimpleBroker("/topic");
+        config.setApplicationDestinationPrefixes("/app");
     }
+
+    @Override
+    public void registerStompEndpoints(StompEndpointRegistry registry){
+        //this set's wheree the client needs to listen to receive mesages from
+        registry.addEndpoint("/hello");
+        //registry.addEndpoint("/startgame");
+
+
+    }
+
+
+
 }
