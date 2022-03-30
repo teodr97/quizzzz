@@ -1,5 +1,6 @@
 package commons.game;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,7 +16,8 @@ public class Question {
     public String question = "<Question>";
 
     private List<Activity> activityList;
-    private Activity correctAnswer;
+    //private Activity correctAnswer;
+    private int correctAnswerIndex;
 
     private int points; // Are we using this anymore?
 
@@ -48,11 +50,12 @@ public class Question {
      * This function compares a given answer against the
      * correct one and decides if it's correct or not.
      * @param question The question that's currently on-screen
-     * @param answer The player's answer
+     * @param answerIndex The index of the player's answer within the option list contained
+     *                    by the question
      * @return True or false, depending on whether the answer is correct or not
      */
-    public static boolean hasCorrectAnswer(Question question, Activity answer) {
-        return answer.getTitle().equals(question.getCorrectAnswer().getTitle());
+    public static boolean hasCorrectAnswer(Question question, int answerIndex) {
+        return answerIndex == question.correctAnswerIndex;
     }
 
     /**
@@ -61,6 +64,8 @@ public class Question {
      */
     public Question(List<Activity> activityList) {
         this.activityList = activityList;
+        // Shuffles the elements in the list to prevent predictable answer patterns.
+        Collections.shuffle(activityList);
 
         // Generate a new random integer to determine the type of question that will be used.
         // Not a good solution for a greater amount of questions, they should be stored in a
@@ -69,19 +74,18 @@ public class Question {
         switch (randomFactor) {
             case 1:
                 this.question = "Which activity uses the most amount of power?";
-                this.correctAnswer = Utils.retrieveActivityMostEnergy(activityList);
+                this.correctAnswerIndex = Utils.retrieveActivityMostEnergy(activityList);
                 break;
             case 2:
                 this.question = "Which activity uses the least amount of power?";
-                this.correctAnswer = Utils.retrieveActivityLeastEnergy(activityList);
+                this.correctAnswerIndex = Utils.retrieveActivityLeastEnergy(activityList);
                 break;
             default:
                 // Generate a random integer from 0 to 2 for getting an index for the correct answer
-                int correctAnswerIndex = Utils.generateRandomIntSmallerThan(3);
+                int correctActivityIndex = Utils.generateRandomIntSmallerThan(3);
                 // Retrieve a random activity that will serve as the correct answer using indexes 0-3
-                this.correctAnswer = activityList.get(correctAnswerIndex);
-                this.question = "How much power does the following activity use:\n\"" + correctAnswer.getTitle() + "\"";
-                this.activityList = Utils.replaceActivitiesWithPowerDraws(activityList, correctAnswerIndex);
+                this.question = "How much power does the following activity use:\n\"" + activityList.get(correctActivityIndex).getTitle() + "\"";
+                this.activityList = Utils.replaceActivitiesWithPowerDraws(activityList, correctActivityIndex);
                 break;
         }
     }
@@ -89,14 +93,16 @@ public class Question {
     //SETTERS==========================================================
     public void setQuestion(String question) { this.question = question; }
 
-    public void setCorrectAnswer (Activity correctAnswer) { this.correctAnswer = correctAnswer; }
+    public void setCorrectAnswer (Activity correctAnswer) { activityList.set(correctAnswerIndex, correctAnswer); }
 
     //GETTERS==========================================================
     public String getQuestion() { return this.question; }
 
     public List<Activity> getActivityList() { return activityList; }
 
-    public Activity getCorrectAnswer() { return this.correctAnswer; }
+    public Activity getCorrectAnswer() { return this.activityList.get(correctAnswerIndex); }
+
+    public int getCorrectAnswerIndex() { return correctAnswerIndex; }
 
     @Override
     public int hashCode() {
@@ -109,7 +115,7 @@ public class Question {
         ret += "\nOption: " + this.activityList.get(0).toString();
         ret += "\nOption: " + this.activityList.get(1).toString();
         ret += "\nOption: " + this.activityList.get(2).toString();
-        ret += "\nAnswer: " + this.correctAnswer.toString();
+        ret += "\nAnswer: " + this.activityList.get(correctAnswerIndex).toString();
         ret += "\n}";
         return ret;
     }
@@ -120,7 +126,7 @@ public class Question {
         if (other == null || getClass() != other.getClass()) return false;
         Question question1 = (Question) other;
         return activityList.equals(question1.getActivityList()) && question.equals(question1.getQuestion()) &&
-                correctAnswer.equals(question1.getCorrectAnswer());
+                getCorrectAnswer().equals(question1.getCorrectAnswer());
     }
 
 }

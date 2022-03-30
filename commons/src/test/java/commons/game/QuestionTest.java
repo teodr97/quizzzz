@@ -32,7 +32,7 @@ class QuestionTest {
     void hasCorrectAnswer() {
         question = new Question(activityList);
 
-        assertTrue(Question.hasCorrectAnswer(question, question.getCorrectAnswer()));
+        assertTrue(Question.hasCorrectAnswer(question, question.getCorrectAnswerIndex()));
     }
 
     /**
