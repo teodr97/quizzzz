@@ -108,6 +108,7 @@ public class SinglePlayer implements Initializable {
         //When this screen starts, it will create a new game entity and fetch a question
         this.game = new Game();
         this.statSharer.reset();
+        List<Acitvity> alist = new LinkedList<>()
         game.createQuestionList(new QuestionRetriever(mainCtrl));
         this.statSharer.totalAnswers = game.getTotalRounds();
 

@@ -195,6 +195,12 @@ public class Game {
     /**
      * creates a list of 20 questions and a list of 20 answers, assigning them to the game class variables
      */
+
+    //im gonna change this a bit since we also need the game object for the server side of things
+    //when doing multiplayer, so instead of taking as input the question generator
+    // we only use the questionGenerator once and it is to retrieve  a list
+    // so to use this server side i will make it so that the parammter is the lsit
+    //now we basicly make a request in this class and so
     public void createQuestionList(QuestionGenerator questionGenerator){
         Question[] questions = new Question[this.totalRounds];
         Activity[] answers = new Activity[this.totalRounds];

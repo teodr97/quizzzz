@@ -1,12 +1,18 @@
 package server.api;
 
 
+import commons.game.Activity;
 import commons.models.Message;
 import commons.models.MessageType;
 import commons.models.Question;
+
+
+
+
 import commons.models.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 
@@ -15,11 +21,11 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import server.database.ActivityRepository;
 
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Timer;
+import java.util.*;
 
 
 @Controller
@@ -28,20 +34,29 @@ import java.util.Timer;
 public class GreetingController {
 
 
-//    private ArrayList<String> questionList  = new ArrayList<>();
+
     private ArrayList<Question> questionList = new ArrayList<>();
     private ArrayList<String> fakeanswerList  = new ArrayList<>();
 
-   public Iterator<Question> questionIterator;
+    private ArrayList<commons.game.Question> questionList2 = new ArrayList<>();
+    public Iterator<commons.game.Question> questionIterator;
 
-    @Autowired
+   public Iterator<Question> questionIterator2;
+
+   public Game game;
+
+   private final ActivityRepository repository;
+   private List<Activity> activityList;
+
+
+
+
     public SimpMessagingTemplate template;
 
     public Timer qtimer;
 
 
     //to stop the sending of question we need this field
-    @Autowired
     private ScheduledAnnotationBeanPostProcessor postProcessor;
 
 
@@ -51,7 +66,16 @@ public class GreetingController {
     //probably will be replaced wiht game model class atritbute
     public boolean gamestarted = false;
 
-    public GreetingController(){
+    @Autowired
+    public GreetingController(ActivityRepository repo){
+        this.repository = repo;
+        this.activityList = (List<Activity>) repository.findAll();
+
+        this.game = new Game();
+
+        //retrieves the questions
+        //game.createQuestionList(retrieveRandomActivitiesSet());
+
 
         fakeanswerList.add("40");
         fakeanswerList.add("30");
@@ -65,7 +89,9 @@ public class GreetingController {
         questionList.add(new Question("Bitcoin green?", "20", fakeanswerList));
 
 
-        questionIterator = questionList.iterator();
+
+
+        //questionIterator = questionList.iterator();
         qtimer = new Timer();
 
 
@@ -151,6 +177,35 @@ public class GreetingController {
 
 
 
+    }
+    /**
+     * Get the amount of activities in the database
+     * @return the amount of activities in the database
+     */
+    int getActivitiesSize() {
+        if (activityList == null || activityList.isEmpty()) activityList = (List<Activity>) repository.findAll();
+        return activityList.size();
+    }
+
+
+
+    /**
+     * This function returns a set of three random questions upon request from
+     * the client.
+     * @return List of three random, different activities from the database
+     */
+    public List<Activity> retrieveRandomActivitiesSet() {
+        List<Activity> activitySet = new LinkedList<>();
+        List<Integer> alreadyChosenIndexes = new ArrayList<>();
+
+        for (int i = 0; i < 3; i++) {
+            int index = (int)(Math.random() * getActivitiesSize());
+
+            while (alreadyChosenIndexes.contains(index)) index = (int)(Math.random() * getActivitiesSize());
+            activitySet.add(activityList.get(index));
+            alreadyChosenIndexes.add(index);
+        }
+        return activitySet;
     }
 
 
