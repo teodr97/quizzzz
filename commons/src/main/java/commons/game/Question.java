@@ -1,6 +1,7 @@
 package commons.game;
 
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
@@ -93,7 +94,7 @@ public class Question {
     //SETTERS==========================================================
     public void setQuestion(String question) { this.question = question; }
 
-    public void setCorrectAnswer (Activity correctAnswer) { activityList.set(correctAnswerIndex, correctAnswer); }
+    public void setCorrectAnswer (Activity correctAnswer) { ((LinkedList<Activity>) activityList).set(correctAnswerIndex, correctAnswer); }
 
     //GETTERS==========================================================
     public String getQuestion() { return this.question; }
