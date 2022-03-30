@@ -97,9 +97,8 @@ class QuestionTest {
         Activity activity1 = new Activity("Path", "Activity",1, "Source" );
         Activity activity2 = new Activity("Path", "Activity",1, "Source" );
 
-        question2.setQuestion(question1.getQuestion());
-        question2.setCorrectAnswer(activity1);
-        question1.setCorrectAnswer(activity2);
+        //question2.setCorrectAnswer(activity1);
+        question1 = question2;
         assertEquals(question1, question2);
     }
 }
