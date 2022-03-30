@@ -105,7 +105,7 @@ public class Question {
 
     @Override
     public String toString() {
-        String ret = "{\nQuestion: " + question;
+        String ret = "Question: " + question;
         ret += "\nOption: " + this.activityList.get(0).toString();
         ret += "\nOption: " + this.activityList.get(1).toString();
         ret += "\nOption: " + this.activityList.get(2).toString();
@@ -114,13 +114,13 @@ public class Question {
         return ret;
     }
 
-    @Override
-    public boolean equals(Object other) {
-        if (this == other) return true;
-        if (other == null || getClass() != other.getClass()) return false;
-        Question question1 = (Question) other;
-        return activityList.equals(question1.getActivityList()) && question.equals(question1.getQuestion()) &&
-                correctAnswer.equals(question1.getCorrectAnswer());
-    }
+//    @Override
+//    public boolean equals(Object other) {
+//        if (this == other) return true;
+//        if (other == null || getClass() != other.getClass()) return false;
+//        Question question1 = (Question) other;
+//        return activityList.equals(question1.getActivityList()) && question.equals(question1.getQuestion()) &&
+//                correctAnswer.equals(question1.getCorrectAnswer());
+//    }
 
 }

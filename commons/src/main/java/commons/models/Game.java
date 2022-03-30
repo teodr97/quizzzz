@@ -201,12 +201,12 @@ public class Game {
     // we only use the questionGenerator once and it is to retrieve  a list
     // so to use this server side i will make it so that the parammter is the lsit
     //now we basicly make a request in this class and so
-    public void createQuestionList(QuestionGenerator questionGenerator){
+    public void createQuestionList(List<Activity> alist){
         Question[] questions = new Question[this.totalRounds];
         Activity[] answers = new Activity[this.totalRounds];
         System.out.println("=============QUESTIONS AND ANSWERS===============");
         for(int i = 0; i < totalRounds; i++){
-            questions[i] = new Question(questionGenerator.retrieveActivitySetFromServer());
+            questions[i] = new Question(alist);
             answers[i] = questions[i].getCorrectAnswer();
             System.out.println(questions[i].toString());
             System.out.println("Answer: " + questions[i].getCorrectAnswer());

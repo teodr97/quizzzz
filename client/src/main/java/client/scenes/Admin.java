@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import commons.game.Activity;
+import commons.models.ActivityEntry;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
@@ -84,11 +85,11 @@ public class Admin implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources){
-        colAutoId.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().autoId));
-        colTitle.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().title));
-        colConsumption.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().consumption_in_wh));
-        colSource.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().source));
-        colImage.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().image_path));
+        colAutoId.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().getAutoId()));
+        colTitle.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().getTitle()));
+        colConsumption.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().getConsumption_in_wh()));
+        colSource.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().getSource()));
+        colImage.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().getImage_path()));
 
         fetchActivities();
     }
@@ -209,22 +210,5 @@ public class Admin implements Initializable {
 
     }
 
-    /**
-     * class for entries
-     */
-    private static class ActivityEntry{
-        String autoId;
-        String title;
-        String source;
-        String image_path;
-        String consumption_in_wh;
 
-        ActivityEntry(String autoId, String title, String source, String image_path, String consumption_in_wh){
-            this.autoId = autoId;
-            this.title = title;
-            this.source = source;
-            this.image_path = image_path;
-            this.consumption_in_wh = consumption_in_wh;
-        }
-    }
 }

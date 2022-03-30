@@ -39,9 +39,14 @@ public class GreetingController {
     private ArrayList<String> fakeanswerList  = new ArrayList<>();
 
     private ArrayList<commons.game.Question> questionList2 = new ArrayList<>();
-    public Iterator<commons.game.Question> questionIterator;
+    public Iterator<Question> questionIterator;
 
-   public Iterator<Question> questionIterator2;
+   public Iterator<commons.game.Question> questionIterator2;
+
+
+    //answersIterator to get the next correct answer
+    private Iterator<Activity> answersIterator;
+
 
    public Game game;
 
@@ -75,7 +80,10 @@ public class GreetingController {
         this.activityList = (List<Activity>) repository.findAll();
 
         this.game = new Game();
+        this.game.createQuestionList(activityList);
 
+        this.questionIterator2 = Arrays.stream(game.questions).iterator();
+        this.answersIterator = Arrays.stream(game.answers).iterator();
         //retrieves the questions
         //game.createQuestionList(retrieveRandomActivitiesSet());
 
@@ -94,7 +102,7 @@ public class GreetingController {
 
 
 
-        //questionIterator = questionList.iterator();
+        questionIterator = questionList.iterator();
         qtimer = new Timer();
 
 
@@ -155,9 +163,33 @@ public class GreetingController {
         }
 
 
+
+
         //Timer qtimer = new Timer();
 
     }
+
+    /**After someone clicked the startgame button we start sending every questoin to the client every 10 seconds
+     *
+     */
+//    @Scheduled(fixedRate = 10000)
+//    public void sendQuestion1() {
+//        //the game started reference will probably be a game class attribute
+//
+//        if (gamestarted) {
+//            commons.game.Question current = questionIterator2.next();
+//            System.out.println(current);
+//            //this.template.convertAndSend("/topic/questions", new Message(MessageType.QUESTION, "server", this.questionIterator.next()));
+//            this.template.convertAndSend("/topic/questions2", current);
+//            System.out.println("sent a question");
+//        }
+//        if (!questionIterator2.hasNext()) {
+//            //send game over screen and stop the scheduled sending of questions
+//            //TO-DO:
+//            //this.template.convertAndSend("/topic/greetings", new Message());
+//            stopSending();
+//        }
+//    }
 
     /**
      * Stops sending quesitons every 10 seconds

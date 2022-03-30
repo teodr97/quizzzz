@@ -100,6 +100,8 @@ public class MultiPlayer implements Initializable {
     private Message incomingmsg;
 
     private Question incomingq;
+    private commons.game.Question incomingq2;
+
 
     public boolean gamended;
 
@@ -165,6 +167,33 @@ public class MultiPlayer implements Initializable {
 
                     }
                 });
+
+
+        this.mainCtrl.sessie.subscribe("/topic/questions2", new StompFrameHandler() {
+
+            public Type getPayloadType(StompHeaders stompHeaders) {
+                return commons.game.Question.class;
+            }
+
+            public void handleFrame(StompHeaders stompHeaders, Object payload) {
+                // if we get new question we reset the score multiplier to 1
+                //since someone could have clicked a double points joker in the previous round
+
+                System.out.println("awooo");
+                incomingq2 = (commons.game.Question) payload;
+
+                System.out.println(incomingq2.toString());
+                //questionField.setText(incomingq.getQuestion());
+
+
+
+                startBar();
+
+
+
+            }
+        });
+
 
 
         this.mainCtrl.sessie.subscribe("/topic/jokers", new StompFrameHandler() {

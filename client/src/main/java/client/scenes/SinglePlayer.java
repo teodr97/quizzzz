@@ -18,9 +18,7 @@ import javafx.scene.text.Text;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.ResourceBundle;
+import java.util.*;
 
 
 public class SinglePlayer implements Initializable {
@@ -108,13 +106,20 @@ public class SinglePlayer implements Initializable {
         //When this screen starts, it will create a new game entity and fetch a question
         this.game = new Game();
         this.statSharer.reset();
-        List<Acitvity> alist = new LinkedList<>()
-        game.createQuestionList(new QuestionRetriever(mainCtrl));
+
+        List<Activity> alist = new LinkedList<>();
+        alist = new QuestionRetriever(mainCtrl).retrieveActivitySetFromServer();
+
+        game.createQuestionList(alist);
+
+        game.createQuestionList(alist);
         this.statSharer.totalAnswers = game.getTotalRounds();
 
         //assigns the game questions, answers, and points list to the questionIterator
         this.questionIterator = Arrays.stream(game.questions).iterator();
         this.answersIterator = Arrays.stream(game.answers).iterator();
+
+
 
         //makes an array with references to the answer buttons
         answerbuttons[0] = answerA;
