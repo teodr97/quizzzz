@@ -44,7 +44,7 @@
             <Font name="Arial Bold" size="30.0" />
          </font>
       </Text>
-      <Button fx:id="answerA" layoutX="345.0" layoutY="392.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="408.0" style="-fx-background-color: #0249bd;" styleClass="buttons" text="answerA" textAlignment="CENTER" textFill="WHITE">
+      <Button fx:id="answerA" layoutX="345.0" layoutY="392.0" mnemonicParsing="false" onAction="#checkAnswer" prefHeight="28.0" prefWidth="408.0" style="-fx-background-color: #0249bd;" styleClass="buttons" text="answerA" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="24.0" />
          </font>
@@ -52,7 +52,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button fx:id="answerB" layoutX="345.0" layoutY="457.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="408.0" style="-fx-background-color: #0249bd;" styleClass="buttons" text="answerB" textAlignment="CENTER" textFill="WHITE">
+      <Button fx:id="answerB" layoutX="345.0" layoutY="457.0" mnemonicParsing="false" onAction="#checkAnswer" prefHeight="28.0" prefWidth="408.0" style="-fx-background-color: #0249bd;" styleClass="buttons" text="answerB" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="24.0" />
          </font>
@@ -60,7 +60,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button fx:id="answerC" layoutX="345.0" layoutY="525.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="408.0" style="-fx-background-color: #0249bd;" styleClass="buttons" text="answerC" textAlignment="CENTER" textFill="WHITE">
+      <Button fx:id="answerC" layoutX="345.0" layoutY="525.0" mnemonicParsing="false" onAction="#checkAnswer" prefHeight="28.0" prefWidth="408.0" style="-fx-background-color: #0249bd;" styleClass="buttons" text="answerC" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="24.0" />
          </font>
@@ -154,7 +154,15 @@
             </ImageView>
          </graphic>
       </Button>
-      <Button fx:id="timeJoker" layoutX="451.0" layoutY="674.0" mnemonicParsing="false" onAction="#senddecreaseTimeForAll" prefHeight="55.0" prefWidth="174.0" style="-fx-background-color: #f73444;" text="timerJoker" textAlignment="CENTER" textFill="WHITE">
+      <Button fx:id="timeJoker" layoutX="640.0" layoutY="674.0" mnemonicParsing="false" onAction="#senddecreaseTimeForAll" prefHeight="55.0" prefWidth="174.0" style="-fx-background-color: #f73444;" text="timerJoker" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button fx:id="timeJoker1" layoutX="452.0" layoutY="674.0" mnemonicParsing="false" onAction="#senddecreaseTimeForAll" prefHeight="55.0" prefWidth="174.0" style="-fx-background-color: #f73444;" text="timerJoker" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="18.0" />
          </font>

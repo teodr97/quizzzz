@@ -1,6 +1,8 @@
 package commons.models;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Objects;
 
 //question class extends from the mesasge class
@@ -13,6 +15,7 @@ public class Question extends Message{
     private String content;
     private String answer;
     private ArrayList<String> fakeAnswers;
+    private ArrayList<String> shuffledAnswers;
 
 
 
@@ -35,20 +38,16 @@ public class Question extends Message{
         super(MessageType.QUESTION, "server", content);
         this.answer = answer;
         this.fakeAnswers = fakeAnswers;
+
+        //shuffle the answers when the question object is initiliazed
+        shuffledAnswers = new ArrayList<>();
+        shuffledAnswers.add(this.answer);
+        for(String fake: fakeAnswers){
+            shuffledAnswers.add(fake);
+        }
+        Collections.shuffle(shuffledAnswers);
     }
 
-//    /** Constructtor of the message object
-//     * @param type message type as type type
-//     * @param username username of the person sending message
-//     * @param content content of the message object
-//     */
-//    public Question(MessageType type, String username, String content)
-//    {
-//        this.msgType = type;
-//
-//        this.username = username;
-//        this.content = content;
-//    }
 
 
     /**
@@ -138,12 +137,13 @@ public class Question extends Message{
                 && Objects.equals(fakeAnswers, question.fakeAnswers);
     }
 
+    /**
+     * @return The array of shuffled answers
+     */
     public ArrayList<String> getShuffledAnswers(){
-        ArrayList<String> newarray = new ArrayList<>();
-        newarray.add(this.answer);
-        for(String fake: fakeAnswers){
-            newarray.add(fake);
-        }
+
+        return this.shuffledAnswers;
+
     }
 
 

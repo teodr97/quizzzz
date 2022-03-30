@@ -5,6 +5,7 @@ import client.utils.GuiUtils;
 
 import commons.models.*;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -63,7 +64,10 @@ public class MultiPlayer implements Initializable {
 
     private ArrayList<Button> buttons;
 
+    //joker buttons
     @FXML private Button timeJoker;
+    @FXML private Button bombJoker;
+
 
     @FXML public ProgressBar timerBar;
 
@@ -78,7 +82,7 @@ public class MultiPlayer implements Initializable {
     @FXML private ListView<AnchorPane> listViewReactions;
 
 
-    public Timer bartimer;
+    public Timer bartimer = new Timer();
 
     public double progress;
 
@@ -129,12 +133,23 @@ public class MultiPlayer implements Initializable {
                     }
 
                     public void handleFrame(StompHeaders stompHeaders, Object payload) {
+                        try{
+                            bartimer.cancel();
+                        }catch(Exception e){
+                            System.out.println(e.getMessage());
+                        }
                         incomingq= (Question) payload;
 
                         System.out.println(incomingq.toString());
-                        questionField.setText(incomingq.getQuestion());
+                        System.out.println(incomingq.getShuffledAnswers().toString());
+                        //questionField.setText(incomingq.getQuestion());
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                displayQuestion(incomingq);
+                            }
+                        });
 
-                        displayQuestion(Question incomingq);
 
 
                         startBar();
@@ -144,33 +159,6 @@ public class MultiPlayer implements Initializable {
                     }
                 });
 
-//        this.mainCtrl.sessie.subscribe("/topic/questions", new StompFrameHandler() {
-//
-//            public Type getPayloadType(StompHeaders stompHeaders) {
-//                return Message.class;
-//            }
-//
-//            public void handleFrame(StompHeaders stompHeaders, Object payload) {
-//                incomingmsg = (Message) payload;
-//                if (incomingmsg.getMsgType() == MessageType.QUESTION) {
-//                    System.out.println("Gotten question");
-//                    questionField.setText(incomingmsg.getContent());
-//                    startBar();
-//
-//                }
-//                if(incomingmsg.getMsgType() == MessageType.GAME_ENDED){
-//                    //variable will probably be replaced by a game class atrribute
-//                    gamended = false;
-//                    timerBar.setProgress(0);
-//                    questionField.setText(incomingmsg.getContent());
-//
-//
-//                }
-//
-//            }
-//        });
-
-//
 
         this.mainCtrl.sessie.subscribe("/topic/jokers", new StompFrameHandler() {
 
@@ -180,7 +168,7 @@ public class MultiPlayer implements Initializable {
 
             public void handleFrame(StompHeaders stompHeaders, Object payload) {
                 incomingmsg = (Message) payload;
-                System.out.println("someone clicked a joker");
+                System.out.println("someone the timer joker");
                 progressInc = 0.002;
 
                 timerBar.setStyle("-fx-accent: red");
@@ -189,14 +177,6 @@ public class MultiPlayer implements Initializable {
             }
         });
 
-//        Message retrieveQ = new Message(MessageType.QUESTION, "client", "gib me question");
-//        this.mainCtrl.sessie.send("/app/getquestions", retrieveQ);
-
-//        bartimer = new Timer();
-////        CODE FOR MAKING THE TIMER BAR MOVE
-////        we sync the server timer and the client timer with by just making sure that the timer bar is full after 10
-////        seconds
-//        bartimer.scheduleAtFixedRate(new increaseTimerBar(this), 0, 10);
     }
 
 
@@ -207,10 +187,13 @@ public class MultiPlayer implements Initializable {
      */
     public void displayQuestion(Question question){
         questionField.setText(question.getQuestion());
-        qNumber.setText(game.getCurRound() + " / 20");
-        answerA.setText(question.getActivityList().get(0).getTitle());
-        answerB.setText(question.getActivityList().get(1).getTitle());
-        answerC.setText(question.getActivityList().get(2).getTitle());
+        //qNumber.setText(game.getCurRound() + " / 20");
+        answerA.setText(question.getShuffledAnswers().get(0));
+        answerB.setText(question.getShuffledAnswers().get(1));
+        answerC.setText(question.getShuffledAnswers().get(2));
+//        answerA.setText(question.getActivityList().get(0).getTitle());
+//        answerB.setText(question.getActivityList().get(1).getTitle());
+//        answerC.setText(question.getActivityList().get(2).getTitle());
         resetGamescreen();
     }
 
@@ -415,6 +398,15 @@ public class MultiPlayer implements Initializable {
         timeJoker.setDisable(true);
         mainCtrl.sessie.send("/topic/jokers", new Message(MessageType.TIME_JOKER, "client", "someone clicked the timer joker"));
     }
+    /**
+     * Send that the timer joker has been used to all clients subscriped to the /topic/joker endpoint
+     */
+    public void sendRemoveFake(){
+        //disable the button if  clicked
+        bombJoker.setDisable(true);
+        mainCtrl.sessie.send("/topic/jokers", new Message(MessageType.TIME_JOKER, "client", "someone clicked the bomb joker"));
+    }
+
 
 
 
