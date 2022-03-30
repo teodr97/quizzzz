@@ -34,7 +34,7 @@ class UtilsTest {
         activityList.add(new Activity("Path","Test", 123, "Source"));
         activityList.add(new Activity("Path","Test", 3, "Source"));
         activityList.add(new Activity("Path","Test", 41, "Source"));
-        assertEquals(activityList.get(0), Utils.retrieveActivityLeastEnergy(activityList));
+        assertEquals(0, Utils.retrieveActivityLeastEnergy(activityList));
     }
 
     /**
@@ -49,7 +49,7 @@ class UtilsTest {
         activityList.add(new Activity("Path","Test", 123, "Source"));
         activityList.add(new Activity("Path","Test", 3, "Source"));
         activityList.add(new Activity("Path","Test", 41, "Source"));
-        assertEquals(activityList.get(1), Utils.retrieveActivityMostEnergy(activityList));
+        assertEquals(1, Utils.retrieveActivityMostEnergy(activityList));
     }
 
     /**
@@ -57,7 +57,7 @@ class UtilsTest {
      */
     @Test
     void replaceActivitiesWithPowerDraws() {
-        List<Activity> activityList = new LinkedList<>();
+        LinkedList<Activity> activityList = new LinkedList<>();
 
         activityList.add(new Activity("Path","Test", 1, "Source"));
         activityList.add(new Activity("Path","Test", 3414, "Source"));
