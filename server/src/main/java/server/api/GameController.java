@@ -110,9 +110,22 @@ public class GameController {
     //we keep the request open untill a new player connects in which case we
     //send the new array of all players
     @GetMapping("/getPlayers")
-    public ResponseEntity<List<Player>> getPlayers(@RequestParam String player) throws InterruptedException, NotFoundException {
+    public ResponseEntity<List<Player>> getPlayers(@RequestParam String player) throws  NotFoundException {
         System.out.println("poll:");
         return ResponseEntity.ok(gameService.getPlayers(player));
+    }
+
+    /**
+     * Gets a game object.
+     * @param player The player's username that sent the request
+     * @return Returns the game object.
+     * @throws InterruptedException
+     * @throws NotFoundException
+     */
+    @GetMapping("/getGame")
+    public ResponseEntity<Game> getGame(@RequestParam String player) throws  NotFoundException {
+        System.out.println("poll:");
+        return ResponseEntity.ok(gameService.getGame(player));
     }
 
 
