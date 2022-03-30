@@ -51,13 +51,16 @@ public class GreetingController {
 
 
 
+    @Autowired
     public SimpMessagingTemplate template;
 
     public Timer qtimer;
 
 
     //to stop the sending of question we need this field
+    @Autowired
     private ScheduledAnnotationBeanPostProcessor postProcessor;
+
 
 
 
@@ -98,8 +101,6 @@ public class GreetingController {
 
 
     }
-
-
 
 
 
@@ -148,6 +149,7 @@ public class GreetingController {
         }
         if(!questionIterator.hasNext()){
             //send game over screen and stop the scheduled sending of questions
+            //TO-DO:
             //this.template.convertAndSend("/topic/greetings", new Message());
             stopSending();
         }
