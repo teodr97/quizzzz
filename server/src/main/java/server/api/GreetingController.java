@@ -51,6 +51,7 @@ public class GreetingController {
     //probably will be replaced wiht game model class atritbute
     public boolean gamestarted = false;
 
+    @Autowired
     public GreetingController(){
 
         fakeanswerList.add("40");
@@ -72,8 +73,6 @@ public class GreetingController {
 
 
     }
-
-
 
 
 
@@ -122,6 +121,7 @@ public class GreetingController {
         }
         if(!questionIterator.hasNext()){
             //send game over screen and stop the scheduled sending of questions
+            //TO-DO:
             //this.template.convertAndSend("/topic/greetings", new Message());
             stopSending();
         }
