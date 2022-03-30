@@ -66,7 +66,7 @@ public class MultiPlayer implements Initializable {
 
     //joker buttons
     @FXML private Button timeJoker;
-    @FXML private Button bombJoker;
+    @FXML private Button removeJoker;
 
 
     @FXML public ProgressBar timerBar;
@@ -168,10 +168,16 @@ public class MultiPlayer implements Initializable {
 
             public void handleFrame(StompHeaders stompHeaders, Object payload) {
                 incomingmsg = (Message) payload;
-                System.out.println("someone the timer joker");
-                progressInc = 0.002;
 
-                timerBar.setStyle("-fx-accent: red");
+
+                if(incomingmsg.getMsgType() == MessageType.TIME_JOKER){
+                    progressInc = 0.002;
+
+                    timerBar.setStyle("-fx-accent: red");
+                }
+                if(incomingmsg.getMsgType() == MessageType.REMOVE_JOKER){
+                    handleRemovalJoker();
+                }
 
 
             }
@@ -179,6 +185,16 @@ public class MultiPlayer implements Initializable {
 
     }
 
+
+    public void handleRemovalJoker(){
+        System.out.println("handling removal");
+        String toremove = incomingq.getFakeAnswers().get(0);
+        for(Button b: buttons){
+            if(b.getText().equals(toremove)){
+                b.setDisable(true);
+            }
+        }
+    }
 
 
     /**
@@ -403,8 +419,9 @@ public class MultiPlayer implements Initializable {
      */
     public void sendRemoveFake(){
         //disable the button if  clicked
-        bombJoker.setDisable(true);
-        mainCtrl.sessie.send("/topic/jokers", new Message(MessageType.TIME_JOKER, "client", "someone clicked the bomb joker"));
+
+        removeJoker.setDisable(true);
+        mainCtrl.sessie.send("/app/clickedJoker", new Message(MessageType.REMOVE_JOKER, "client", "someone clicked the remove joker"));
     }
 
 

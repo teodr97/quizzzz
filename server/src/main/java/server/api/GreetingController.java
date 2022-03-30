@@ -143,6 +143,7 @@ public class GreetingController {
     @MessageMapping("/clickedJoker")
     @SendTo("/topic/jokers")
     public Message handleJoker(Message message){
+        System.out.println("someone clicked a joker");
         return new Message(message.getMsgType(), "Server", message.getContent());
 
 
