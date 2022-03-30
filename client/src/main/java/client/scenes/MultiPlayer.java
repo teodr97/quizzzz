@@ -186,9 +186,13 @@ public class MultiPlayer implements Initializable {
     }
 
 
+    /**
+     * disables the button corresponding to the wrong answer
+     */
     public void handleRemovalJoker(){
         System.out.println("handling removal");
-        String toremove = incomingq.getFakeAnswers().get(0);
+        int randomindex= new Random().nextInt(2);
+        String toremove = incomingq.getFakeAnswers().get(randomindex);
         for(Button b: buttons){
             if(b.getText().equals(toremove)){
                 b.setDisable(true);
