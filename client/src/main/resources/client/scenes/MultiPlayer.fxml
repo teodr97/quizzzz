@@ -100,16 +100,6 @@
          </image>
       </ImageView>
       <ListView fx:id="listViewReactions" focusTraversable="false" layoutX="814.0" layoutY="219.0" pickOnBounds="false" prefHeight="426.0" prefWidth="250.0" />
-      <AnchorPane layoutX="594.0" layoutY="616.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="200.0">
-         <children>
-            <Text fill="WHITE" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="&lt;Username&gt;">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Text>
-            <ImageView fitHeight="40.0" fitWidth="40.0" layoutX="160.0" pickOnBounds="true" preserveRatio="true" />
-         </children>
-      </AnchorPane>
       <Button fx:id="bttnReactLol" layoutX="1060.0" layoutY="230.0" mnemonicParsing="false" onAction="#displayReactionLol" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: transparent;">
          <graphic>
             <ImageView fx:id="imgBttnReactLol" fitHeight="40.0" fitWidth="40.0" layoutX="1070.0" pickOnBounds="true" preserveRatio="true">

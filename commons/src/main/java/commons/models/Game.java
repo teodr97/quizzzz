@@ -192,11 +192,9 @@ public class Game {
      */
     public void createQuestionList(QuestionGenerator questionGenerator){
         Question[] questions = new Question[this.totalRounds];
-        int[] answers = new int[this.totalRounds];
         System.out.println("=============QUESTIONS AND ANSWERS===============");
         for(int i = 0; i < totalRounds; i++){
             questions[i] = new Question(questionGenerator.retrieveActivitySetFromServer());
-            answers[i] = questions[i].getCorrectAnswerIndex();
             System.out.println(questions[i].toString());
             System.out.println("Answer: " + questions[i].getCorrectAnswer());
             //System.out.println(questions[i].toString());
