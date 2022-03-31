@@ -4,7 +4,6 @@ import client.utils.QuestionRetriever;
 import client.utils.SingleplayerHighscoreHandler;
 import client.utils.StatSharerSingleplayer;
 import com.google.inject.Inject;
-import commons.game.Activity;
 import commons.game.Question;
 import commons.models.Game;
 import javafx.animation.AnimationTimer;
@@ -18,9 +17,7 @@ import javafx.scene.text.Text;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.ResourceBundle;
+import java.util.*;
 
 
 public class SinglePlayer implements Initializable {
@@ -63,7 +60,7 @@ public class SinglePlayer implements Initializable {
     private double progress;
 
     private static final double EPSILON = 0.00001;
-    Button[] answerbuttons = new Button[3];
+    List<Button> answerButtons = new ArrayList<>(3);
 
     //game object to generate all questions and answers
     private Game game;
@@ -74,8 +71,8 @@ public class SinglePlayer implements Initializable {
     //questionIterator to get the next question
     private Iterator<Question> questionIterator;
 
-    //answersIterator to get the next correct answer
-    private Iterator<Activity> answersIterator;
+    // The question being currently displayed
+    private Question currentQuestion;
 
     //declare an animation timer
     private AnimationTimer tm = new TimerMethod();
@@ -113,14 +110,14 @@ public class SinglePlayer implements Initializable {
 
         //assigns the game questions, answers, and points list to the questionIterator
         this.questionIterator = Arrays.stream(game.questions).iterator();
-        this.answersIterator = Arrays.stream(game.answers).iterator();
 
         //makes an array with references to the answer buttons
-        answerbuttons[0] = answerA;
-        answerbuttons[1] = answerB;
-        answerbuttons[2] = answerC;
+        answerButtons.add(0, answerA);
+        answerButtons.add(1, answerB);
+        answerButtons.add(2, answerC);
 
-        displayQuestion(this.questionIterator.next());
+        currentQuestion = this.questionIterator.next();
+        displayQuestion(currentQuestion);
 
         progress = 0;
 
@@ -145,7 +142,7 @@ public class SinglePlayer implements Initializable {
 
         //gets the amount of points to be handed, and assigns the correct answer to a variable
         int questionpoints = (int)(500 - 250*progress);
-        String correctanswer = answersIterator.next().getTitle();
+        String correctanswer = currentQuestion.getActivityList().get(currentQuestion.getCorrectAnswerIndex()).getTitle();
         System.out.println("correct answer: "+ correctanswer);
         System.out.println("your answer: "+ useranswer.getText());
 
@@ -164,7 +161,7 @@ public class SinglePlayer implements Initializable {
 
         //after accordingly change the buttons colors
         //we retrieve the current style of all the buttons and add a border to the user chosen button
-        for(Button answerbutton: answerbuttons){
+        for(Button answerbutton: answerButtons){
 
             String currentstyle = answerbutton.getStyle();
             StringBuilder currentstylebuilder = new StringBuilder(currentstyle);
@@ -313,7 +310,8 @@ public class SinglePlayer implements Initializable {
             if((timerBar.getProgress() + EPSILON > 1.5 && timerBar.getProgress() - EPSILON <1.5)){
                 //when timer ends and game hasn't ended we want to display the next question;
                 if(questionIterator.hasNext()){
-                    displayQuestion(questionIterator.next());
+                    currentQuestion = questionIterator.next();
+                    displayQuestion(currentQuestion);
                 }else{
                     loadEndscreen();
                 }
@@ -323,7 +321,7 @@ public class SinglePlayer implements Initializable {
     }
 
     /**
-     * displays the question and answers on the window and resets the game
+     * Displays the question and answers on the window and resets the game.
      * @param question: a Question entity to display
      */
     public void displayQuestion(Question question){

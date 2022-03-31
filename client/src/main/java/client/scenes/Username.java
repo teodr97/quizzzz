@@ -81,8 +81,8 @@ public class Username implements Initializable {
             if(response.getStatus() == 500){
                 missingUser.setText("Username is already taken");
             }else{
-                mainCtrl.switchToWaitingRoom();
                 mainCtrl.startLongPolling();
+                mainCtrl.switchToWaitingRoom();
             }
         }
     }

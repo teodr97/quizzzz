@@ -5,6 +5,8 @@ import client.utils.GuiUtils;
 
 import commons.models.*;
 
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -31,7 +33,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 
-
+import org.glassfish.jersey.client.ClientConfig;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 
@@ -42,11 +44,14 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 import java.util.Timer;
 
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+
 
 public class MultiPlayer implements Initializable {
 
     private Game game;
     private MainCtrl mainCtrl;
+    private static final String SERVER = "http://localhost:8080/";
 
 
     private final Image reactionAngry = new Image(Paths.get("src", "main","resources","images","reactAngry.png").toUri().toString());
@@ -134,9 +139,6 @@ public class MultiPlayer implements Initializable {
                         System.out.println(incomingq.toString());
                         questionField.setText(incomingq.getQuestion());
                         startBar();
-
-
-
                     }
                 });
 
@@ -159,10 +161,7 @@ public class MultiPlayer implements Initializable {
 //                    gamended = false;
 //                    timerBar.setProgress(0);
 //                    questionField.setText(incomingmsg.getContent());
-//
-//
 //                }
-//
 //            }
 //        });
 
@@ -196,12 +195,18 @@ public class MultiPlayer implements Initializable {
     }
 
     /**
-     * switches to the splash screen, for the leave button
+     * If the event is executed then the scene switches to Splash.fxml
      * @param event
      * @throws IOException
      */
-    public void switchToSplash(ActionEvent event) throws IOException {
-        mainCtrl.switchToSplash();
+    public void leaveGame(ActionEvent event) throws IOException {
+        ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/game/leave")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(mainCtrl.getPlayer(), APPLICATION_JSON));
+
+        this.mainCtrl.switchToSplash();
     }
 
     /**
