@@ -26,8 +26,6 @@ import java.util.Timer;
 @Slf4j
 @EnableScheduling
 public class GreetingController {
-
-
 //    private ArrayList<String> questionList  = new ArrayList<>();
     private ArrayList<Question> questionList = new ArrayList<>();
     private ArrayList<String> fakeanswerList  = new ArrayList<>();
@@ -44,10 +42,6 @@ public class GreetingController {
     @Autowired
     private ScheduledAnnotationBeanPostProcessor postProcessor;
 
-
-
-
-
     //probably will be replaced wiht game model class atritbute
     public boolean gamestarted = false;
 
@@ -57,7 +51,6 @@ public class GreetingController {
         fakeanswerList.add("40");
         fakeanswerList.add("30");
 
-
         questionList.add(new Question("Nuclear reactors huuh?", "20", fakeanswerList));
         questionList.add(new Question("Nuclear physicist whet?", "20", fakeanswerList));
         questionList.add(new Question("Tesla who?", "20", fakeanswerList));
@@ -65,13 +58,8 @@ public class GreetingController {
         questionList.add(new Question("Elon to the moon?", "20", fakeanswerList));
         questionList.add(new Question("Bitcoin green?", "20", fakeanswerList));
 
-
         questionIterator = questionList.iterator();
         qtimer = new Timer();
-
-
-
-
     }
 
 
@@ -86,7 +74,6 @@ public class GreetingController {
         System.out.println(message.toString());
 
         return new Message(MessageType.CONNECTED, "Server", "We see you have connected, ");
-
     }
 
     /**
@@ -102,9 +89,7 @@ public class GreetingController {
         //will be replaced  with game state functionality:
         gamestarted = true;
         return new Message(MessageType.GAME_STARTED, "Server", "Someone started the game");
-
     }
-
 
     /**After someone clicked the startgame button we start sending every questoin to the client every 10 seconds
      *
@@ -125,10 +110,7 @@ public class GreetingController {
             //this.template.convertAndSend("/topic/greetings", new Message());
             stopSending();
         }
-
-
         //Timer qtimer = new Timer();
-
     }
 
     /**
@@ -148,9 +130,6 @@ public class GreetingController {
     public Message handleJoker(Message message){
         System.out.println("someone clicked a joker");
         return new Message(message.getMsgType(), "Server", message.getContent());
-
-
-
     }
 
 
