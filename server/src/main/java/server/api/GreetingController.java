@@ -99,7 +99,7 @@ public class GreetingController {
         this.game.createQuestionList2(activitySet);
 
         this.questionIterator = Arrays.stream(game.questions).iterator();
-        this.answersIterator = Arrays.stream(game.answers).iterator();
+
         //retrieves the questions
         //game.createQuestionList(retrieveRandomActivitiesSet());
 
@@ -122,7 +122,7 @@ public class GreetingController {
 
 
 
-        current = questionIterator.next();
+        //current = questionIterator.next();
 
 
         //questionIterator = questionList.iterator();
@@ -178,15 +178,15 @@ public class GreetingController {
             //Question current = questionIterator.next();
 
             //this.template.convertAndSend("/topic/questions", new Message(MessageType.QUESTION, "server", this.questionIterator.next()));
-            this.template.convertAndSend("/topic/questions", current);
+            this.template.convertAndSend("/topic/questions", questionIterator.next());
             System.out.println("sent a question");
         }
-//        if(!questionIterator.hasNext()){
-//            //send game over screen and stop the scheduled sending of questions
-//            //TO-DO:
-//            //this.template.convertAndSend("/topic/greetings", new Message());
-//            stopSending();
-//        }
+        if(!questionIterator.hasNext()){
+            //send game over screen and stop the scheduled sending of questions
+            //TO-DO:
+            //this.template.convertAndSend("/topic/greetings", new Message());
+            stopSending();
+        }
 
 
 

@@ -153,16 +153,16 @@ public class MultiPlayer implements Initializable {
                         incomingq= (Question) payload;
 
 
-                        questionField.setText(incomingq.getQuestion());
+                        //questionField.setText(incomingq.getQuestion());
                         System.out.println(incomingq.realString());
 
                         //questionField.setText(incomingq.getQuestion());
-//                        Platform.runLater(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                displayQuestion(incomingq);
-//                            }
-//                        });
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                displayQuestion(incomingq);
+                            }
+                        });
 
 
 
@@ -276,15 +276,15 @@ public class MultiPlayer implements Initializable {
      * @param question: a Question entity to display
      */
     public void displayQuestion(Question question){
-//        questionField.setText(question.getQuestion());
+        questionField.setText(question.getQuestion());
 //        //qNumber.setText(game.getCurRound() + " / 20");
 //        answerA.setText(question.getShuffledAnswers().get(0));
 //        answerB.setText(question.getShuffledAnswers().get(1));
 //        answerC.setText(question.getShuffledAnswers().get(2));
-////        answerA.setText(question.getActivityList().get(0).getTitle());
-////        answerB.setText(question.getActivityList().get(1).getTitle());
-////        answerC.setText(question.getActivityList().get(2).getTitle());
-//        resetGamescreen();
+        answerA.setText(question.getActivityList().get(0).getTitle());
+        answerB.setText(question.getActivityList().get(1).getTitle());
+        answerC.setText(question.getActivityList().get(2).getTitle());
+        resetGamescreen();
     }
 
     /**

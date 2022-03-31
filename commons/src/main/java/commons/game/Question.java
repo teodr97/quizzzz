@@ -16,6 +16,7 @@ public class Question {
 
     private List<Activity> activityList;
     private Activity correctAnswer;
+    private int correctAnswerIndex;
 
     private int points; // Are we using this anymore?
 
@@ -69,19 +70,18 @@ public class Question {
         switch (randomFactor) {
             case 1:
                 this.question = "Which activity uses the most amount of power?";
-                this.correctAnswer = Utils.retrieveActivityMostEnergy(activityList);
+                this.correctAnswerIndex = Utils.retrieveActivityMostEnergy(activityList);
                 break;
             case 2:
                 this.question = "Which activity uses the least amount of power?";
-                this.correctAnswer = Utils.retrieveActivityLeastEnergy(activityList);
+                this.correctAnswerIndex = Utils.retrieveActivityLeastEnergy(activityList);
                 break;
             default:
                 // Generate a random integer from 0 to 2 for getting an index for the correct answer
-                int correctAnswerIndex = Utils.generateRandomIntSmallerThan(3);
+                int correctActivityIndex = Utils.generateRandomIntSmallerThan(3);
                 // Retrieve a random activity that will serve as the correct answer using indexes 0-3
-                this.correctAnswer = activityList.get(correctAnswerIndex);
-                this.question = "How much power does the following activity use:\n\"" + correctAnswer.getTitle() + "\"";
-                this.activityList = Utils.replaceActivitiesWithPowerDraws(activityList, correctAnswerIndex);
+                this.question = "How much power does the following activity use:\n\"" + activityList.get(correctActivityIndex).getTitle() + "\"";
+                this.activityList = Utils.replaceActivitiesWithPowerDraws(activityList, correctActivityIndex);
                 break;
         }
     }

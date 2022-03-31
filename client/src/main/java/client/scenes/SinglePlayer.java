@@ -113,7 +113,7 @@ public class SinglePlayer implements Initializable {
 
         game.createQuestionList(alist);
 
-        game.createQuestionList(alist);
+        //game.createQuestionList(alist);
         this.statSharer.totalAnswers = game.getTotalRounds();
 
         //assigns the game questions, answers, and points list to the questionIterator

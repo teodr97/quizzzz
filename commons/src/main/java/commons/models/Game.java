@@ -221,18 +221,18 @@ public class Game {
     public void createQuestionList2(ArrayList<Activity> alist){
 
         Question[] questions = new Question[this.totalRounds];
-        Activity[] answers = new Activity[this.totalRounds];
+        int[] answers = new int[this.totalRounds];
         System.out.println("=============QUESTIONS AND ANSWERS===============");
         for(int i = 0; i < totalRounds; i++){
             questions[i] = new Question(alist);
-            answers[i] = questions[i].getCorrectAnswer();
+            answers[i] = questions[i].getCorrectAnswerIndex();
             System.out.println(questions[i].toString());
             System.out.println("Answer: " + questions[i].getCorrectAnswer());
             //System.out.println(questions[i].toString());
         }
         System.out.println("=================================================");
-        this.answers = answers;
         this.questions = questions;
+
     }
 
     /**

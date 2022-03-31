@@ -21,10 +21,12 @@ public class Question extends Message{
     private ArrayList<String> fakeAnswers;
     private ArrayList<String> shuffledAnswers;
 
+    private int correctAnswerIndex;
+
 
 
     private Activity correctAnswer;
-    private ArrayList<Activity> activities = new ArrayList<>();
+    private ArrayList<Activity> activityList = new ArrayList<>();
 
 
 
@@ -49,32 +51,57 @@ public class Question extends Message{
      *
      * @param
      */
-    public Question(ArrayList<Activity> activities){
+    public Question(ArrayList<Activity> activityList){
         super(MessageType.QUESTION, "server", "");
 
-        this.activities = activities;
+        this.activityList = activityList;
 
 
+        Collections.shuffle(activityList);
 
+        // Generate a new random integer to determine the type of question that will be used.
+        // Not a good solution for a greater amount of questions, they should be stored in a
+        // database instead.
         int randomFactor = Utils.generateRandomIntSmallerThan(4);
         switch (randomFactor) {
             case 1:
                 this.question = "Which activity uses the most amount of power?";
-                this.correctAnswer = Utils.retrieveActivityMostEnergy(activities);
+                this.correctAnswerIndex = Utils.retrieveActivityMostEnergy(activityList);
                 break;
             case 2:
                 this.question = "Which activity uses the least amount of power?";
-                this.correctAnswer = Utils.retrieveActivityLeastEnergy(activities);
+                this.correctAnswerIndex = Utils.retrieveActivityLeastEnergy(activityList);
                 break;
             default:
                 // Generate a random integer from 0 to 2 for getting an index for the correct answer
-                int correctAnswerIndex = Utils.generateRandomIntSmallerThan(3);
+                int correctActivityIndex = Utils.generateRandomIntSmallerThan(3);
                 // Retrieve a random activity that will serve as the correct answer using indexes 0-3
-                this.correctAnswer = activities.get(correctAnswerIndex);
-                this.question = "How much power does the following activity use:\n\"" + correctAnswer.getTitle() + "\"";
-                this.activities = Utils.replaceActivitiesWithPowerDraws2(activities, correctAnswerIndex);
+                this.question = "How much power does the following activity use:\n\"" + activityList.get(correctActivityIndex).getTitle() + "\"";
+                this.activityList = Utils.replaceActivitiesWithPowerDraws2(activityList, correctActivityIndex);
                 break;
         }
+
+        //THIS WORKED
+
+//        int randomFactor = Utils.generateRandomIntSmallerThan(4);
+//        switch (randomFactor) {
+//            case 1:
+//                this.question = "Which activity uses the most amount of power?";
+//                this.correctAnswer = Utils.retrieveActivityMostEnergy(activities);
+//                break;
+//            case 2:
+//                this.question = "Which activity uses the least amount of power?";
+//                this.correctAnswer = Utils.retrieveActivityLeastEnergy(activities);
+//                break;
+//            default:
+//                // Generate a random integer from 0 to 2 for getting an index for the correct answer
+//                int correctAnswerIndex = Utils.generateRandomIntSmallerThan(3);
+//                // Retrieve a random activity that will serve as the correct answer using indexes 0-3
+//                this.correctAnswer = activities.get(correctAnswerIndex);
+//                this.question = "How much power does the following activity use:\n\"" + correctAnswer.getTitle() + "\"";
+//                this.activities = Utils.replaceActivitiesWithPowerDraws2(activities, correctAnswerIndex);
+//                break;
+//        }
 
         //shuffle the answers when the question object is initiliazed
 //        shuffledAnswers = new ArrayList<>();
@@ -135,8 +162,11 @@ public class Question extends Message{
 
     public String getQuestion() { return this.question; }
 
-    public List<Activity> getActivityList() { return activities; }
+    public List<Activity> getActivityList() { return activityList; }
 
+    public int getCorrectAnswerIndex() {
+        return correctAnswerIndex;
+    }
 
     /**
      * @return the answer of this question as a string
