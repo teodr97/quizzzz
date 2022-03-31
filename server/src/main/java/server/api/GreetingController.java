@@ -56,7 +56,7 @@ public class GreetingController {
     private ArrayList<Activity> testList = new ArrayList<>();
 
     private Question testq;
-
+    private Question current;
 
 
     @Autowired
@@ -105,7 +105,9 @@ public class GreetingController {
         Activity act = new Activity("/image", "act", 232, "src");
         testList.add(act);
 
-        //testq = new Question(testList);
+
+        testq = new Question(activityList);
+        current = questionIterator.next();
 
 
         //questionIterator = questionList.iterator();
@@ -156,10 +158,10 @@ public class GreetingController {
         //the game started reference will probably be a game class attribute
 
         if(gamestarted){
-            Question current = questionIterator.next();
-            System.out.println(current.getQuestion());
+            //Question current = questionIterator.next();
+            System.out.println(testq.getQuestion());
             //this.template.convertAndSend("/topic/questions", new Message(MessageType.QUESTION, "server", this.questionIterator.next()));
-            this.template.convertAndSend("/topic/questions", current);
+            this.template.convertAndSend("/topic/questions", testq);
             System.out.println("sent a question");
         }
 //        if(!questionIterator.hasNext()){
