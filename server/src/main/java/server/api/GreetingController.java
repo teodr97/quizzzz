@@ -13,7 +13,9 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor;
 import org.springframework.stereotype.Controller;
+
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -26,14 +28,21 @@ import java.util.Timer;
 public class GreetingController {
 
 
-    private ArrayList<String> questionList  = new ArrayList<>();
-    private ArrayList<String> answerList  = new ArrayList<>();
-   public Iterator<String> questionIterator;
+//    private ArrayList<String> questionList  = new ArrayList<>();
+    private ArrayList<Question> questionList = new ArrayList<>();
+    private ArrayList<String> fakeanswerList  = new ArrayList<>();
+
+   public Iterator<Question> questionIterator;
 
     @Autowired
     public SimpMessagingTemplate template;
 
     public Timer qtimer;
+
+
+    //to stop the sending of question we need this field
+    @Autowired
+    private ScheduledAnnotationBeanPostProcessor postProcessor;
 
 
 
@@ -42,16 +51,20 @@ public class GreetingController {
     //probably will be replaced wiht game model class atritbute
     public boolean gamestarted = false;
 
-    public GreetingController(){questionList.add("Nuclear reactors huuh?");
-        questionList.add("Nuclear physicist whet?");
-        questionList.add("Tesla who?");
-        questionList.add("Edison BOO");
-        questionList.add("Elon to the moon?");
-        questionList.add("Bitcoin green?");
+    @Autowired
+    public GreetingController(){
 
-        answerList.add("40");
-        answerList.add("30");
-        answerList.add("20");
+        fakeanswerList.add("40");
+        fakeanswerList.add("30");
+
+
+        questionList.add(new Question("Nuclear reactors huuh?", "20", fakeanswerList));
+        questionList.add(new Question("Nuclear physicist whet?", "20", fakeanswerList));
+        questionList.add(new Question("Tesla who?", "20", fakeanswerList));
+        questionList.add(new Question("Edison BOO", "20", fakeanswerList));
+        questionList.add(new Question("Elon to the moon?", "20", fakeanswerList));
+        questionList.add(new Question("Bitcoin green?", "20", fakeanswerList));
+
 
         questionIterator = questionList.iterator();
         qtimer = new Timer();
@@ -60,8 +73,6 @@ public class GreetingController {
 
 
     }
-
-
 
 
 
@@ -87,6 +98,8 @@ public class GreetingController {
     @SendTo("/topic/gamestate")
     public Message start(Message message){
         System.out.println(message.toString());
+
+        //will be replaced  with game state functionality:
         gamestarted = true;
         return new Message(MessageType.GAME_STARTED, "Server", "Someone started the game");
 
@@ -103,13 +116,26 @@ public class GreetingController {
         if(gamestarted){
 
             //this.template.convertAndSend("/topic/questions", new Message(MessageType.QUESTION, "server", this.questionIterator.next()));
-            this.template.convertAndSend("/topic/questions", new Question(this.questionIterator.next(), "Answersee"));
+            this.template.convertAndSend("/topic/questions", questionIterator.next());
             System.out.println("sent a question");
+        }
+        if(!questionIterator.hasNext()){
+            //send game over screen and stop the scheduled sending of questions
+            //TO-DO:
+            //this.template.convertAndSend("/topic/greetings", new Message());
+            stopSending();
         }
 
 
         //Timer qtimer = new Timer();
 
+    }
+
+    /**
+     * Stops sending quesitons every 10 seconds
+     */
+    public void stopSending(){
+        postProcessor.postProcessBeforeDestruction(this, "");
     }
 
 
@@ -120,11 +146,16 @@ public class GreetingController {
     @MessageMapping("/clickedJoker")
     @SendTo("/topic/jokers")
     public Message handleJoker(Message message){
+        System.out.println("someone clicked a joker");
         return new Message(message.getMsgType(), "Server", message.getContent());
 
 
 
     }
+
+
+
+
 
 
 
