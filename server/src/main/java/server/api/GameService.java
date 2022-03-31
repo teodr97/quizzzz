@@ -100,6 +100,19 @@ public class GameService {
     }
 
     /**
+     * Gets number of players on the server.
+     * @return Returns an integer
+     */
+    public Integer getAllPlayers(){
+        Map<String, Game> game = GameStorage.getInstance().getGames();
+        int players = 0;
+        for(Game g : game.values()){
+            players += g.getPlayers().size();
+        }
+        return players;
+    }
+
+    /**
      * NOT FULLY IMPLEMENTED YET
      * Should check what gamestate is the game in.
      * @param gamePlay Gets a gamePlay object.
