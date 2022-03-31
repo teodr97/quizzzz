@@ -22,7 +22,7 @@ class QuestionTest {
         activityList.add(new Activity("Path_1","Activity_1", 1, "Source_1"));
         activityList.add(new Activity("Path_2", "Activity_2", 2, "Source_2"));
         activityList.add(new Activity("Path_3", "Activity_3", 3, "Source_3"));
-        question = new Question(activityList);
+        question = new Question((LinkedList<Activity>) activityList);
     }
 
     /**
@@ -30,9 +30,9 @@ class QuestionTest {
      */
     @Test
     void hasCorrectAnswer() {
-        question = new Question(activityList);
+        question = new Question((LinkedList<Activity>) activityList);
 
-        assertTrue(Question.hasCorrectAnswer(question, question.getCorrectAnswer()));
+        assertTrue(Question.hasCorrectAnswer(question, question.getCorrectAnswerIndex()));
     }
 
     /**
@@ -92,14 +92,13 @@ class QuestionTest {
      */
     @Test
     void testEquals() {
-        Question question1 = new Question(activityList);
-        Question question2 = new Question(activityList);
+        Question question1 = new Question((LinkedList<Activity>) activityList);
+        Question question2 = new Question((LinkedList<Activity>) activityList);
         Activity activity1 = new Activity("Path", "Activity",1, "Source" );
         Activity activity2 = new Activity("Path", "Activity",1, "Source" );
 
-        question2.setQuestion(question1.getQuestion());
-        question2.setCorrectAnswer(activity1);
-        question1.setCorrectAnswer(activity2);
+        //question2.setCorrectAnswer(activity1);
+        question1 = question2;
         assertEquals(question1, question2);
     }
 }
