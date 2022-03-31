@@ -219,6 +219,7 @@ public class Game {
     }
 
     public void createQuestionList2(ArrayList<Activity> alist){
+
         Question[] questions = new Question[this.totalRounds];
         Activity[] answers = new Activity[this.totalRounds];
         System.out.println("=============QUESTIONS AND ANSWERS===============");

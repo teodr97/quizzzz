@@ -141,9 +141,11 @@ public class MultiPlayer implements Initializable {
                     public void handleFrame(StompHeaders stompHeaders, Object payload) {
                         // if we get new question we reset the score multiplier to 1
                         //since someone could have clicked a double points joker in the previous round
-                        System.out.println("we got it");
-                        scoreMultiplier = 1;
+//                        System.out.println("we got it");
+//                        scoreMultiplier = 1;
                         try{
+                            System.out.println("we got it");
+                            scoreMultiplier = 1;
                             bartimer.cancel();
                         }catch(Exception e){
                             System.out.println(e.getMessage());

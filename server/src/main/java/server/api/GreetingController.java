@@ -53,6 +53,9 @@ public class GreetingController {
    private final ActivityRepository repository;
    private ArrayList<Activity> activityList;
 
+    private ArrayList<Activity> activitySet = new ArrayList<>();
+
+
     private ArrayList<Activity> testList = new ArrayList<>();
 
     private Question testq;
@@ -81,9 +84,19 @@ public class GreetingController {
     public GreetingController(ActivityRepository repo){
         this.repository = repo;
         this.activityList = (ArrayList<Activity>) repository.findAll();
+        List<Integer> alreadyChosenIndexes = new ArrayList<>();
 
         this.game = new Game();
-        this.game.createQuestionList2(activityList);
+
+        for (int i = 0; i < 3; i++) {
+            int index = (int)(Math.random() * getActivitiesSize());
+
+            while (alreadyChosenIndexes.contains(index)) index = (int)(Math.random() * getActivitiesSize());
+            activitySet.add(activityList.get(index));
+            alreadyChosenIndexes.add(index);
+        }
+
+        this.game.createQuestionList2(activitySet);
 
         this.questionIterator = Arrays.stream(game.questions).iterator();
         this.answersIterator = Arrays.stream(game.answers).iterator();
@@ -106,7 +119,9 @@ public class GreetingController {
         testList.add(act);
 
 
-        testq = new Question(activityList);
+
+
+
         current = questionIterator.next();
 
 
@@ -141,6 +156,7 @@ public class GreetingController {
     @MessageMapping("/start")
     @SendTo("/topic/gamestate")
     public Message start(Message message){
+
         System.out.println(message.toString());
 
         //will be replaced  with game state functionality:
@@ -158,10 +174,11 @@ public class GreetingController {
         //the game started reference will probably be a game class attribute
 
         if(gamestarted){
+            ;
             //Question current = questionIterator.next();
-            System.out.println(testq.getQuestion());
+
             //this.template.convertAndSend("/topic/questions", new Message(MessageType.QUESTION, "server", this.questionIterator.next()));
-            this.template.convertAndSend("/topic/questions", testq);
+            this.template.convertAndSend("/topic/questions", current);
             System.out.println("sent a question");
         }
 //        if(!questionIterator.hasNext()){
