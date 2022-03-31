@@ -165,7 +165,7 @@ public class WaitingRoom implements Initializable {
                             incomingmsg = (Message) payload;
                             if(incomingmsg.getMsgType() == MessageType.GAME_STARTED){
                                 System.out.println("someone started the game so we starting");
-                                //startGame2();
+                                startGame2();
                             }
                         }
                     });
