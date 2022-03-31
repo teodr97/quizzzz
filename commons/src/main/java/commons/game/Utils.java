@@ -65,7 +65,7 @@ public class Utils {
         // We replace every string containing the activity by the power it draws,
         // as that is what we need to show for the answers the player will choose from.
         for (int i = 0; i < result.size(); i++) {
-            result.get(i).setTitle(Long.toString(result.get(i).getConsumption_in_wh()));
+            result.get(i).setTitle(Long.toString(result.get(i).getConsumption_in_wh()) + " Wh");
             // We change the power amounts used within other answers to amounts that
             // are different to the amount in the correct answer.
             if (i != correctAnswerIndex) {
@@ -74,7 +74,7 @@ public class Utils {
                 while (result.get(i).getTitle().equals(result.get(correctAnswerIndex).getTitle()))
                 result.get(i).setTitle(Long.toString(
                         result.get(correctAnswerIndex).getConsumption_in_wh() + (int) (Math.random() * 100)
-                ));
+                ) + " Wh");
             }
         }
         return result;
