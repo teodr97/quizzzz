@@ -59,13 +59,13 @@ public class WaitingRoom implements Initializable {
     private static final Injector INJECTOR = createInjector(new MyModule());
     private static final MyFXML FXML = new MyFXML(INJECTOR);
     private static final String SERVER = "http://localhost:8080/";
-    private static final ExecutorService EXEC = Executors.newSingleThreadExecutor();
+
 
     private final MultiPlayer multiplayer;
     private final MainCtrl mainCtrl;
 
 
-
+    private static ExecutorService exec = Executors.newSingleThreadExecutor();
     private Username usernameCtrl;
 
     private Scene overview;
@@ -137,7 +137,6 @@ public class WaitingRoom implements Initializable {
 //                StompSessionHandler sessionHandler = new MySessionHandler();
 //                ListenableFuture<StompSession> f = stompClient.connect(url, sessionHandler);
 
-
                 try{
                     thiswaiting.mainCtrl.sessie = f.get();
                     thiswaiting.mainCtrl.sessie.subscribe("/topic/greetings", new StompFrameHandler() {
@@ -152,11 +151,7 @@ public class WaitingRoom implements Initializable {
                                 System.out.println("You;ve joined the waiting room");
                                 greetings.setText("You;ve joined the waiting room");
                             }
-
-
                         }
-
-
                     });
                     Message greetingsMsg = new Message(MessageType.CONNECT, "client", "Hello server");
                     thiswaiting.mainCtrl.sessie.send("/app/hello", greetingsMsg);
@@ -170,24 +165,14 @@ public class WaitingRoom implements Initializable {
                             incomingmsg = (Message) payload;
                             if(incomingmsg.getMsgType() == MessageType.GAME_STARTED){
                                 System.out.println("someone started the game so we starting");
-                                startGame();
+                                //startGame2();
                             }
-
-
                         }
-
-
                     });
-
-
-
-
                 }catch(Exception e){
                     System.out.print(e.getMessage());
                 }
                 //new Scanner(System.in).nextLine();
-
-
             }
         });
         this.wsclientthread.start();
@@ -206,7 +191,7 @@ public class WaitingRoom implements Initializable {
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .post(Entity.entity(mainCtrl.getPlayer(), APPLICATION_JSON));
-
+        stop();
         mainCtrl.switchToMultiplayer();
     }
 
@@ -232,8 +217,11 @@ public class WaitingRoom implements Initializable {
     //in a longpolling fashion
     public void longpollUpdateLobby(Player player){
         //this get requests gets all the players that are connected/connecting to the server
-        EXEC.submit(() -> {
+        System.out.println("Before thread.");
+        exec = Executors.newSingleThreadExecutor();
+        exec.submit(() -> {
             while(!Thread.interrupted()){
+                System.out.println("Starting thread.");
                 ArrayList<Player> playersResponse = ClientBuilder.newClient(new ClientConfig()) //
                         .target(SERVER).path("/game/getPlayers") //
                         .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.TRUE)
@@ -242,13 +230,14 @@ public class WaitingRoom implements Initializable {
                         .accept(APPLICATION_JSON) //
                         .get(new GenericType<ArrayList<Player>>() {});
 
+                System.out.println("After response." + playersResponse);
                 updatePlayerListText(playersResponse, players);
                 System.out.println("Hello");
                 System.out.println(playersResponse.toString());
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
-                    EXEC.shutdownNow();
+                    exec.shutdownNow();
                     e.printStackTrace();
                 }
             }
@@ -295,7 +284,7 @@ public class WaitingRoom implements Initializable {
     /**
      * Starts the game and switches the screen to the multiplayer screen
      */
-    public void startGame(){
+    public void startGame2(){
         System.out.println("move to next screen plax");
         this.mainCtrl.switchToMultiplayer();
     }
@@ -313,7 +302,7 @@ public class WaitingRoom implements Initializable {
      * Stops thread
      */
     public void stop() {
-        EXEC.shutdownNow();
+        exec.shutdownNow();
     }
 
     //renders the lobby in fxml fil
