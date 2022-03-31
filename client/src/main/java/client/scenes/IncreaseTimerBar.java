@@ -8,34 +8,18 @@ import java.util.TimerTask;
 public class IncreaseTimerBar extends TimerTask {
 
     private final MultiPlayer  multiplayer;
-    // if the epsilon is too small there is a chance the thread won't stop at progress  = 1;
-    // and this means we will be updating the progress in two seperate threas so the prgress will double in speed
-    //keep this kinda big
-    private static final double EPSILON = 0.002;
 
 
-
+    /** This handels the increasing of the timer bar it is manually synched with the time on the server
+     * the server sends question every 10 secoinds and the timer bar fills up every 10 seconds
+     * @param multiplayer multiplayer controller so we can change things on it
+     */
     public IncreaseTimerBar(MultiPlayer multiplayer){
         this.multiplayer = multiplayer;
     }
 
     @Override
     public void run(){
-
-        if((multiplayer.timerBar.getProgress() + EPSILON > 1 && multiplayer.timerBar.getProgress() - EPSILON <1)){
-            //update the current round + 1
-            //game.setCurRound(game.getCurRound()+1);
-
-            this.cancel();
-            return;
-
-
-            //when timer ends and game hasn't ended we want to display the next question
-            //multiplayer.disableAnswers();
-
-        }
-        //System.out.println(multiplayer.progress);
-
         multiplayer.progress += multiplayer.progressInc;
         Platform.runLater(new Runnable() {
             @Override
