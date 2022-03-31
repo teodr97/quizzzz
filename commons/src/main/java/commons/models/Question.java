@@ -44,17 +44,38 @@ public class Question extends Message{
 //                act.getSource(),
 //                act.getImage_path(),
 //                Long.toString(act.getConsumption_in_wh()));
-//    }
+
+    /**
+     * This function compares a given answer against the
+     * correct one and decides if it's correct or not.
+     * @param question The question that's currently on-screen
+     * @param answerIndex The index of the player's answer within the option list contained
+     *                    by the question
+     * @return True or false, depending on whether the answer is correct or not
+     */
+    public static boolean hasCorrectAnswer(Question question, int answerIndex) {
+        return answerIndex == question.correctAnswerIndex;
+    }
+
+
 
     /** Constructtor of the message object
      * is extends from class message and we give is message type question
      *
      * @param
      */
-    public Question(ArrayList<Activity> activityList){
+    public Question(ArrayList<Activity> allactivites){
         super(MessageType.QUESTION, "server", "");
 
-        this.activityList = activityList;
+        List<Integer> alreadyChosenIndexes = new ArrayList<>();
+
+        for (int i = 0; i < 3; i++) {
+            int index = (int)(Math.random() * allactivites.size());
+
+            while (alreadyChosenIndexes.contains(index)) index = (int)(Math.random() * allactivites.size());
+            this.activityList.add(allactivites.get(index));
+            alreadyChosenIndexes.add(index);
+        }
 
 
         Collections.shuffle(activityList);

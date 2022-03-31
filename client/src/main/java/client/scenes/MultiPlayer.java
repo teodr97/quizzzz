@@ -62,7 +62,7 @@ public class MultiPlayer implements Initializable {
     @FXML private Button answerB;
     @FXML private Button answerC;
 
-    private ArrayList<Button> buttons;
+    private ArrayList<Button> answerButtons;
 
     //joker buttons
     @FXML private Button timeJoker;
@@ -113,10 +113,10 @@ public class MultiPlayer implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources){
 
-        buttons = new ArrayList<>();
-        buttons.add(answerA);
-        buttons.add(answerB);
-        buttons.add(answerC);
+        answerButtons = new ArrayList<>();
+        answerButtons.add(answerA);
+        answerButtons.add(answerB);
+        answerButtons.add(answerC);
 
         Path hgPath = Paths.get("src", "main","resources","images","JokerHG.png");
         Path twoxPath = Paths.get("src", "main","resources","images","Joker2X.png");
@@ -174,31 +174,6 @@ public class MultiPlayer implements Initializable {
                 });
 
 
-        this.mainCtrl.sessie.subscribe("/topic/questions2", new StompFrameHandler() {
-
-            public Type getPayloadType(StompHeaders stompHeaders) {
-                return commons.game.Question.class;
-            }
-
-            public void handleFrame(StompHeaders stompHeaders, Object payload) {
-                // if we get new question we reset the score multiplier to 1
-                //since someone could have clicked a double points joker in the previous round
-
-                System.out.println("awooo");
-                incomingq2 = (commons.game.Question) payload;
-
-                System.out.println(incomingq2.toString());
-                //questionField.setText(incomingq.getQuestion());
-
-
-
-                startBar();
-
-
-
-            }
-        });
-
 
 
         this.mainCtrl.sessie.subscribe("/topic/jokers", new StompFrameHandler() {
@@ -239,9 +214,9 @@ public class MultiPlayer implements Initializable {
     public void handleDoubleJoker(){
         prompt.setText("Double joker used");
         //disable the button if  clicked
-
+        scoreMultiplier = 2;
         doubleJoker.setDisable(true);
-        handleDoubleJoker();
+
         //we do send a message to the server for stat tracking
         //mainCtrl.sessie.send("/app/clickedJoker", new Message(MessageType.DOUBLE_JOKER, "client", "someone clicked the double points joker"));
     }
@@ -253,6 +228,18 @@ public class MultiPlayer implements Initializable {
     //this joker can be handled fully on client since it doens't effect the other players
     public void handleRemovalJoker(){
         //disable the button if  clicked
+        removeJoker.setDisable(true);
+        ArrayList<Button> wrongbuttons = new ArrayList<Button>();
+        for(Button button : answerButtons){
+            if(answerButtons.indexOf(button) != incomingq.getCorrectAnswerIndex()){
+                wrongbuttons.add(button);
+            }
+        }
+        int randomindex= new Random().nextInt(2);
+        wrongbuttons.get(randomindex).setDisable(true);
+
+
+
 
 //        removeJoker.setDisable(true);
 //
@@ -329,64 +316,84 @@ public class MultiPlayer implements Initializable {
      * @throws InterruptedException
      */
     public void checkAnswer(ActionEvent event) throws IOException, InterruptedException {
-//        //check answer will also have to call a function:
-//        //disableAnswers so the uses can't click the answers after already choosing one
-//
-//        //get the button clicked from the event parameter
-//        Button useranswer = (Button) event.getTarget();
-//
-//        //gets the amount of points to be handed, and assigns the correct answer to a variable
-//        int questionpoints = (int)((500 - 250*progress)*scoreMultiplier);
-//        String correctanswer = incomingq.getAnswer();
-//        System.out.println("correct answer: "+ correctanswer);
-//        System.out.println("your answer: "+ useranswer.getText());
-//
-//        //since we made an iterator of the answers the program checks if  the users button clicked is the right corresponding click
-//        //this function should definitely be tested
-//
-//        //make the buttons there "correct colors" green for right answer red for the wrong answers
-//        for(Button answerbutton: buttons){
-//            //the one corresponding with he next answers entry is the correct answer and  becomes green
-//            if(answerbutton.getText().equals(correctanswer)){
-//                answerbutton.setStyle("-fx-background-color: #309500;");
-//            }else{ //we make it red
-//                answerbutton.setStyle("-fx-background-color: #BD0000;");
-//            }
-//        }
-//
-//        //after accordingly change the buttons colors
-//        //we retrieve the current style of all the buttons and add a border to the user chosen button
-//        for(Button answerbutton: buttons){
-//
-//            String currentstyle = answerbutton.getStyle();
-//            StringBuilder currentstylebuilder = new StringBuilder(currentstyle);
-//            //adding the border style
-//            currentstylebuilder.append("-fx-border-color: black; -fx-border-width: 3px;");
-//            String newstyle = currentstylebuilder.toString();
-//
-//            if(answerbutton == useranswer){
-//                answerbutton.setStyle(newstyle);
-//            }
-//        }
-//        //after that we have to prompt of if the user was correct or not
-//        //user got the answer correct
-//        if(correctanswer.equals(useranswer.getText())){
-//            int currentpoints = Integer.parseInt(userpoint.getText());
-//            int newpoints = currentpoints + questionpoints;
-//            this.pointsInt = newpoints;
-//            userpoint.setText(String.valueOf(newpoints));
-//            prompt.setText("Correct");
-//            //this.statSharer.correctAnswers++;
-//        } else{
-//            prompt.setText("Incorrect");
-//        }
-//
-//        //change scene state to the one where someone has answered the question
-//        //in which case the buttons should be disabled and change colors
-//        disableAnswers();
-//
-//        return;
+//check answer will also have to call a function:
+        //disableAnswers so the uses can't click the answers after already choosing one
+
+        //get the button clicked from the event parameter
+        Button useranswer = (Button) event.getTarget();
+
+        //gets the amount of points to be handed, and assigns the correct answer to a variable
+        int questionpoints = (int)((500 - 250*progress)*scoreMultiplier);
+        String correctanswer = incomingq.getActivityList().get(incomingq.getCorrectAnswerIndex()).getTitle();
+        System.out.println("correct answer: "+ correctanswer);
+        System.out.println("your answer: "+ useranswer.getText());
+
+        //since we made an iterator of the answers the program checks if  the users button clicked is the right corresponding click
+        //this function should definitely be tested
+
+        // make the buttons there "correct colors" green for right answer red for the wrong answers
+        for(Button answerbutton: answerButtons){
+            // the one corresponding with he next answers entry is the correct answer and  becomes green
+            if(Question.hasCorrectAnswer(incomingq, answerButtons.indexOf(answerbutton))){
+                setButtonsStyle(incomingq.getCorrectAnswerIndex());
+            }else{ //we make it red
+                setButtonsStyle(incomingq.getCorrectAnswerIndex());
+            }
+        }
+
+        //after accordingly change the buttons colors
+        //we retrieve the current style of all the buttons and add a border to the user chosen button
+        for(Button answerbutton: answerButtons){
+
+            String currentstyle = answerbutton.getStyle();
+            StringBuilder currentstylebuilder = new StringBuilder(currentstyle);
+            //adding the border style
+            currentstylebuilder.append("-fx-border-color: black; -fx-border-width: 3px;");
+            String newstyle = currentstylebuilder.toString();
+
+            if(answerbutton == useranswer){
+                answerbutton.setStyle(newstyle);
+            }
+        }
+        // after that we have to prompt of if the user was correct or not
+        // user got the answer correct
+        if(Question.hasCorrectAnswer(incomingq, answerButtons.indexOf(useranswer))){
+            int currentpoints = Integer.parseInt(userpoint.getText());
+            int newpoints = currentpoints + questionpoints;
+            this.pointsInt = newpoints;
+            userpoint.setText(String.valueOf(newpoints));
+            prompt.setText("Correct");
+            //this.statSharer.correctAnswers++;
+
+        } else{
+            prompt.setText("Incorrect");
+        }
+
+        // change scene state to the one where someone has answered the question
+        // in which case the buttons should be disabled and change colors
+        disableAnswers();
+
+        return;
+
     }
+
+    /**
+     * Sets the font size of the button texts to a variable size, depending on the length
+     * of the text displayed on each button. The button also has its color switch to either
+     * green or red depending on whether the answer is correct or not.
+     * @param correctAnswerIndex The index of the correct answer button
+     */
+    private void setButtonsStyle(int correctAnswerIndex) {
+        String color = "#000000";
+
+        for (Button bttn : answerButtons) {
+            if (answerButtons.indexOf(bttn) == correctAnswerIndex) color = "#309500";
+            else color = "#BD0000";
+            bttn.setStyle(String.format("-fx-background-color: %s; -fx-font-size: %d;", color,
+                    (int)(-Math.pow((bttn.getText().length() - 20), -3) * 0.5 + 2) * 10));
+        }
+    }
+
 
 
 

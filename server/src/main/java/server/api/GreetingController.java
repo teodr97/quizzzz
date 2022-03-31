@@ -51,7 +51,7 @@ public class GreetingController {
    public Game game;
 
    private final ActivityRepository repository;
-   private ArrayList<Activity> activityList;
+   private ArrayList<Activity> allactivies;
 
     private ArrayList<Activity> activitySet = new ArrayList<>();
 
@@ -83,20 +83,14 @@ public class GreetingController {
     @Autowired
     public GreetingController(ActivityRepository repo){
         this.repository = repo;
-        this.activityList = (ArrayList<Activity>) repository.findAll();
+        this.allactivies = (ArrayList<Activity>) repository.findAll();
         List<Integer> alreadyChosenIndexes = new ArrayList<>();
 
         this.game = new Game();
 
-        for (int i = 0; i < 3; i++) {
-            int index = (int)(Math.random() * getActivitiesSize());
 
-            while (alreadyChosenIndexes.contains(index)) index = (int)(Math.random() * getActivitiesSize());
-            activitySet.add(activityList.get(index));
-            alreadyChosenIndexes.add(index);
-        }
 
-        this.game.createQuestionList2(activitySet);
+        this.game.createQuestionList2(allactivies);
 
         this.questionIterator = Arrays.stream(game.questions).iterator();
 
@@ -243,8 +237,8 @@ public class GreetingController {
      * @return the amount of activities in the database
      */
     int getActivitiesSize() {
-        if (activityList == null || activityList.isEmpty()) activityList = (ArrayList<Activity>) repository.findAll();
-        return activityList.size();
+        if (allactivies == null || allactivies.isEmpty()) allactivies = (ArrayList<Activity>) repository.findAll();
+        return allactivies.size();
     }
 
 
@@ -262,7 +256,7 @@ public class GreetingController {
             int index = (int)(Math.random() * getActivitiesSize());
 
             while (alreadyChosenIndexes.contains(index)) index = (int)(Math.random() * getActivitiesSize());
-            activitySet.add(activityList.get(index));
+            activitySet.add(allactivies.get(index));
             alreadyChosenIndexes.add(index);
         }
         return activitySet;
