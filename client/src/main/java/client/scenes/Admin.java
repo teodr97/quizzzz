@@ -213,20 +213,21 @@ public class Admin implements Initializable {
     public void updateActivity(){
         //first needs to check if an activity is selected
         Activity activity = tableActivity.getSelectionModel().getSelectedItem();
+
         if(activity == null){
             textConsole.setText("Please select an activity from the table to edit");
             return;
         }
         //check each field, update activity object
-        if(textTitle.getText() != null && textTitle.getText().equals("")) {
+        if(textTitle.getText() != null && !textTitle.getText().equals("")) {
             activity.setTitle(textTitle.getText());
         }
 
-        if(textConsumption.getText() != null && textConsumption.getText().equals("")){
+        if(textConsumption.getText() != null && !textConsumption.getText().equals("")){
             activity.setConsumption_in_wh(Long.parseLong(textConsumption.getText()));
         }
 
-        if(textSource.getText() != null && textSource.getText().equals("")){
+        if(textSource.getText() != null && !textSource.getText().equals("")){
             activity.setSource(textSource.getText());
         }
 
