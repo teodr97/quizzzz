@@ -151,12 +151,15 @@ public class MainCtrl {
      * Switches to the multiplayer scene after the add name button is clicked
      */
     public void switchToMultiplayer() {
+        System.out.println("move to next screen plax");
+        //var overview = myFXML.load(MultiPlayer.class, "client", "scenes", "MultiPlayer.fxml");
 
-        var overview = myFXML.load(MultiPlayer.class, "client", "scenes", "MultiPlayer.fxml");
         try{
+            var overview = myFXML.load(MultiPlayer.class, "client", "scenes", "MultiPlayer.fxml");
             // in the meantime we created a websocket thread which where we try to call the swithtoMultplayer function from
             //since java fx needs to be run in it's own thread w
             // e need the Playform.runlater block
+
             Platform.runLater(new Runnable() {
 
                 @Override
@@ -166,7 +169,6 @@ public class MainCtrl {
             });
 
         }catch(Exception e){
-
             System.out.println(e.getMessage());
         }
 

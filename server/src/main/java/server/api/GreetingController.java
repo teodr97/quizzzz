@@ -41,7 +41,7 @@ public class GreetingController {
     private ArrayList<commons.game.Question> questionList2 = new ArrayList<>();
     public Iterator<Question> questionIterator;
 
-   public Iterator<commons.game.Question> questionIterator2;
+   //public Iterator<commons.game.Question> questionIterator2;
 
 
     //answersIterator to get the next correct answer
@@ -51,8 +51,11 @@ public class GreetingController {
    public Game game;
 
    private final ActivityRepository repository;
-   private List<Activity> activityList;
+   private ArrayList<Activity> activityList;
 
+    private ArrayList<Activity> testList = new ArrayList<>();
+
+    private Question testq;
 
 
 
@@ -77,12 +80,12 @@ public class GreetingController {
     @Autowired
     public GreetingController(ActivityRepository repo){
         this.repository = repo;
-        this.activityList = (List<Activity>) repository.findAll();
+        this.activityList = (ArrayList<Activity>) repository.findAll();
 
         this.game = new Game();
-        this.game.createQuestionList(activityList);
+        this.game.createQuestionList2(activityList);
 
-        this.questionIterator2 = Arrays.stream(game.questions).iterator();
+        this.questionIterator = Arrays.stream(game.questions).iterator();
         this.answersIterator = Arrays.stream(game.answers).iterator();
         //retrieves the questions
         //game.createQuestionList(retrieveRandomActivitiesSet());
@@ -92,17 +95,20 @@ public class GreetingController {
         fakeanswerList.add("30");
 
 
-        questionList.add(new Question("Nuclear reactors huuh?", "20", fakeanswerList));
-        questionList.add(new Question("Nuclear physicist whet?", "20", fakeanswerList));
-        questionList.add(new Question("Tesla who?", "20", fakeanswerList));
-        questionList.add(new Question("Edison BOO", "20", fakeanswerList));
-        questionList.add(new Question("Elon to the moon?", "20", fakeanswerList));
-        questionList.add(new Question("Bitcoin green?", "20", fakeanswerList));
+//        questionList.add(new Question("Nuclear reactors huuh?", "20", fakeanswerList));
+//        questionList.add(new Question("Nuclear physicist whet?", "20", fakeanswerList));
+//        questionList.add(new Question("Tesla who?", "20", fakeanswerList));
+//        questionList.add(new Question("Edison BOO", "20", fakeanswerList));
+//        questionList.add(new Question("Elon to the moon?", "20", fakeanswerList));
+//        questionList.add(new Question("Bitcoin green?", "20", fakeanswerList));
+
+        Activity act = new Activity("/image", "act", 232, "src");
+        testList.add(act);
+
+        //testq = new Question(testList);
 
 
-
-
-        questionIterator = questionList.iterator();
+        //questionIterator = questionList.iterator();
         qtimer = new Timer();
 
 
@@ -150,17 +156,18 @@ public class GreetingController {
         //the game started reference will probably be a game class attribute
 
         if(gamestarted){
-
+            Question current = questionIterator.next();
+            System.out.println(current.getQuestion());
             //this.template.convertAndSend("/topic/questions", new Message(MessageType.QUESTION, "server", this.questionIterator.next()));
-            this.template.convertAndSend("/topic/questions", questionIterator.next());
+            this.template.convertAndSend("/topic/questions", current);
             System.out.println("sent a question");
         }
-        if(!questionIterator.hasNext()){
-            //send game over screen and stop the scheduled sending of questions
-            //TO-DO:
-            //this.template.convertAndSend("/topic/greetings", new Message());
-            stopSending();
-        }
+//        if(!questionIterator.hasNext()){
+//            //send game over screen and stop the scheduled sending of questions
+//            //TO-DO:
+//            //this.template.convertAndSend("/topic/greetings", new Message());
+//            stopSending();
+//        }
 
 
 
@@ -217,7 +224,7 @@ public class GreetingController {
      * @return the amount of activities in the database
      */
     int getActivitiesSize() {
-        if (activityList == null || activityList.isEmpty()) activityList = (List<Activity>) repository.findAll();
+        if (activityList == null || activityList.isEmpty()) activityList = (ArrayList<Activity>) repository.findAll();
         return activityList.size();
     }
 

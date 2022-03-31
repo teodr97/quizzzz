@@ -296,7 +296,7 @@ public class WaitingRoom implements Initializable {
      * Starts the game and switches the screen to the multiplayer screen
      */
     public void startGame(){
-        System.out.println("move to next screen plax");
+
         this.mainCtrl.switchToMultiplayer();
     }
 

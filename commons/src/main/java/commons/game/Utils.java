@@ -1,5 +1,6 @@
 package commons.game;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Utils {
@@ -73,6 +74,40 @@ public class Utils {
                 result.get(i).setTitle(Long.toString(
                         result.get(correctAnswerIndex).getConsumption_in_wh() + (int) (Math.random() * 100)
                 ));
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Replaces the string variables of each activity in the list with their
+     * corresponding power draws (in order to make displaying options on the
+     * front-end more convenient). For any option but the correct one, the
+     * string variable will hold a multiple of the power draw of the correct
+     * answer in order to prevent identical power draws in more options.
+     * @param activityList the list of activities that will be displayed as
+     *                     options
+     * @param correctAnswerIndex the index of the correct answer in the list
+     * @return the list of activities with their string variables holding
+     * power draw values
+     */
+    public static ArrayList<Activity> replaceActivitiesWithPowerDraws2(ArrayList<Activity> activityList, int correctAnswerIndex) {
+        ArrayList<Activity> result = new ArrayList<>();
+        result.addAll(activityList);
+
+        // We replace every string containing the activity by the power it draws,
+        // as that is what we need to show for the answers the player will choose from.
+        for (int i = 0; i < result.size(); i++) {
+            result.get(i).setTitle(Long.toString(result.get(i).getConsumption_in_wh()));
+            // We change the power amounts used within other answers to amounts that
+            // are different to the amount in the correct answer.
+            if (i != correctAnswerIndex) {
+                // Generate another result if the power draw to be displayed with this options is the
+                // same as the one of the correct answer.
+                while (result.get(i).getTitle().equals(result.get(correctAnswerIndex).getTitle()))
+                    result.get(i).setTitle(Long.toString(
+                            result.get(correctAnswerIndex).getConsumption_in_wh() + (int) (Math.random() * 100)
+                    ));
             }
         }
         return result;

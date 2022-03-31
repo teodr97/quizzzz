@@ -15,15 +15,16 @@ import java.util.Objects;
 // we retrieve content by calling this.getQuestion.
 public class Question extends Message{
 
-
-    private String question;
+    public String question;
+    private String content;
     private String answer;
     private ArrayList<String> fakeAnswers;
     private ArrayList<String> shuffledAnswers;
 
-    private List<Activity> activityList;
+
 
     private Activity correctAnswer;
+    private ArrayList<Activity> activities = new ArrayList<>();
 
 
 
@@ -31,43 +32,57 @@ public class Question extends Message{
 
     }
 
-    public Question(List<Activity> activityList){
-        this.activityList = activityList;
+//    public Question(String content, String answer){
+//
+//        super(MessageType.QUESTION, "server", content);
+//        this.answer = answer;
+//        act = new Activity("/image", "act", 232, "src");
+//        ActivityEntry act2 = new ActivityEntry(Integer.toString(act.getAutoId()),
+//                act.getTitle(),
+//                act.getSource(),
+//                act.getImage_path(),
+//                Long.toString(act.getConsumption_in_wh()));
+//    }
+
+    /** Constructtor of the message object
+     * is extends from class message and we give is message type question
+     *
+     * @param
+     */
+    public Question(ArrayList<Activity> activities){
+        super(MessageType.QUESTION, "server", "");
+
+        this.activities = activities;
 
 
-        // Generate a new random integer to determine the type of question that will be used.
-        // Not a good solution for a greater amount of questions, they should be stored in a
-        // database instead.
+
         int randomFactor = Utils.generateRandomIntSmallerThan(4);
         switch (randomFactor) {
             case 1:
-                
                 this.question = "Which activity uses the most amount of power?";
-                this.correctAnswer = Utils.retrieveActivityMostEnergy(activityList);
+                this.correctAnswer = Utils.retrieveActivityMostEnergy(activities);
                 break;
             case 2:
                 this.question = "Which activity uses the least amount of power?";
-                this.correctAnswer = Utils.retrieveActivityLeastEnergy(activityList);
+                this.correctAnswer = Utils.retrieveActivityLeastEnergy(activities);
                 break;
             default:
                 // Generate a random integer from 0 to 2 for getting an index for the correct answer
                 int correctAnswerIndex = Utils.generateRandomIntSmallerThan(3);
                 // Retrieve a random activity that will serve as the correct answer using indexes 0-3
-                this.correctAnswer = activityList.get(correctAnswerIndex);
+                this.correctAnswer = activities.get(correctAnswerIndex);
                 this.question = "How much power does the following activity use:\n\"" + correctAnswer.getTitle() + "\"";
-                this.activityList = Utils.replaceActivitiesWithPowerDraws(activityList, correctAnswerIndex);
+                this.activities = Utils.replaceActivitiesWithPowerDraws2(activities, correctAnswerIndex);
                 break;
         }
 
-
-        super(MessageType.QUESTION, "server", content);
-        this.answer = answer;
-        act = new Activity("/image", "act", 232, "src");
-        act2 = new ActivityEntry(Integer.toString(act.getAutoId()),
-                act.getTitle(),
-                act.getSource(),
-                act.getImage_path(),
-                Long.toString(act.getConsumption_in_wh()));
+        //shuffle the answers when the question object is initiliazed
+//        shuffledAnswers = new ArrayList<>();
+//        shuffledAnswers.add(this.answer);
+//        for(String fake: fakeAnswers){
+//            shuffledAnswers.add(fake);
+//        }
+//        Collections.shuffle(shuffledAnswers);
     }
 
     /** Constructtor of the message object
@@ -75,19 +90,21 @@ public class Question extends Message{
      *
      * @param content content of the message object
      */
-    public Question(String content, String answer, ArrayList<String> fakeAnswers){
-        super(MessageType.QUESTION, "server", content);
-        this.answer = answer;
-        this.fakeAnswers = fakeAnswers;
-
-        //shuffle the answers when the question object is initiliazed
-        shuffledAnswers = new ArrayList<>();
-        shuffledAnswers.add(this.answer);
-        for(String fake: fakeAnswers){
-            shuffledAnswers.add(fake);
-        }
-        Collections.shuffle(shuffledAnswers);
-    }
+//    public Question(String content, String answer, ArrayList<Activity> activities){
+//        super(MessageType.QUESTION, "server", content);
+//        this.answer = answer;
+//        this.act
+//
+//        act = new Activity("/image", "act", 232, "src");
+//
+//        //shuffle the answers when the question object is initiliazed
+//        shuffledAnswers = new ArrayList<>();
+//        shuffledAnswers.add(this.answer);
+//        for(String fake: fakeAnswers){
+//            shuffledAnswers.add(fake);
+//        }
+//        Collections.shuffle(shuffledAnswers);
+//    }
 
 
 
@@ -116,6 +133,17 @@ public class Question extends Message{
         return this.answer;
     }
 
+    public String getQuestion() { return this.question; }
+
+    public List<Activity> getActivityList() { return activities; }
+
+
+    /**
+     * @return the answer of this question as a string
+     */
+    public Activity getCorrectAnswer(){
+        return this.correctAnswer;
+    }
     /**
      * @return returns the arraylist with fake answers usually two fake answers
      */
@@ -127,8 +155,11 @@ public class Question extends Message{
      * @param question question to be set as a string
      */
     public void setQuestion(String question){
-        super.setContent(question);
+        this.question = question;
     }
+
+    //settter for the correctanswer field
+    public void setCorrectAnswer (Activity correctAnswer) { this.correctAnswer = correctAnswer; }
 
 
     /**
@@ -148,7 +179,7 @@ public class Question extends Message{
     /**
      * @return returns the content of the messge as a string
      */
-    public String getQuestion() {return super.getContent();}
+    public String getContent() {return super.getContent();}
 
 
     /**
@@ -165,22 +196,26 @@ public class Question extends Message{
      */
     public String toString()
     {
-        return (super.toString());
+        return (super.toString()+this.question);
 
     }
 
     /**
      * @return returns the a string of the questoin object in human readable form
      */
-    public String realString();
+    //calling this function in the client side code breaks it
+    // ithink it takes to much compute
+    public String realString()
     {
-        String ret = "Question: " + question;
-        ret += "\nOption: " + this.activityList.get(0).toString();
-        ret += "\nOption: " + this.activityList.get(1).toString();
-        ret += "\nOption: " + this.activityList.get(2).toString();
-        ret += "\nAnswer: " + this.correctAnswer.toString();
-        ret += "\n}";
-        return ret;
+//        String ret = "Question: " + question;
+//        ret += "\nOption: " + this.activities.get(0).toString();
+//        ret += "\nOption: " + this.activities.get(1).toString();
+//        ret += "\nOption: " + this.activities.get(2).toString();
+//        ret += "\nAnswer: " + this.correctAnswer.toString();
+//        ret += "\n}";
+//        return ret;
+        return "";
+
     }
 
     /**

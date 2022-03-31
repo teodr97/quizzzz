@@ -141,6 +141,7 @@ public class MultiPlayer implements Initializable {
                     public void handleFrame(StompHeaders stompHeaders, Object payload) {
                         // if we get new question we reset the score multiplier to 1
                         //since someone could have clicked a double points joker in the previous round
+                        System.out.println("we got it");
                         scoreMultiplier = 1;
                         try{
                             bartimer.cancel();
@@ -149,15 +150,17 @@ public class MultiPlayer implements Initializable {
                         }
                         incomingq= (Question) payload;
 
-                        System.out.println(incomingq.toString());
-                        System.out.println(incomingq.getShuffledAnswers().toString());
+
+                        questionField.setText(incomingq.getQuestion());
+                        System.out.println(incomingq.realString());
+
                         //questionField.setText(incomingq.getQuestion());
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                displayQuestion(incomingq);
-                            }
-                        });
+//                        Platform.runLater(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                displayQuestion(incomingq);
+//                            }
+//                        });
 
 
 
@@ -213,7 +216,7 @@ public class MultiPlayer implements Initializable {
                     timerBar.setStyle("-fx-accent: red");
                 }
                 if(incomingmsg.getMsgType() == MessageType.REMOVE_JOKER){
-                    handleRemovalJoker();
+                    //handleRemovalJoker();
                 }
 
                 if(incomingmsg.getMsgType() == MessageType.DOUBLE_JOKER){
@@ -249,19 +252,20 @@ public class MultiPlayer implements Initializable {
     public void handleRemovalJoker(){
         //disable the button if  clicked
 
-        removeJoker.setDisable(true);
-
-        //we do send a message to the server for stat tracking
-        //mainCtrl.sessie.send("/app/clickedJoker", new Message(MessageType.REMOVE_JOKER, "client", "someone clicked the remove joker"));
-        prompt.setText("removal joker used");
-        System.out.println("handling removal");
-        int randomindex= new Random().nextInt(2);
-        String toremove = incomingq.getFakeAnswers().get(randomindex);
-        for(Button b: buttons){
-            if(b.getText().equals(toremove)){
-                b.setDisable(true);
-            }
-        }
+//        removeJoker.setDisable(true);
+//
+//        //we do send a message to the server for stat tracking
+//        //mainCtrl.sessie.send("/app/clickedJoker", new Message(MessageType.REMOVE_JOKER, "client", "someone clicked the remove joker"));
+//        prompt.setText("removal joker used");
+//        System.out.println("handling removal");
+//        int randomindex= new Random().nextInt(2);
+//        //String toremove = incomingq.getFakeAnswers().get(randomindex);
+//
+//        for(Button b: buttons){
+//            if(b.getText().equals(toremove)){
+//                b.setDisable(true);
+//            }
+//        }
     }
 
 
@@ -270,15 +274,15 @@ public class MultiPlayer implements Initializable {
      * @param question: a Question entity to display
      */
     public void displayQuestion(Question question){
-        questionField.setText(question.getQuestion());
-        //qNumber.setText(game.getCurRound() + " / 20");
-        answerA.setText(question.getShuffledAnswers().get(0));
-        answerB.setText(question.getShuffledAnswers().get(1));
-        answerC.setText(question.getShuffledAnswers().get(2));
-//        answerA.setText(question.getActivityList().get(0).getTitle());
-//        answerB.setText(question.getActivityList().get(1).getTitle());
-//        answerC.setText(question.getActivityList().get(2).getTitle());
-        resetGamescreen();
+//        questionField.setText(question.getQuestion());
+//        //qNumber.setText(game.getCurRound() + " / 20");
+//        answerA.setText(question.getShuffledAnswers().get(0));
+//        answerB.setText(question.getShuffledAnswers().get(1));
+//        answerC.setText(question.getShuffledAnswers().get(2));
+////        answerA.setText(question.getActivityList().get(0).getTitle());
+////        answerB.setText(question.getActivityList().get(1).getTitle());
+////        answerC.setText(question.getActivityList().get(2).getTitle());
+//        resetGamescreen();
     }
 
     /**
@@ -323,63 +327,63 @@ public class MultiPlayer implements Initializable {
      * @throws InterruptedException
      */
     public void checkAnswer(ActionEvent event) throws IOException, InterruptedException {
-        //check answer will also have to call a function:
-        //disableAnswers so the uses can't click the answers after already choosing one
-
-        //get the button clicked from the event parameter
-        Button useranswer = (Button) event.getTarget();
-
-        //gets the amount of points to be handed, and assigns the correct answer to a variable
-        int questionpoints = (int)((500 - 250*progress)*scoreMultiplier);
-        String correctanswer = incomingq.getAnswer();
-        System.out.println("correct answer: "+ correctanswer);
-        System.out.println("your answer: "+ useranswer.getText());
-
-        //since we made an iterator of the answers the program checks if  the users button clicked is the right corresponding click
-        //this function should definitely be tested
-
-        //make the buttons there "correct colors" green for right answer red for the wrong answers
-        for(Button answerbutton: buttons){
-            //the one corresponding with he next answers entry is the correct answer and  becomes green
-            if(answerbutton.getText().equals(correctanswer)){
-                answerbutton.setStyle("-fx-background-color: #309500;");
-            }else{ //we make it red
-                answerbutton.setStyle("-fx-background-color: #BD0000;");
-            }
-        }
-
-        //after accordingly change the buttons colors
-        //we retrieve the current style of all the buttons and add a border to the user chosen button
-        for(Button answerbutton: buttons){
-
-            String currentstyle = answerbutton.getStyle();
-            StringBuilder currentstylebuilder = new StringBuilder(currentstyle);
-            //adding the border style
-            currentstylebuilder.append("-fx-border-color: black; -fx-border-width: 3px;");
-            String newstyle = currentstylebuilder.toString();
-
-            if(answerbutton == useranswer){
-                answerbutton.setStyle(newstyle);
-            }
-        }
-        //after that we have to prompt of if the user was correct or not
-        //user got the answer correct
-        if(correctanswer.equals(useranswer.getText())){
-            int currentpoints = Integer.parseInt(userpoint.getText());
-            int newpoints = currentpoints + questionpoints;
-            this.pointsInt = newpoints;
-            userpoint.setText(String.valueOf(newpoints));
-            prompt.setText("Correct");
-            //this.statSharer.correctAnswers++;
-        } else{
-            prompt.setText("Incorrect");
-        }
-
-        //change scene state to the one where someone has answered the question
-        //in which case the buttons should be disabled and change colors
-        disableAnswers();
-
-        return;
+//        //check answer will also have to call a function:
+//        //disableAnswers so the uses can't click the answers after already choosing one
+//
+//        //get the button clicked from the event parameter
+//        Button useranswer = (Button) event.getTarget();
+//
+//        //gets the amount of points to be handed, and assigns the correct answer to a variable
+//        int questionpoints = (int)((500 - 250*progress)*scoreMultiplier);
+//        String correctanswer = incomingq.getAnswer();
+//        System.out.println("correct answer: "+ correctanswer);
+//        System.out.println("your answer: "+ useranswer.getText());
+//
+//        //since we made an iterator of the answers the program checks if  the users button clicked is the right corresponding click
+//        //this function should definitely be tested
+//
+//        //make the buttons there "correct colors" green for right answer red for the wrong answers
+//        for(Button answerbutton: buttons){
+//            //the one corresponding with he next answers entry is the correct answer and  becomes green
+//            if(answerbutton.getText().equals(correctanswer)){
+//                answerbutton.setStyle("-fx-background-color: #309500;");
+//            }else{ //we make it red
+//                answerbutton.setStyle("-fx-background-color: #BD0000;");
+//            }
+//        }
+//
+//        //after accordingly change the buttons colors
+//        //we retrieve the current style of all the buttons and add a border to the user chosen button
+//        for(Button answerbutton: buttons){
+//
+//            String currentstyle = answerbutton.getStyle();
+//            StringBuilder currentstylebuilder = new StringBuilder(currentstyle);
+//            //adding the border style
+//            currentstylebuilder.append("-fx-border-color: black; -fx-border-width: 3px;");
+//            String newstyle = currentstylebuilder.toString();
+//
+//            if(answerbutton == useranswer){
+//                answerbutton.setStyle(newstyle);
+//            }
+//        }
+//        //after that we have to prompt of if the user was correct or not
+//        //user got the answer correct
+//        if(correctanswer.equals(useranswer.getText())){
+//            int currentpoints = Integer.parseInt(userpoint.getText());
+//            int newpoints = currentpoints + questionpoints;
+//            this.pointsInt = newpoints;
+//            userpoint.setText(String.valueOf(newpoints));
+//            prompt.setText("Correct");
+//            //this.statSharer.correctAnswers++;
+//        } else{
+//            prompt.setText("Incorrect");
+//        }
+//
+//        //change scene state to the one where someone has answered the question
+//        //in which case the buttons should be disabled and change colors
+//        disableAnswers();
+//
+//        return;
     }
 
 
