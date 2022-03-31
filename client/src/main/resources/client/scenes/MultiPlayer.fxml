@@ -24,7 +24,7 @@
          </cursor>
         </Button>
         <Line endX="1022.0" layoutX="99.0" layoutY="179.0" startX="-100.0" stroke="#fdecfa" strokeWidth="4.0" />
-        <Text fill="WHITE" layoutX="63.0" layoutY="151.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Multi Player" textAlignment="CENTER">
+        <Text fill="WHITE" layoutX="63.0" layoutY="151.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Multiplayer" textAlignment="CENTER">
             <font>
                 <Font name="Arial Bold" size="18.0" />
             </font>
