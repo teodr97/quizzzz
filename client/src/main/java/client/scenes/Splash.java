@@ -68,6 +68,7 @@ public class Splash implements Initializable {
      * @throws IOException
      */
     public void switchToUsername(ActionEvent event) throws IOException {
+        mainCtrl.startUserLongPolling();
         mainCtrl.switchToUsername();
     }
 

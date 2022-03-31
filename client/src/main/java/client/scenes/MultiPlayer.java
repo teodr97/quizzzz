@@ -164,9 +164,6 @@ public class MultiPlayer implements Initializable {
                                 displayQuestion(incomingq);
                             }
                         });
-
-
-
                         startBar();
                     }
                 });
@@ -205,7 +202,6 @@ public class MultiPlayer implements Initializable {
             public void handleFrame(StompHeaders stompHeaders, Object payload) {
                 incomingmsg = (Message) payload;
 
-
                 if(incomingmsg.getMsgType() == MessageType.TIME_JOKER){
                     prompt.setText("Timer joker used");
                     progressInc = 0.002;
@@ -219,11 +215,8 @@ public class MultiPlayer implements Initializable {
                 if(incomingmsg.getMsgType() == MessageType.DOUBLE_JOKER){
                     handleDoubleJoker();
                 }
-
-
             }
         });
-
     }
 
 
@@ -236,7 +229,7 @@ public class MultiPlayer implements Initializable {
         //disable the button if  clicked
 
         doubleJoker.setDisable(true);
-        handleDoubleJoker();
+        scoreMultiplier = 2;
         //we do send a message to the server for stat tracking
         //mainCtrl.sessie.send("/app/clickedJoker", new Message(MessageType.DOUBLE_JOKER, "client", "someone clicked the double points joker"));
     }

@@ -35,14 +35,18 @@ public class Main extends Application {
         //gets Splash.fxml file, which has the scene/parent set up via Scene Builder
         var overview = FXML.load(Splash.class, "client", "scenes", "Splash.fxml");
         var waitingRoom = FXML.load(WaitingRoom.class, "client", "scenes", "WaitingRoom.fxml");
+        var usernameScreen = FXML.load(Username.class, "client", "scenes", "Username.fxml");
 
         //gets the mainCtrl class
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
         //passes the parameters to the mainCtrl class
-        mainCtrl.initialize(primaryStage, waitingRoom, overview, FXML);
+        mainCtrl.initialize(primaryStage, waitingRoom, usernameScreen, overview, FXML);
 
         primaryStage.setOnCloseRequest(e -> {
             waitingRoom.getKey().stop();
+            usernameScreen.getKey().stop();
+            waitingRoom.getKey().stopWebSocket();
+
         });
     }
 

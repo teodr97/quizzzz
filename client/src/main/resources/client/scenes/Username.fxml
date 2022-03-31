@@ -47,7 +47,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Text fill="WHITE" layoutX="27.0" layoutY="747.0" strokeType="OUTSIDE" strokeWidth="0.0" text="15 players active">
+      <Text fx:id="activePlayers" fill="WHITE" layoutX="27.0" layoutY="747.0" strokeType="OUTSIDE" strokeWidth="0.0">
          <font>
             <Font size="18.0" />
          </font>

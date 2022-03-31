@@ -117,6 +117,17 @@ public class GameController {
         return ResponseEntity.ok(gameService.getPlayers(player));
     }
 
+    /**
+     * @return the number of players
+     * @throws InterruptedException
+     */
+    //get the players in a long polling fashion
+    //we keep the request open untill a new player connects in which case we
+    //send the new array of all players
+    @GetMapping("/getAllPlayers")
+    public ResponseEntity<Integer> getAllPlayers() throws InterruptedException {
+        return ResponseEntity.ok(gameService.getAllPlayers());
+    }
 
 
 
