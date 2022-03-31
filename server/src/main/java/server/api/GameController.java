@@ -111,18 +111,13 @@ public class GameController {
     //get the players in a long polling fashion
     //we keep the request open untill a new player connects in which case we
     //send the new array of all players
-    @GetMapping("/getPlayers/")
-    public ResponseEntity<List<Player>> getPlayers(@PathVariable("id") String player) throws InterruptedException, NotFoundException {
+    @GetMapping("/getPlayers")
+    public ResponseEntity<List<Player>> getPlayers(@RequestParam String player) throws InterruptedException, NotFoundException {
         System.out.println("poll:");
         return ResponseEntity.ok(gameService.getPlayers(player));
     }
 
-    //keeppolling code
-    private ResponseEntity<List<Player>> keepPolling(String playerid) throws InterruptedException, NotFoundException {
-        Thread.sleep(1000);
-        return getPlayers(playerid);
 
-    }
 
 
     /**
