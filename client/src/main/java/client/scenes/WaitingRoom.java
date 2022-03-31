@@ -192,6 +192,7 @@ public class WaitingRoom implements Initializable {
                 .accept(APPLICATION_JSON) //
                 .post(Entity.entity(mainCtrl.getPlayer(), APPLICATION_JSON));
         stop();
+        sendstartGame();
         mainCtrl.switchToMultiplayer();
     }
 
