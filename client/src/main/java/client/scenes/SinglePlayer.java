@@ -159,13 +159,13 @@ public class SinglePlayer implements Initializable {
         //since we made an iterator of the answers the program checks if  the users button clicked is the right corresponding click
         //this function should definitely be tested
 
-        // make the buttons there "correct colors" green for right answer red for the wrong answers
-        for(Button answerbutton: answerButtons){
-            // the one corresponding with he next answers entry is the correct answer and  becomes green
-            if(Question.hasCorrectAnswer(currentQuestion, answerButtons.indexOf(answerbutton))){
-                setButtonsStyle(currentQuestion.getCorrectAnswerIndex());
+        //make the buttons there "correct colors" green for right answer red for the wrong answers
+        for(Button answerbutton: answerbuttons){
+            //the one corresponding with he next answers entry is the correct answer and  becomes green
+            if(answerbutton.getText().equals(correctanswer)){
+                answerbutton.setStyle("-fx-background-color: #309500;");
             }else{ //we make it red
-                setButtonsStyle(currentQuestion.getCorrectAnswerIndex());
+                answerbutton.setStyle("-fx-background-color: #BD0000;");
             }
         }
 
@@ -183,9 +183,9 @@ public class SinglePlayer implements Initializable {
                 answerbutton.setStyle(newstyle);
             }
         }
-        // after that we have to prompt of if the user was correct or not
-        // user got the answer correct
-        if(Question.hasCorrectAnswer(currentQuestion, answerButtons.indexOf(useranswer))){
+        //after that we have to prompt of if the user was correct or not
+        //user got the answer correct
+        if(correctanswer.equals(useranswer.getText())){
             int currentpoints = Integer.parseInt(userpoint.getText());
             int newpoints = currentpoints + questionpoints;
             this.pointsInt = newpoints;
@@ -196,8 +196,8 @@ public class SinglePlayer implements Initializable {
             prompt.setText("Incorrect");
         }
 
-        // change scene state to the one where someone has answered the question
-        // in which case the buttons should be disabled and change colors
+        //change scene state to the one where someone has answered the question
+        //in which case the buttons should be disabled and change colors
         disableAnswers();
 
         return;
@@ -226,47 +226,16 @@ public class SinglePlayer implements Initializable {
     }
 
     /**
-     * Sets the font size of the button texts to a variable size, depending on the length
-     * of the text displayed on each button. The button also has its color switch to the
-     * one indicated by the argument.
-     * @param color The color the button should have
-     */
-    private void setButtonsStyle(String color) {
-        for (Button bttn : answerButtons) {
-            bttn.setStyle(String.format("-fx-background-color: %s; -fx-font-size: %d;", color, (int)(-Math.pow((bttn.getText().length() - 20), -3) * 0.5 + 2) * 10));
-        }
-    }
-
-    /**
-     * Sets the font size of the button texts to a variable size, depending on the length
-     * of the text displayed on each button. The button also has its color switch to either
-     * green or red depending on whether the answer is correct or not.
-     * @param correctAnswerIndex The index of the correct answer button
-     */
-    private void setButtonsStyle(int correctAnswerIndex) {
-        String color = "#000000";
-
-        for (Button bttn : answerButtons) {
-            if (answerButtons.indexOf(bttn) == correctAnswerIndex) color = "#309500";
-            else color = "#BD0000";
-            bttn.setStyle(String.format("-fx-background-color: %s; -fx-font-size: %d;", color, (int)(-Math.pow((bttn.getText().length() - 20), -3) * 0.5 + 2) * 10));
-        }
-    }
-
-    /**
      * Resets the game screen for the next round.
      */
     public void resetGamescreen(){
         //resetting the answer buttons
         //color and clickability, the timer bar and the text prompt
 
-        // Buttons.
-        for (Button bttn : answerButtons) {
-            bttn.setMinSize(408, 50);
-            bttn.setPrefSize(408, 50);
-            bttn.setMaxSize(408, 50);
-        }
-        setButtonsStyle("#0249bd");
+        //buttons
+        answerA.setStyle("-fx-background-color: #0249bd;");
+        answerB.setStyle("-fx-background-color: #0249bd;");
+        answerC.setStyle("-fx-background-color: #0249bd;");
         enableAnswers();
 
         //timerbar
@@ -339,7 +308,6 @@ public class SinglePlayer implements Initializable {
         answerA.setText(question.getActivityList().get(0).getTitle());
         answerB.setText(question.getActivityList().get(1).getTitle());
         answerC.setText(question.getActivityList().get(2).getTitle());
-
         resetGamescreen();
     }
 
