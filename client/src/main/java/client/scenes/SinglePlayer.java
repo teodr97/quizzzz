@@ -223,7 +223,8 @@ public class SinglePlayer implements Initializable {
      */
     private void setButtonsStyle(String color) {
         for (Button bttn : answerButtons) {
-            bttn.setStyle(String.format("-fx-background-color: %s; -fx-font-size: %d;", color, (int)(-Math.pow((bttn.getText().length() - 20), -3) * 0.5 + 2) * 10));
+            bttn.setStyle(String.format("-fx-background-color: %s; -fx-font-size: %d;", color,
+                    (int)(-Math.pow((bttn.getText().length() - 20), -3) * 0.5 + 2) * 10));
         }
     }
 
@@ -239,7 +240,8 @@ public class SinglePlayer implements Initializable {
         for (Button bttn : answerButtons) {
             if (answerButtons.indexOf(bttn) == correctAnswerIndex) color = "#309500";
             else color = "#BD0000";
-            bttn.setStyle(String.format("-fx-background-color: %s; -fx-font-size: %d;", color, (int)(-Math.pow((bttn.getText().length() - 20), -3) * 0.5 + 2) * 10));
+            bttn.setStyle(String.format("-fx-background-color: %s; -fx-font-size: %d;", color,
+                    (int)(-Math.pow((bttn.getText().length() - 20), -3) * 0.5 + 2) * 10));
         }
     }
 
