@@ -156,13 +156,12 @@ public class Admin implements Initializable {
         //Gets the first entry of the zip file (assumed to be activities.json)
         folder.listFiles();
         for(File file : folder.listFiles()){
+            System.out.println(file.getName());
             if (file.getName().contains("activities.json")){
                 activityList = jsonToActivity(file);
-                continue;
             } else{
-                postFile(file);
+                postFile(file.getPath());
             }
-            System.out.println("uhh how'd that happen? " + file.getName());
         }
 
         for (Activity activity : activityList) {
@@ -180,13 +179,13 @@ public class Admin implements Initializable {
 
     }
 
-    private void postFile(File file) {
-        System.out.println("postFile method");
+    private void postFile(String path) {
+        System.out.println("postFile method: " + path);
         ClientBuilder.newClient(new ClientConfig())
-                .target("http://localhost:8080").path("/images/upload")
+                .target("http://localhost:8080/images/upload")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .post(Entity.entity(file, APPLICATION_JSON));
+                .post(Entity.entity(path, APPLICATION_JSON));
     }
 
     /**

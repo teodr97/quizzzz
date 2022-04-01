@@ -32,10 +32,10 @@ public class ImageUploadController {
     }
 
     @PostMapping(path = "/upload")
-    public void uploadImage(File file) throws IOException {
+    public void uploadImage(String path) throws IOException {
         //literally directly upload the file
-        System.out.println("uploadImage method");
-        storageService.store(file);
+        System.out.println("uploadImage method: " + path);
+        storageService.store(path);
     }
 
 }

@@ -28,15 +28,16 @@ public class StorageService{
     /**
      * stores the file in a given path
      */
-    public void store(File file) throws IOException {
-        System.out.println("we make it to storageservice");
+    public void store(String path) throws IOException {
+        System.out.println("StorageService method: " +path);
         Path destinationFile = this.rootLocation;
+        Path initialPath = Paths.get(path);
+        File file = initialPath.toFile();
         if(file.getName() == null){
             System.out.println("BROOOOOOOOOOOOOOO");
             return;
-        };
+        }
         System.out.println("made it!!!!!! : " + file.getName());
-        return;
 
 //        ZipFile zf = new ZipFile("whatever");
 //        ZipEntry ze = new ZipEntry("ignore");
