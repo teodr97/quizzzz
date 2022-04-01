@@ -1,5 +1,6 @@
 package commons.game;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -49,11 +50,12 @@ public class Question {
      * This function compares a given answer against the
      * correct one and decides if it's correct or not.
      * @param question The question that's currently on-screen
-     * @param answer The player's answer
+     * @param answerIndex The index of the player's answer within the option list contained
+     *                    by the question
      * @return True or false, depending on whether the answer is correct or not
      */
-    public static boolean hasCorrectAnswer(Question question, Activity answer) {
-        return answer.getTitle().equals(question.getCorrectAnswer().getTitle());
+    public static boolean hasCorrectAnswer(Question question, int answerIndex) {
+        return answerIndex == question.correctAnswerIndex;
     }
 
     /**
@@ -62,6 +64,8 @@ public class Question {
      */
     public Question(List<Activity> activityList) {
         this.activityList = activityList;
+        // Shuffles the elements in the list to prevent predictable answer patterns.
+        Collections.shuffle(activityList);
 
         // Generate a new random integer to determine the type of question that will be used.
         // Not a good solution for a greater amount of questions, they should be stored in a
@@ -79,6 +83,7 @@ public class Question {
             default:
                 // Generate a random integer from 0 to 2 for getting an index for the correct answer
                 int correctActivityIndex = Utils.generateRandomIntSmallerThan(3);
+                correctAnswerIndex = correctActivityIndex;
                 // Retrieve a random activity that will serve as the correct answer using indexes 0-3
                 this.question = "How much power does the following activity use:\n\"" + activityList.get(correctActivityIndex).getTitle() + "\"";
                 this.activityList = Utils.replaceActivitiesWithPowerDraws(activityList, correctActivityIndex);
@@ -89,14 +94,16 @@ public class Question {
     //SETTERS==========================================================
     public void setQuestion(String question) { this.question = question; }
 
-    public void setCorrectAnswer (Activity correctAnswer) { this.correctAnswer = correctAnswer; }
+    //public void setCorrectAnswer (Activity correctAnswer) { ((LinkedList<Activity>)activityList).set(correctAnswerIndex, correctAnswer); }
 
     //GETTERS==========================================================
     public String getQuestion() { return this.question; }
 
     public List<Activity> getActivityList() { return activityList; }
 
-    public Activity getCorrectAnswer() { return this.correctAnswer; }
+    public Activity getCorrectAnswer() { return this.activityList.get(correctAnswerIndex); }
+
+    public int getCorrectAnswerIndex() { return correctAnswerIndex; }
 
     @Override
     public int hashCode() {
@@ -109,18 +116,18 @@ public class Question {
         ret += "\nOption: " + this.activityList.get(0).toString();
         ret += "\nOption: " + this.activityList.get(1).toString();
         ret += "\nOption: " + this.activityList.get(2).toString();
-        ret += "\nAnswer: " + this.correctAnswer.toString();
+        ret += "\nAnswer: " + this.activityList.get(correctAnswerIndex).toString();
         ret += "\n}";
         return ret;
     }
 
-//    @Override
-//    public boolean equals(Object other) {
-//        if (this == other) return true;
-//        if (other == null || getClass() != other.getClass()) return false;
-//        Question question1 = (Question) other;
-//        return activityList.equals(question1.getActivityList()) && question.equals(question1.getQuestion()) &&
-//                correctAnswer.equals(question1.getCorrectAnswer());
-//    }
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
+        Question question1 = (Question) other;
+        return activityList.equals(question1.getActivityList()) && question.equals(question1.getQuestion()) &&
+                getCorrectAnswer().equals(question1.getCorrectAnswer());
+    }
 
 }

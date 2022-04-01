@@ -49,6 +49,9 @@ public class MainCtrl {
     private WaitingRoom room;
     private Scene waitingRoom;
 
+    private Username usernameRoom;
+    private Scene userScene;
+
 
 
     public MainCtrl() {
@@ -76,12 +79,16 @@ public class MainCtrl {
      * @param overview Overview of the Splash scene.
      * @param myFXML The FXML injector used throughout the lifespan of the app.
      */
-    public void initialize(Stage primaryStage, Pair<WaitingRoom, Parent> waitingRoom, Pair<Splash, Parent> overview, MyFXML myFXML) {
+    public void initialize(Stage primaryStage, Pair<WaitingRoom, Parent> waitingRoom, Pair<Username,
+            Parent> userScreen,Pair<Splash, Parent> overview, MyFXML myFXML) {
         this.primaryStage = primaryStage;
         MainCtrl.myFXML = myFXML;
 
         this.room = waitingRoom.getKey();
         this.waitingRoom = new Scene(waitingRoom.getValue());
+
+        this.usernameRoom = userScreen.getKey();
+        this.userScene = new Scene(userScreen.getValue());
 
         primaryStage.setTitle("QUIZZ");
         primaryStage.setScene(new Scene(overview.getValue()));
@@ -127,8 +134,7 @@ public class MainCtrl {
      * Switches the scene to the Username selection scene.
      */
     public void switchToUsername() {
-        var overview = myFXML.load(Username.class, "client", "scenes", "Username.fxml");
-        setAndShowScenes(new Scene(overview.getValue()));
+        setAndShowScenes(userScene);
     }
 
     /**
@@ -201,6 +207,20 @@ public class MainCtrl {
     }
 
     /**
+     * Start the long polling in Username.
+     */
+    public void startUserLongPolling(){
+        usernameRoom.longpollUpdateLobby();
+    }
+
+    /**
+     * Stops the thread
+     */
+    public void stopUserThread(){
+        usernameRoom.stop();
+    }
+
+    /**
      * Starts the long polling in waitingroom.
      */
     public void startLongPolling(){
@@ -229,6 +249,7 @@ public class MainCtrl {
     public void stopThread(){
         room.leaveGame();
     }
+
     /**
      * Switches the scene to the admin panel
      */

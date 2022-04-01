@@ -32,9 +32,6 @@ import java.util.*;
 @Slf4j
 @EnableScheduling
 public class GreetingController {
-
-
-
     private ArrayList<Question> questionList = new ArrayList<>();
     private ArrayList<String> fakeanswerList  = new ArrayList<>();
 
@@ -71,7 +68,6 @@ public class GreetingController {
     //to stop the sending of question we need this field
     @Autowired
     private ScheduledAnnotationBeanPostProcessor postProcessor;
-
 
 
 
@@ -121,10 +117,6 @@ public class GreetingController {
 
         //questionIterator = questionList.iterator();
         qtimer = new Timer();
-
-
-
-
     }
 
 
@@ -139,7 +131,6 @@ public class GreetingController {
         System.out.println(message.toString());
 
         return new Message(MessageType.CONNECTED, "Server", "We see you have connected, ");
-
     }
 
     /**
@@ -156,9 +147,7 @@ public class GreetingController {
         //will be replaced  with game state functionality:
         gamestarted = true;
         return new Message(MessageType.GAME_STARTED, "Server", "Someone started the game");
-
     }
-
 
     /**After someone clicked the startgame button we start sending every questoin to the client every 10 seconds
      *
@@ -181,12 +170,7 @@ public class GreetingController {
             //this.template.convertAndSend("/topic/greetings", new Message());
             stopSending();
         }
-
-
-
-
         //Timer qtimer = new Timer();
-
     }
 
     /**After someone clicked the startgame button we start sending every questoin to the client every 10 seconds
@@ -228,9 +212,6 @@ public class GreetingController {
     public Message handleJoker(Message message){
         System.out.println("someone clicked a joker");
         return new Message(message.getMsgType(), "Server", message.getContent());
-
-
-
     }
     /**
      * Get the amount of activities in the database

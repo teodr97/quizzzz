@@ -90,11 +90,6 @@ public class Game {
      */
     public Question[] questions;
 
-    /**
-     * The list of activities that are the answers to the questions
-     */
-    public Activity[] answers;
-
     public Game() {
         this.curRound = 1;
         this.totalRounds = 20;
@@ -203,25 +198,22 @@ public class Game {
     // so to use this server side i will make it so that the parammter is the lsit
     //now we basicly make a request in this class and so
     public void createQuestionList(List<Activity> alist){
-//        Question[] questions = new Question[this.totalRounds];
-//        Activity[] answers = new Activity[this.totalRounds];
-//        System.out.println("=============QUESTIONS AND ANSWERS===============");
-//        for(int i = 0; i < totalRounds; i++){
-//            questions[i] = new Question(alist);
-//            answers[i] = questions[i].getCorrectAnswer();
-//            System.out.println(questions[i].toString());
-//            System.out.println("Answer: " + questions[i].getCorrectAnswer());
-//            //System.out.println(questions[i].toString());
-//        }
-//        System.out.println("=================================================");
-//        this.answers = answers;
-//        this.questions = questions;
+        Question[] questions = new Question[this.totalRounds];
+
+        System.out.println("=============QUESTIONS AND ANSWERS===============");
+        for(int i = 0; i < totalRounds; i++){
+            questions[i] = new Question(questionGenerator.retrieveActivitySetFromServer());
+            System.out.println(questions[i].toString());
+            System.out.println("Answer: " + questions[i].getCorrectAnswer());
+            //System.out.println(questions[i].toString());
+        }
+        System.out.println("=================================================");
+        this.questions = questions;
     }
 
     public void createQuestionList2(ArrayList<Activity> alist){
 
         Question[] questions = new Question[this.totalRounds];
-        int[] answers = new int[this.totalRounds];
         System.out.println("=============QUESTIONS AND ANSWERS===============");
         for(int i = 0; i < totalRounds; i++){
             questions[i] = new Question(alist);
