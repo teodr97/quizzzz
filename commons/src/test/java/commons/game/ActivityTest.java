@@ -103,7 +103,7 @@ class ActivityTest {
      */
     @Test
     void testToString() {
-        assertEquals("Activity{autoId=0, image_path='Test', title='Test', consumption_in_wh=1, source='Test'}", activity.toString());
+        assertEquals("Activity", activity.toString());
     }
 
     /**

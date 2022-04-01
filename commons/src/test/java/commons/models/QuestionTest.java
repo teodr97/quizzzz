@@ -1,5 +1,10 @@
 package commons.models;
 
+
+
+
+import commons.game.Activity;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -7,98 +12,83 @@ import java.util.ArrayList;
 
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 class QuestionTest {
-    Question question;
-    ArrayList<String> fakeAnswers;
+    private Question question;
+    private ArrayList<Activity> activityList;
 
 
     /**
      * The method that initializes each test.
      */
-//    @BeforeEach
-//    private void initialiseTests() {
-//        fakeAnswers = new ArrayList<>();
-//        fakeAnswers.add("fake1");
-//        fakeAnswers.add("fake2");
-//        question = new Question("Test", "Answer", fakeAnswers);
-//    }
-//
-//
-//    /**
-//     * Test for thew get question methode
-//     */
-//    @Test
-//    void testgetQuestion() {
-//        assertEquals("Test", question.getQuestion());
-//    }
-//
-//    /**
-//     * Test for thew get Answers methode
-//     */
-//    @Test
-//    void testgetAnswer() {
-//        assertEquals("Answer", question.getAnswer());
-//    }
-//
-//    /**
-//     * Test for thew get FakeAnswers methode
-//     */
-//    @Test
-//    void testgetFakeAnswers() {
-//        assertEquals(fakeAnswers, question.getFakeAnswers());
-//    }
-
+    @BeforeEach
+    private void initialiseTests() {
+        activityList = new ArrayList<>();
+        activityList.add(new Activity("Path_1","Activity_1", 1, "Source_1"));
+        activityList.add(new Activity("Path_2", "Activity_2", 2, "Source_2"));
+        activityList.add(new Activity("Path_3", "Activity_3", 3, "Source_3"));
+        question = new Question(activityList);
+    }
 
     /**
-     * Test for thew get setQuestion methode
+     * tests correct answer
      */
-//    @Test
-//    void testsetQuestion() {
-//        question.setQuestion("Test2");
-//        assertEquals("Test2", question.getQuestion());
-//    }
+    @Test
+    void hasCorrectAnswer() {
+        question = new Question(activityList);
+
+        assertTrue(Question.hasCorrectAnswer(question, question.getCorrectAnswerIndex()));
+    }
 
     /**
-     * Test for thew get setAnswers methode
+     * tests question setter
      */
-//    @Test
-//    void testsetAnswer() {
-//        question.setAnswer("Answer2");
-//        assertEquals("Answer2", question.getAnswer());
-//
-//    }
+    @Test
+    void setQuestion() {
+        question.setQuestion("Test");
+        assertEquals("Test", question.getQuestion());
+    }
 
     /**
-     * Test for thew get setFakeAnswers methode
+     * tests question getter
      */
-//    @Test
-//    void testsetFakeAnswers() {
-//        ArrayList<String> fakeAnswers2 = new ArrayList<>();
-//        fakeAnswers2.add("fake3");
-//        fakeAnswers2.add("fake4");
-//        question.setFakeAnswers(fakeAnswers2);
-//        assertEquals(fakeAnswers2, question.getFakeAnswers());
-//
-//
-//    }
+    @Test
+    void getQuestion() {
+        assertNotEquals("<Question>", question.getQuestion());
+    }
 
     /**
-     * Test for the equals methode
+     * tests activitylist size
      */
-//    @Test
-//    void testEquals() {
-//        Question q2 = new Question("Test", "Answer", fakeAnswers);
-//        assertTrue(question.equals(q2));
-//    }
-
+    @Test
+    void getActivityList() {
+        assertEquals(3, question.getActivityList().size());
+    }
 
     /**
-     * Test for the to string methode 
+     *
      */
     @Test
     void testToString() {
-        String s = "server(QUESTION): Test";
-        assertEquals(s, question.toString());
+        String correct = "server" + "(QUESTION): " + question.getQuestion();
+
+        assertEquals(correct, question.toString());
+    }
+
+    /**
+     * Test equals method
+     */
+    @Test
+    void testEquals() {
+        Question question1 = new Question(activityList);
+        Question question2 = new Question(activityList);
+        Activity activity1 = new Activity("Path", "Activity",1, "Source" );
+        Activity activity2 = new Activity("Path", "Activity",1, "Source" );
+
+        //question2.setCorrectAnswer(activity1);
+        question1 = question2;
+        assertEquals(question1, question2);
     }
 }

@@ -149,10 +149,8 @@ public class MultiPlayer implements Initializable {
                     public void handleFrame(StompHeaders stompHeaders, Object payload) {
                         // if we get new question we reset the score multiplier to 1
                         //since someone could have clicked a double points joker in the previous round
-//                        System.out.println("we got it");
-//                        scoreMultiplier = 1;
                         try{
-                            System.out.println("we got it");
+                            System.out.println("Client received question from server");
                             scoreMultiplier = 1;
                             bartimer.cancel();
                         }catch(Exception e){
@@ -161,8 +159,6 @@ public class MultiPlayer implements Initializable {
                         incomingq= (Question) payload;
 
 
-                        //questionField.setText(incomingq.getQuestion());
-                        System.out.println(incomingq.realString());
 
                         //questionField.setText(incomingq.getQuestion());
                         Platform.runLater(new Runnable() {
@@ -174,29 +170,6 @@ public class MultiPlayer implements Initializable {
                         startBar();
                     }
                 });
-
-//        this.mainCtrl.sessie.subscribe("/topic/questions", new StompFrameHandler() {
-//
-//            public Type getPayloadType(StompHeaders stompHeaders) {
-//                return Message.class;
-//            }
-//
-//            public void handleFrame(StompHeaders stompHeaders, Object payload) {
-//                incomingmsg = (Message) payload;
-//                if (incomingmsg.getMsgType() == MessageType.QUESTION) {
-//                    System.out.println("Gotten question");
-//                    questionField.setText(incomingmsg.getContent());
-//                    startBar();
-//
-//                }
-//                if(incomingmsg.getMsgType() == MessageType.GAME_ENDED){
-//                    //variable will probably be replaced by a game class atrribute
-//                    gamended = false;
-//                    timerBar.setProgress(0);
-//                    questionField.setText(incomingmsg.getContent());
-//                }
-//            }
-//        });
 
         this.mainCtrl.sessie.subscribe("/topic/jokers", new StompFrameHandler() {
 
@@ -214,11 +187,14 @@ public class MultiPlayer implements Initializable {
                     timerBar.setStyle("-fx-accent: red");
                 }
                 if(incomingmsg.getMsgType() == MessageType.REMOVE_JOKER){
-                    //handleRemovalJoker();
+                    //maybe we want functionality here to notify the other
+                    //client that someone used a joker
+                    System.out.println("someone used a joker");
                 }
 
                 if(incomingmsg.getMsgType() == MessageType.DOUBLE_JOKER){
-                    handleDoubleJoker();
+                    //handleDoubleJoker();
+                    System.out.println("someone used a joker");
                 }
             }
         });
@@ -228,14 +204,14 @@ public class MultiPlayer implements Initializable {
     /**
      * Send that the double points joker has been used to all clients subscriped to the /topic/joker endpoint
      */
-    //this joker can be handled fully on client since it doens't effect the other players
+    //this joker can be handled fully on client side since it doens't effect the other players
     public void handleDoubleJoker(){
         prompt.setText("Double joker used");
         //disable the button if  clicked
         scoreMultiplier = 2;
         doubleJoker.setDisable(true);
 
-        //we do send a message to the server for stat tracking
+        //we could send a message to the server for stat tracking
         //mainCtrl.sessie.send("/app/clickedJoker", new Message(MessageType.DOUBLE_JOKER, "client", "someone clicked the double points joker"));
     }
 
@@ -256,23 +232,6 @@ public class MultiPlayer implements Initializable {
         int randomindex= new Random().nextInt(2);
         wrongbuttons.get(randomindex).setDisable(true);
 
-
-
-
-//        removeJoker.setDisable(true);
-//
-//        //we do send a message to the server for stat tracking
-//        //mainCtrl.sessie.send("/app/clickedJoker", new Message(MessageType.REMOVE_JOKER, "client", "someone clicked the remove joker"));
-//        prompt.setText("removal joker used");
-//        System.out.println("handling removal");
-//        int randomindex= new Random().nextInt(2);
-//        //String toremove = incomingq.getFakeAnswers().get(randomindex);
-//
-//        for(Button b: buttons){
-//            if(b.getText().equals(toremove)){
-//                b.setDisable(true);
-//            }
-//        }
     }
 
 
@@ -282,10 +241,6 @@ public class MultiPlayer implements Initializable {
      */
     public void displayQuestion(Question question){
         questionField.setText(question.getQuestion());
-//        //qNumber.setText(game.getCurRound() + " / 20");
-//        answerA.setText(question.getShuffledAnswers().get(0));
-//        answerB.setText(question.getShuffledAnswers().get(1));
-//        answerC.setText(question.getShuffledAnswers().get(2));
         answerA.setText(question.getActivityList().get(0).getTitle());
         answerB.setText(question.getActivityList().get(1).getTitle());
         answerC.setText(question.getActivityList().get(2).getTitle());
@@ -334,7 +289,7 @@ public class MultiPlayer implements Initializable {
      * @throws InterruptedException
      */
     public void checkAnswer(ActionEvent event) throws IOException, InterruptedException {
-//check answer will also have to call a function:
+        //check answer will also have to call a function:
         //disableAnswers so the uses can't click the answers after already choosing one
 
         //get the button clicked from the event parameter
@@ -411,12 +366,6 @@ public class MultiPlayer implements Initializable {
                     (int)(-Math.pow((bttn.getText().length() - 20), -3) * 0.5 + 2) * 10));
         }
     }
-
-
-
-
-
-
 
     /**
      * If the event is executed then the scene switches to Splash.fxml
@@ -522,14 +471,6 @@ public class MultiPlayer implements Initializable {
         //we need to send that someone clicked this joker to every player
         mainCtrl.sessie.send("/topic/jokers", new Message(MessageType.TIME_JOKER, "client", "someone clicked the timer joker"));
     }
-
-
-
-
-
-
-
-
 }
 
 

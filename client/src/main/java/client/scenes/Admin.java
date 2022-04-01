@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import commons.game.Activity;
-import commons.models.ActivityEntry;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
@@ -215,12 +214,36 @@ public class Admin implements Initializable {
         //first needs to check if an activity is selected
         Activity activity = tableActivity.getSelectionModel().getSelectedItem();
 
-        ActivityEntry(String autoId, String title, String source, String image_path, String consumption_in_wh){
-            this.autoId = autoId;
-            this.title = title;
-            this.source = source;
-            this.image_path = image_path;
-            this.consumption_in_wh = consumption_in_wh;
+
+        if(activity == null){
+            textConsole.setText("Please select an activity from the table to edit");
+            return;
         }
+        //check each field, update activity object
+        if(textTitle.getText() != null && !textTitle.getText().equals("")) {
+            activity.setTitle(textTitle.getText());
+        }
+
+        if(textConsumption.getText() != null && !textConsumption.getText().equals("")){
+            activity.setConsumption_in_wh(Long.parseLong(textConsumption.getText()));
+        }
+
+        if(textSource.getText() != null && !textSource.getText().equals("")){
+            activity.setSource(textSource.getText());
+        }
+
+        //update request to server
+        Response r = ClientBuilder.newClient(new ClientConfig())
+                .target("http://localhost:8080/api/v1/activity/update")
+                .request(APPLICATION_JSON).accept(APPLICATION_JSON)
+                .post(Entity.entity(activity, APPLICATION_JSON));
+
+        //change entry on table
+        tableActivity.refresh();
+
+        //check setText
+        textConsole.setText("Activity data has been changed");
     }
+
 }
+

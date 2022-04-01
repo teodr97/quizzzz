@@ -2,8 +2,8 @@
 package commons.models;
 
 import commons.game.Activity;
-import commons.models.Question;
-//import commons.game.Question;
+
+
 import commons.game.exceptions.NicknameTakenException;
 import commons.game.exceptions.NotFoundException;
 import lombok.Data;
@@ -197,29 +197,13 @@ public class Game {
     // we only use the questionGenerator once and it is to retrieve  a list
     // so to use this server side i will make it so that the parammter is the lsit
     //now we basicly make a request in this class and so
-    public void createQuestionList(List<Activity> alist){
-        Question[] questions = new Question[this.totalRounds];
-
-        System.out.println("=============QUESTIONS AND ANSWERS===============");
-        for(int i = 0; i < totalRounds; i++){
-            questions[i] = new Question(questionGenerator.retrieveActivitySetFromServer());
-            System.out.println(questions[i].toString());
-            System.out.println("Answer: " + questions[i].getCorrectAnswer());
-            //System.out.println(questions[i].toString());
-        }
-        System.out.println("=================================================");
-        this.questions = questions;
-    }
-
-    public void createQuestionList2(ArrayList<Activity> alist){
-
+    public void createQuestionList(ArrayList<Activity> alist){
         Question[] questions = new Question[this.totalRounds];
         System.out.println("=============QUESTIONS AND ANSWERS===============");
         for(int i = 0; i < totalRounds; i++){
             questions[i] = new Question(alist);
-            answers[i] = questions[i].getCorrectAnswerIndex();
             System.out.println(questions[i].toString());
-            System.out.println("Answer: " + questions[i].getCorrectAnswer());
+            
             //System.out.println(questions[i].toString());
         }
         System.out.println("=================================================");
@@ -255,28 +239,9 @@ public class Game {
             }
         }
     }
-    */
-
-    /**
-     * Starts a new round of the game. Increments the curRound counter.
-     * If the game has already ended it instead calls Game.endGame();
      */
-//    public void startNextRound() {
-//        if (this.curRound >= this.totalRounds) {
-//            this.endGame();
-//            return;
-//        }
-//
-//        //resetting player choices
-//        for (var player : this.players) {
-//            player.setChosenAnswer(-1);
-//            player.setTimeLeft(1);
-//        }
-//        this.curQuestion = new Question(ServerUtils.retrieveActivitySetFromServer());
-//        //reset time
-//
-//        this.curRound++;
-//    }
+
+
 
     /**
      * Ends the game.

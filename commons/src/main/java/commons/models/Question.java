@@ -16,34 +16,14 @@ import java.util.Objects;
 public class Question extends Message{
 
     public String question;
-    private String content;
     private String answer;
-    private ArrayList<String> fakeAnswers;
-    private ArrayList<String> shuffledAnswers;
-
     private int correctAnswerIndex;
-
-
-
-    private Activity correctAnswer;
     private ArrayList<Activity> activityList = new ArrayList<>();
-
-
 
     public Question(){
 
     }
 
-//    public Question(String content, String answer){
-//
-//        super(MessageType.QUESTION, "server", content);
-//        this.answer = answer;
-//        act = new Activity("/image", "act", 232, "src");
-//        ActivityEntry act2 = new ActivityEntry(Integer.toString(act.getAutoId()),
-//                act.getTitle(),
-//                act.getSource(),
-//                act.getImage_path(),
-//                Long.toString(act.getConsumption_in_wh()));
 
     /**
      * This function compares a given answer against the
@@ -56,7 +36,6 @@ public class Question extends Message{
     public static boolean hasCorrectAnswer(Question question, int answerIndex) {
         return answerIndex == question.correctAnswerIndex;
     }
-
 
 
     /** Constructtor of the message object
@@ -102,58 +81,7 @@ public class Question extends Message{
                 break;
         }
 
-        //THIS WORKED
-
-//        int randomFactor = Utils.generateRandomIntSmallerThan(4);
-//        switch (randomFactor) {
-//            case 1:
-//                this.question = "Which activity uses the most amount of power?";
-//                this.correctAnswer = Utils.retrieveActivityMostEnergy(activities);
-//                break;
-//            case 2:
-//                this.question = "Which activity uses the least amount of power?";
-//                this.correctAnswer = Utils.retrieveActivityLeastEnergy(activities);
-//                break;
-//            default:
-//                // Generate a random integer from 0 to 2 for getting an index for the correct answer
-//                int correctAnswerIndex = Utils.generateRandomIntSmallerThan(3);
-//                // Retrieve a random activity that will serve as the correct answer using indexes 0-3
-//                this.correctAnswer = activities.get(correctAnswerIndex);
-//                this.question = "How much power does the following activity use:\n\"" + correctAnswer.getTitle() + "\"";
-//                this.activities = Utils.replaceActivitiesWithPowerDraws2(activities, correctAnswerIndex);
-//                break;
-//        }
-
-        //shuffle the answers when the question object is initiliazed
-//        shuffledAnswers = new ArrayList<>();
-//        shuffledAnswers.add(this.answer);
-//        for(String fake: fakeAnswers){
-//            shuffledAnswers.add(fake);
-//        }
-//        Collections.shuffle(shuffledAnswers);
     }
-
-    /** Constructtor of the message object
-     * is extends from class message and we give is message type question
-     *
-     * @param content content of the message object
-     */
-//    public Question(String content, String answer, ArrayList<Activity> activities){
-//        super(MessageType.QUESTION, "server", content);
-//        this.answer = answer;
-//        this.act
-//
-//        act = new Activity("/image", "act", 232, "src");
-//
-//        //shuffle the answers when the question object is initiliazed
-//        shuffledAnswers = new ArrayList<>();
-//        shuffledAnswers.add(this.answer);
-//        for(String fake: fakeAnswers){
-//            shuffledAnswers.add(fake);
-//        }
-//        Collections.shuffle(shuffledAnswers);
-//    }
-
 
 
     /**
@@ -185,22 +113,15 @@ public class Question extends Message{
 
     public List<Activity> getActivityList() { return activityList; }
 
+
+    /**
+     * @return returns the index of the correct answer
+     */
     public int getCorrectAnswerIndex() {
         return correctAnswerIndex;
     }
 
-    /**
-     * @return the answer of this question as a string
-     */
-    public Activity getCorrectAnswer(){
-        return this.correctAnswer;
-    }
-    /**
-     * @return returns the arraylist with fake answers usually two fake answers
-     */
-    public ArrayList<String> getFakeAnswers(){
-        return this.fakeAnswers;
-    }
+
 
     /** Set the question for this question
      * @param question question to be set as a string
@@ -209,8 +130,6 @@ public class Question extends Message{
         this.question = question;
     }
 
-    //settter for the correctanswer field
-    public void setCorrectAnswer (Activity correctAnswer) { this.correctAnswer = correctAnswer; }
 
 
     /**
@@ -220,12 +139,6 @@ public class Question extends Message{
         this.answer = answer;
     }
 
-    /**
-     * @param fakeAnswers Sets the array of fake asnwers to this question
-     */
-    public void setFakeAnswers(ArrayList<String> fakeAnswers) {
-        this.fakeAnswers = fakeAnswers;
-    }
 
     /**
      * @return returns the content of the messge as a string
@@ -251,23 +164,8 @@ public class Question extends Message{
 
     }
 
-    /**
-     * @return returns the a string of the questoin object in human readable form
-     */
-    //calling this function in the client side code breaks it
-    // ithink it takes to much compute
-    public String realString()
-    {
-//        String ret = "Question: " + question;
-//        ret += "\nOption: " + this.activities.get(0).toString();
-//        ret += "\nOption: " + this.activities.get(1).toString();
-//        ret += "\nOption: " + this.activities.get(2).toString();
-//        ret += "\nAnswer: " + this.correctAnswer.toString();
-//        ret += "\n}";
-//        return ret;
-        return "";
 
-    }
+
 
     /**
      * @param other object to check equality with
@@ -278,18 +176,8 @@ public class Question extends Message{
         if (this == other) return true;
         if (other == null || getClass() != other.getClass()) return false;
         Question question = (Question) other;
-        return Objects.equals(content, question.content) && Objects.equals(answer, question.answer)
-                && Objects.equals(fakeAnswers, question.fakeAnswers);
+        return Objects.equals(question, question.question)
+                && Objects.equals(activityList, question.activityList);
     }
-
-    /**
-     * @return The array of shuffled answers
-     */
-    public ArrayList<String> getShuffledAnswers(){
-
-        return this.shuffledAnswers;
-
-    }
-
 
 }

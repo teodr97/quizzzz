@@ -108,8 +108,8 @@ public class SinglePlayer implements Initializable {
         this.game = new Game();
         this.statSharer.reset();
 
-        List<Activity> alist = new LinkedList<>();
-        alist = new QuestionRetriever(mainCtrl).retrieveActivitySetFromServer();
+        ArrayList<Activity> alist = new ArrayList<>();
+        alist = (ArrayList<Activity>) new QuestionRetriever(mainCtrl).retrieveActivitySetFromServer();
 
         game.createQuestionList(alist);
 

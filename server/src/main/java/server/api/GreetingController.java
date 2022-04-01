@@ -11,8 +11,8 @@ import commons.models.Question;
 
 import commons.models.*;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 
@@ -21,7 +21,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+
 import server.database.ActivityRepository;
 
 
@@ -38,12 +38,8 @@ public class GreetingController {
     private ArrayList<commons.game.Question> questionList2 = new ArrayList<>();
     public Iterator<Question> questionIterator;
 
-   //public Iterator<commons.game.Question> questionIterator2;
-
-
     //answersIterator to get the next correct answer
     private Iterator<Activity> answersIterator;
-
 
    public Game game;
 
@@ -64,14 +60,9 @@ public class GreetingController {
 
     public Timer qtimer;
 
-
     //to stop the sending of question we need this field
     @Autowired
     private ScheduledAnnotationBeanPostProcessor postProcessor;
-
-
-
-
 
     //probably will be replaced wiht game model class atritbute
     public boolean gamestarted = false;
@@ -79,46 +70,15 @@ public class GreetingController {
     @Autowired
     public GreetingController(ActivityRepository repo){
         this.repository = repo;
+        //retrieve all activites from the database
         this.allactivies = (ArrayList<Activity>) repository.findAll();
         List<Integer> alreadyChosenIndexes = new ArrayList<>();
 
         this.game = new Game();
-
-
-
-        this.game.createQuestionList2(allactivies);
-
+        this.game.createQuestionList(allactivies);
         this.questionIterator = Arrays.stream(game.questions).iterator();
-
-        //retrieves the questions
-        //game.createQuestionList(retrieveRandomActivitiesSet());
-
-
-        fakeanswerList.add("40");
-        fakeanswerList.add("30");
-
-
-//        questionList.add(new Question("Nuclear reactors huuh?", "20", fakeanswerList));
-//        questionList.add(new Question("Nuclear physicist whet?", "20", fakeanswerList));
-//        questionList.add(new Question("Tesla who?", "20", fakeanswerList));
-//        questionList.add(new Question("Edison BOO", "20", fakeanswerList));
-//        questionList.add(new Question("Elon to the moon?", "20", fakeanswerList));
-//        questionList.add(new Question("Bitcoin green?", "20", fakeanswerList));
-
-        Activity act = new Activity("/image", "act", 232, "src");
-        testList.add(act);
-
-
-
-
-
-        //current = questionIterator.next();
-
-
-        //questionIterator = questionList.iterator();
         qtimer = new Timer();
     }
-
 
 
     /**
@@ -157,43 +117,19 @@ public class GreetingController {
         //the game started reference will probably be a game class attribute
 
         if(gamestarted){
-            ;
             //Question current = questionIterator.next();
 
             //this.template.convertAndSend("/topic/questions", new Message(MessageType.QUESTION, "server", this.questionIterator.next()));
             this.template.convertAndSend("/topic/questions", questionIterator.next());
             System.out.println("sent a question");
         }
-        if(!questionIterator.hasNext()){
+        if(!questionIterator.hasNext()) {
             //send game over screen and stop the scheduled sending of questions
             //TO-DO:
             //this.template.convertAndSend("/topic/greetings", new Message());
             stopSending();
         }
-        //Timer qtimer = new Timer();
     }
-
-    /**After someone clicked the startgame button we start sending every questoin to the client every 10 seconds
-     *
-     */
-//    @Scheduled(fixedRate = 10000)
-//    public void sendQuestion1() {
-//        //the game started reference will probably be a game class attribute
-//
-//        if (gamestarted) {
-//            commons.game.Question current = questionIterator2.next();
-//            System.out.println(current);
-//            //this.template.convertAndSend("/topic/questions", new Message(MessageType.QUESTION, "server", this.questionIterator.next()));
-//            this.template.convertAndSend("/topic/questions2", current);
-//            System.out.println("sent a question");
-//        }
-//        if (!questionIterator2.hasNext()) {
-//            //send game over screen and stop the scheduled sending of questions
-//            //TO-DO:
-//            //this.template.convertAndSend("/topic/greetings", new Message());
-//            stopSending();
-//        }
-//    }
 
     /**
      * Stops sending quesitons every 10 seconds
@@ -213,6 +149,7 @@ public class GreetingController {
         System.out.println("someone clicked a joker");
         return new Message(message.getMsgType(), "Server", message.getContent());
     }
+
     /**
      * Get the amount of activities in the database
      * @return the amount of activities in the database
@@ -221,8 +158,6 @@ public class GreetingController {
         if (allactivies == null || allactivies.isEmpty()) allactivies = (ArrayList<Activity>) repository.findAll();
         return allactivies.size();
     }
-
-
 
     /**
      * This function returns a set of three random questions upon request from
@@ -242,15 +177,4 @@ public class GreetingController {
         }
         return activitySet;
     }
-
-
-
-
-
-
-
-
-
-
-
 }

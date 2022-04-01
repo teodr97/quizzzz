@@ -132,7 +132,7 @@ public class WsClient {
 
             //java fx thread need to be edited after the current websocket thread
 
-            waitingroom.startGame2();
+            waitingroom.startGame();
         }
         //System.out.println("Received : " + incomingmsg.getContent() + " from : " + incomingmsg.getUsername());
     }
