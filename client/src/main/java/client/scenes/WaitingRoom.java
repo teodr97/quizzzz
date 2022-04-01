@@ -2,39 +2,24 @@ package client.scenes;
 
 import client.MyFXML;
 import client.MyModule;
-
-
-import javafx.fxml.FXML;
-
-
-
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import jakarta.ws.rs.client.ClientBuilder;
-
-
+import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.Response;
 import javafx.event.ActionEvent;
-
-
-
-
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-
 import javafx.scene.control.ListView;
-
 import javafx.scene.text.Text;
-
 import javafx.scene.text.TextAlignment;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-
 import java.util.ResourceBundle;
 
 import static com.google.inject.Guice.createInjector;
