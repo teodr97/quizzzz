@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class ActivityControllerTest {
@@ -89,5 +90,26 @@ class ActivityControllerTest {
         controller.deleteAll();
         controller.getAllActivities();
         verify(repositoryMock).findAll();
+    }
+
+    /**
+     * test updating activities
+     */
+    @Test
+    void update(){
+        Activity a = new Activity("Test","Test", 1, "Test");
+        when(repositoryMock.findById(1)).thenReturn(Optional.of(a));
+        Activity b = controller.getById(1).getBody();
+
+        b.setAutoId(1);
+        b.setTitle("East");
+        b.setConsumption_in_wh(100);
+        b.setSource("West");
+
+        Activity c = controller.update(b).getBody();
+
+        assertEquals("East", c.getTitle());
+        assertEquals(100, c.getConsumption_in_wh());
+        assertEquals("West", c.getSource());
     }
 }

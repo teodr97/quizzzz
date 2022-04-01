@@ -34,7 +34,7 @@ class GameTest {
         activityList.add(new Activity("Test_2", "Test_2", 2314567, "Test_2"));
         activityList.add(new Activity("Test_3","Test_3", 1010010100, "Test_3"));
         game = new Game();
-        question = new Question(activityList);
+        question = new Question((LinkedList<Activity>) activityList);
         player = new Player("Test");
     }
 

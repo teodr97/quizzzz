@@ -1,31 +1,55 @@
 package client.scenes;
 
 import client.utils.GuiUtils;
-import commons.models.Game;
+
+
+import commons.models.*;
+
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
+
 import java.io.IOException;
+
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
+
+import org.glassfish.jersey.client.ClientConfig;
+import org.springframework.messaging.simp.stomp.StompFrameHandler;
+import org.springframework.messaging.simp.stomp.StompHeaders;
+
+
+
+import org.springframework.web.socket.messaging.WebSocketStompClient;
+
+
+import java.util.Timer;
+
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+
 
 public class MultiPlayer implements Initializable {
 
     private Game game;
     private MainCtrl mainCtrl;
+    private static final String SERVER = "http://localhost:8080/";
+
 
     private final Image reactionAngry = new Image(Paths.get("src", "main","resources","images","reactAngry.png").toUri().toString());
     private final Image reactionLol = new Image(Paths.get("src", "main","resources","images","reactLol.png").toUri().toString());
@@ -46,7 +70,20 @@ public class MultiPlayer implements Initializable {
     @FXML private Button answerB;
     @FXML private Button answerC;
 
-    @FXML private Text prompt;
+    private ArrayList<Button> buttons;
+
+    //joker buttons
+    @FXML private Button timeJoker;
+    @FXML private Button removeJoker;
+    @FXML private Button doubleJoker;
+
+    private int scoreMultiplier = 1;
+
+
+
+    @FXML public ProgressBar timerBar;
+
+    @FXML public Text prompt;
     @FXML private Text userpoint;
 
     private int pointsInt = 0;
@@ -56,6 +93,24 @@ public class MultiPlayer implements Initializable {
 
     @FXML private ListView<AnchorPane> listViewReactions;
 
+
+    public Timer bartimer = new Timer();
+
+    public double progress;
+
+    public double progressInc = 0.001;
+
+    private static final double EPSILON = 0.00001;
+
+
+    private WebSocketStompClient stompClient;
+
+    private Message incomingmsg;
+
+    private Question incomingq;
+
+    public boolean gamended;
+
     @Inject
     public MultiPlayer(MainCtrl mainCtrl) {
         this.mainCtrl = mainCtrl;
@@ -63,6 +118,11 @@ public class MultiPlayer implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources){
+
+        buttons = new ArrayList<>();
+        buttons.add(answerA);
+        buttons.add(answerB);
+        buttons.add(answerC);
 
         Path hgPath = Paths.get("src", "main","resources","images","JokerHG.png");
         Path twoxPath = Paths.get("src", "main","resources","images","Joker2X.png");
@@ -76,23 +136,283 @@ public class MultiPlayer implements Initializable {
         imgBttnReactCool.setImage(reactionCool);
         imgBttnReactSweaty.setImage(reactionSweaty);
         imgBttnReactLol.setImage(reactionLol);
+        System.out.println(timerBar.getStyle());
+
+        this.mainCtrl.sessie.subscribe("/topic/questions", new StompFrameHandler() {
+
+                    public Type getPayloadType(StompHeaders stompHeaders) {
+                        return Question.class;
+                    }
+
+                    public void handleFrame(StompHeaders stompHeaders, Object payload) {
+                        // if we get new question we reset the score multiplier to 1
+                        //since someone could have clicked a double points joker in the previous round
+                        scoreMultiplier = 1;
+                        try{
+                            bartimer.cancel();
+                        }catch(Exception e){
+                            System.out.println(e.getMessage());
+                        }
+                        incomingq= (Question) payload;
+
+                        System.out.println(incomingq.toString());
+                        System.out.println(incomingq.getShuffledAnswers().toString());
+                        //questionField.setText(incomingq.getQuestion());
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                displayQuestion(incomingq);
+                            }
+                        });
+                        startBar();
+                    }
+                });
+
+//        this.mainCtrl.sessie.subscribe("/topic/questions", new StompFrameHandler() {
+//
+//            public Type getPayloadType(StompHeaders stompHeaders) {
+//                return Message.class;
+//            }
+//
+//            public void handleFrame(StompHeaders stompHeaders, Object payload) {
+//                incomingmsg = (Message) payload;
+//                if (incomingmsg.getMsgType() == MessageType.QUESTION) {
+//                    System.out.println("Gotten question");
+//                    questionField.setText(incomingmsg.getContent());
+//                    startBar();
+//
+//                }
+//                if(incomingmsg.getMsgType() == MessageType.GAME_ENDED){
+//                    //variable will probably be replaced by a game class atrribute
+//                    gamended = false;
+//                    timerBar.setProgress(0);
+//                    questionField.setText(incomingmsg.getContent());
+//                }
+//            }
+//        });
+
+//
+
+        this.mainCtrl.sessie.subscribe("/topic/jokers", new StompFrameHandler() {
+
+            public Type getPayloadType(StompHeaders stompHeaders) {
+                return Message.class;
+            }
+
+            public void handleFrame(StompHeaders stompHeaders, Object payload) {
+                incomingmsg = (Message) payload;
+
+                if(incomingmsg.getMsgType() == MessageType.TIME_JOKER){
+                    prompt.setText("Timer joker used");
+                    progressInc = 0.002;
+
+                    timerBar.setStyle("-fx-accent: red");
+                }
+                if(incomingmsg.getMsgType() == MessageType.REMOVE_JOKER){
+                    handleRemovalJoker();
+                }
+
+                if(incomingmsg.getMsgType() == MessageType.DOUBLE_JOKER){
+                    handleDoubleJoker();
+                }
+            }
+        });
+    }
+
+
+    /**
+     * Send that the double points joker has been used to all clients subscriped to the /topic/joker endpoint
+     */
+    //this joker can be handled fully on client since it doens't effect the other players
+    public void handleDoubleJoker(){
+        prompt.setText("Double joker used");
+        //disable the button if  clicked
+
+        doubleJoker.setDisable(true);
+        scoreMultiplier = 2;
+        //we do send a message to the server for stat tracking
+        //mainCtrl.sessie.send("/app/clickedJoker", new Message(MessageType.DOUBLE_JOKER, "client", "someone clicked the double points joker"));
+    }
+
+
+    /**
+     * Send that the removal joker has been used to all clients subscriped to the /topic/joker endpoint
+     */
+    //this joker can be handled fully on client since it doens't effect the other players
+    public void handleRemovalJoker(){
+        //disable the button if  clicked
+
+        removeJoker.setDisable(true);
+
+        //we do send a message to the server for stat tracking
+        //mainCtrl.sessie.send("/app/clickedJoker", new Message(MessageType.REMOVE_JOKER, "client", "someone clicked the remove joker"));
+        prompt.setText("removal joker used");
+        System.out.println("handling removal");
+        int randomindex= new Random().nextInt(2);
+        String toremove = incomingq.getFakeAnswers().get(randomindex);
+        for(Button b: buttons){
+            if(b.getText().equals(toremove)){
+                b.setDisable(true);
+            }
+        }
+    }
+
+
+    /**
+     * displays the question and answers on the window and resets the game
+     * @param question: a Question entity to display
+     */
+    public void displayQuestion(Question question){
+        questionField.setText(question.getQuestion());
+        //qNumber.setText(game.getCurRound() + " / 20");
+        answerA.setText(question.getShuffledAnswers().get(0));
+        answerB.setText(question.getShuffledAnswers().get(1));
+        answerC.setText(question.getShuffledAnswers().get(2));
+//        answerA.setText(question.getActivityList().get(0).getTitle());
+//        answerB.setText(question.getActivityList().get(1).getTitle());
+//        answerC.setText(question.getActivityList().get(2).getTitle());
+        resetGamescreen();
     }
 
     /**
-     * switches to the splash screen, for the leave button
+     * Resets the game screen for the next round.
+     */
+    public void resetGamescreen(){
+        //resetting the answer buttons
+        //color and clickability, the timer bar and the text prompt
+
+        //buttons
+        answerA.setStyle("-fx-background-color: #0249bd;");
+        answerB.setStyle("-fx-background-color: #0249bd;");
+        answerC.setStyle("-fx-background-color: #0249bd;");
+        enableAnswers();
+
+        //timerbar
+        //we don't have to set the progress of the timer bar
+        //because the animation timer continually does that
+        progress = 0;
+
+        //prompt
+        prompt.setText("");
+
+        return;
+    }
+
+    /**
+     * Enables all answer buttons.
+     */
+    public void enableAnswers(){
+        answerA.setDisable(false);
+        answerB.setDisable(false);
+        answerC.setDisable(false);
+
+        return;
+    }
+
+    /**
+     * Checks if the answer in singleplayer is correct
+     * @param event
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public void checkAnswer(ActionEvent event) throws IOException, InterruptedException {
+        //check answer will also have to call a function:
+        //disableAnswers so the uses can't click the answers after already choosing one
+
+        //get the button clicked from the event parameter
+        Button useranswer = (Button) event.getTarget();
+
+        //gets the amount of points to be handed, and assigns the correct answer to a variable
+        int questionpoints = (int)((500 - 250*progress)*scoreMultiplier);
+        String correctanswer = incomingq.getAnswer();
+        System.out.println("correct answer: "+ correctanswer);
+        System.out.println("your answer: "+ useranswer.getText());
+
+        //since we made an iterator of the answers the program checks if  the users button clicked is the right corresponding click
+        //this function should definitely be tested
+
+        //make the buttons there "correct colors" green for right answer red for the wrong answers
+        for(Button answerbutton: buttons){
+            //the one corresponding with he next answers entry is the correct answer and  becomes green
+            if(answerbutton.getText().equals(correctanswer)){
+                answerbutton.setStyle("-fx-background-color: #309500;");
+            }else{ //we make it red
+                answerbutton.setStyle("-fx-background-color: #BD0000;");
+            }
+        }
+
+        //after accordingly change the buttons colors
+        //we retrieve the current style of all the buttons and add a border to the user chosen button
+        for(Button answerbutton: buttons){
+
+            String currentstyle = answerbutton.getStyle();
+            StringBuilder currentstylebuilder = new StringBuilder(currentstyle);
+            //adding the border style
+            currentstylebuilder.append("-fx-border-color: black; -fx-border-width: 3px;");
+            String newstyle = currentstylebuilder.toString();
+
+            if(answerbutton == useranswer){
+                answerbutton.setStyle(newstyle);
+            }
+        }
+        //after that we have to prompt of if the user was correct or not
+        //user got the answer correct
+        if(correctanswer.equals(useranswer.getText())){
+            int currentpoints = Integer.parseInt(userpoint.getText());
+            int newpoints = currentpoints + questionpoints;
+            this.pointsInt = newpoints;
+            userpoint.setText(String.valueOf(newpoints));
+            prompt.setText("Correct");
+            //this.statSharer.correctAnswers++;
+        } else{
+            prompt.setText("Incorrect");
+        }
+
+        //change scene state to the one where someone has answered the question
+        //in which case the buttons should be disabled and change colors
+        disableAnswers();
+
+        return;
+    }
+
+
+
+
+
+
+    /**
+     * If the event is executed then the scene switches to Splash.fxml
      * @param event
      * @throws IOException
      */
-    public void switchToSplash(ActionEvent event) throws IOException {
-        mainCtrl.switchToSplash();
+    public void leaveGame(ActionEvent event) throws IOException {
+        ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/game/leave")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(mainCtrl.getPlayer(), APPLICATION_JSON));
+
+        this.mainCtrl.switchToSplash();
     }
 
+    /**
+     * Starts the timer bar sheduled task for displaying the progressbar
+     */
+    public void startBar(){
+        timerBar.setStyle("-fx-accent: blue");
+        progressInc = 0.001;
+        progress = 0;
+        timerBar.setProgress(progress);
+        bartimer = new Timer();
+        bartimer.scheduleAtFixedRate(new IncreaseTimerBar(this), 0, 10);
+    }
+
+    
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // THE USERNAME PASSED TO EACH OF THE BUTTON FUNCTIONS SHOULD BE
     // REPLACED WITH THE ACTUAL USERNAME OF THE LOCAl PLAYER! THE
     // USERNAME PARAMETER IS JUST A PLACEHOLDER.
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
     /**
      * Used by the button for displaying a laugh reaction on the game screen.
      */
@@ -141,4 +461,40 @@ public class MultiPlayer implements Initializable {
         // Start the display timer for the newly added reaction.
         newReaction.start();
     }
+
+    /**
+     * Disables all answer buttons.
+     */
+    public void disableAnswers(){
+        answerA.setDisable(true);
+        answerB.setDisable(true);
+        answerC.setDisable(true);
+
+        return;
+    }
+
+    /**
+     * Send that the timer joker has been used to all clients subscriped to the /topic/joker endpoint
+     */
+    public void senddecreaseTimeForAll(){
+
+        //disable the button if  clicked
+        timeJoker.setDisable(true);
+
+        //we need to send that someone clicked this joker to every player
+        mainCtrl.sessie.send("/topic/jokers", new Message(MessageType.TIME_JOKER, "client", "someone clicked the timer joker"));
+    }
+
+
+
+
+
+
+
+
 }
+
+
+
+
+
