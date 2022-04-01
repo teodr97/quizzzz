@@ -28,13 +28,14 @@ public class StorageService{
     /**
      * stores the file in a given path
      */
-    public void store(FileEntryPair fep) throws IOException {
+    public void store(File file) throws IOException {
+        System.out.println("we make it to storageservice");
         Path destinationFile = this.rootLocation;
-        if(fep.getFileName().equals(null)){
+        if(file.getName() == null){
             System.out.println("BROOOOOOOOOOOOOOO");
             return;
         };
-        System.out.println("made it!!!!!!");
+        System.out.println("made it!!!!!! : " + file.getName());
         return;
 
 //        ZipFile zf = new ZipFile("whatever");

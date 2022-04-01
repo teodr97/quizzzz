@@ -4,8 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import commons.game.Activity;
-import commons.models.FileEntryPair;
-import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
@@ -18,29 +16,27 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.glassfish.jersey.client.ClientConfig;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import javax.inject.Inject;
 import java.io.*;
 import java.net.URL;
-import java.nio.file.Files;
-import java.util.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
+
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 public class Admin implements Initializable {
 
     private MainCtrl mainCtrl;
-
-    @FXML
-    private ImageView testImage;
 
     @FXML
     private Button dbBtn;
@@ -84,9 +80,12 @@ public class Admin implements Initializable {
     @FXML
     private TableColumn<Activity,String> colSource;
 
+    @FXML
+    private ImageView testImage;
+
     private Stage stage;
 
-    private File file;
+    private File folder;
 
     @Inject
     public Admin(MainCtrl mainCtrl) {
@@ -119,17 +118,17 @@ public class Admin implements Initializable {
      * takes the file and stores it, changes name of button.
      */
     public void uploadFile(){
-        FileChooser fileChooser = new FileChooser();
-        File tempFile = fileChooser.showOpenDialog(stage);
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        File tempFile = directoryChooser.showDialog(stage);
         //if no file assigned just quit method
         if(tempFile==null){return;}
         //check if temp file is zip
-        if(isExtension(tempFile.getName(), "zip")){
-            this.file = tempFile;
-            fileText.setText(file.getName());
+        if(tempFile.isDirectory()){
+            this.folder = tempFile;
+            fileText.setText(folder.getName());
             return;
         }
-        fileText.setText("Please provide a zip file.");
+        fileText.setText("Please provide a directory.");
     }
 
     /**
@@ -152,12 +151,19 @@ public class Admin implements Initializable {
      * @throws IOException
      */
     public void uploadToDatabase() throws IOException {
+        List<Activity> activityList = null;
 
         //Gets the first entry of the zip file (assumed to be activities.json)
-        ZipFile zf = new ZipFile(this.file);
-        ZipEntry ze = zf.getEntry("activities.json");
-
-        List<Activity> activityList = jsonToActivity(zf,ze);
+        folder.listFiles();
+        for(File file : folder.listFiles()){
+            if (file.getName().contains("activities.json")){
+                activityList = jsonToActivity(file);
+                continue;
+            } else{
+                postFile(file);
+            }
+            System.out.println("uhh how'd that happen? " + file.getName());
+        }
 
         for (Activity activity : activityList) {
 
@@ -168,57 +174,31 @@ public class Admin implements Initializable {
             }
         }
 
-        //imports the images
-        importImages(zf);
-
-
-        //reset file
-        tableActivity.refresh();
         fileText.setText("Importing Complete");
-        this.file = null;
+
+        this.folder = null;
+
     }
 
-    /**
-     * Copy all files into the server
-     * @param zf
-     */
-    private void importImages(ZipFile zf) throws IOException {
-        Iterator<? extends ZipEntry> zIterator = zf.entries().asIterator();
-        while(zIterator.hasNext()){
-            ZipEntry ze = zIterator.next();
-
-            //skip the activities.json file
-            if(ze.getName().equals("activities.json")){
-                continue;
-            }
-
-            testImage.setImage(new Image(zf.getInputStream(ze)));
-
-//            String fileName = ze.getName();
-//            InputStream is = zf.getInputStream(ze);
-//            File f = Files.copy(is, fileName);
-//
-//            FileEntryPair fep = new FileEntryPair(fileName, f);
-//
-//
-//            //at this point, the program chooses to trust the zip file and just copy each file directly
-//            //by sending a request
-//            Response r = ClientBuilder.newClient(new ClientConfig())
-//                    .target("http://localhost:8080").path("/images/upload")
-//                    .request(APPLICATION_JSON)
-//                    .post(Entity.entity(fep, APPLICATION_JSON));
-//
-        }
+    private void postFile(File file) {
+        System.out.println("postFile method");
+        ClientBuilder.newClient(new ClientConfig())
+                .target("http://localhost:8080").path("/images/upload")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(file, APPLICATION_JSON));
     }
+
     /**
      * helper method to convert json to activityList
      */
-    private List<Activity> jsonToActivity(ZipFile zf, ZipEntry ze) throws IOException {
+    private List<Activity> jsonToActivity(File file) throws IOException {
         //converts input stream into activityList
         ObjectMapper om = new ObjectMapper();
         om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        InputStream is = new FileInputStream(file);
 
-        return om.readValue(zf.getInputStream(ze), new TypeReference<ArrayList<Activity>>(){});
+        return om.readValue(is, new TypeReference<ArrayList<Activity>>(){});
     }
 
     /**
@@ -226,7 +206,7 @@ public class Admin implements Initializable {
      * @param activity
      * @return
      */
-    public static Response postActivity(Activity activity) {
+    public Response postActivity(Activity activity) {
         return ClientBuilder.newClient(new ClientConfig())
                 .target("http://localhost:8080").path("/api/v1/activity/post")
                 .request(APPLICATION_JSON)
@@ -255,20 +235,21 @@ public class Admin implements Initializable {
     public void updateActivity(){
         //first needs to check if an activity is selected
         Activity activity = tableActivity.getSelectionModel().getSelectedItem();
+
         if(activity == null){
             textConsole.setText("Please select an activity from the table to edit");
             return;
         }
         //check each field, update activity object
-        if(textTitle.getText() != null && textTitle.getText().equals("")) {
+        if(textTitle.getText() != null && !textTitle.getText().equals("")) {
             activity.setTitle(textTitle.getText());
         }
 
-        if(textConsumption.getText() != null && textConsumption.getText().equals("")){
+        if(textConsumption.getText() != null && !textConsumption.getText().equals("")){
             activity.setConsumption_in_wh(Long.parseLong(textConsumption.getText()));
         }
 
-        if(textSource.getText() != null && textSource.getText().equals("")){
+        if(textSource.getText() != null && !textSource.getText().equals("")){
             activity.setSource(textSource.getText());
         }
 
@@ -284,5 +265,7 @@ public class Admin implements Initializable {
         //check setText
         textConsole.setText("Activity data has been changed");
     }
+
+
 
 }
