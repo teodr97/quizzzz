@@ -89,4 +89,12 @@ public class Splash implements Initializable {
         mainCtrl.switchToAdmin();
     }
 
+    /**
+     * Switches the scene to the Server Selection screen.
+     * @param event The button click event.
+     */
+    public void switchToServerSelection(ActionEvent event) {
+        mainCtrl.switchToServerSelection();
+    }
+
 }

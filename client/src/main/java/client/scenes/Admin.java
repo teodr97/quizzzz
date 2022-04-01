@@ -36,6 +36,7 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 public class Admin implements Initializable {
 
     private MainCtrl mainCtrl;
+    private ServerSelectorCtrl serverSelectorCtrl;
 
     @FXML
     private Button dbBtn;
@@ -78,8 +79,9 @@ public class Admin implements Initializable {
     private File file;
 
     @Inject
-    public Admin(MainCtrl mainCtrl) {
+    public Admin(MainCtrl mainCtrl, ServerSelectorCtrl serverSelectorCtrl) {
         this.mainCtrl = mainCtrl;
+        this.serverSelectorCtrl = serverSelectorCtrl;
     }
 
     @Override
@@ -178,9 +180,9 @@ public class Admin implements Initializable {
      * @param activity
      * @return
      */
-    public static Response postActivity(Activity activity) {
+    public Response postActivity(Activity activity) {
         return ClientBuilder.newClient(new ClientConfig())
-                .target("http://localhost:8080").path("/api/v1/activity/post")
+                .target(serverSelectorCtrl.getServer()).path("/api/v1/activity/post")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .post(Entity.entity(activity, APPLICATION_JSON));
@@ -191,7 +193,7 @@ public class Admin implements Initializable {
      */
     public void fetchActivities() {
         List<Activity> activityList = ClientBuilder.newClient(new ClientConfig())
-                .target("http://localhost:8080").path("/api/v1/activity")
+                .target(serverSelectorCtrl.getServer()).path("/api/v1/activity")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<>() {});

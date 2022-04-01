@@ -1,53 +1,30 @@
 package client.scenes;
 
-import client.MyFXML;
-import client.MyModule;
-
-
-import javafx.fxml.FXML;
-
-
-
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import jakarta.ws.rs.client.ClientBuilder;
-
-
+import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.Response;
 import javafx.event.ActionEvent;
-
-
-
-
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-
 import javafx.scene.control.ListView;
-
 import javafx.scene.text.Text;
-
 import javafx.scene.text.TextAlignment;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-
 import java.util.ResourceBundle;
 
-import static com.google.inject.Guice.createInjector;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 public class WaitingRoom implements Initializable {
 
-    private static final Injector INJECTOR = createInjector(new MyModule());
-    private static final MyFXML FXML = new MyFXML(INJECTOR);
-    private static final String SERVER = "http://localhost:8080/";
-
-
     private final MainCtrl mainCtrl;
+    private final ServerSelectorCtrl serverSelectorCtrl;
 
     private Username usernameCtrl;
 
@@ -59,20 +36,12 @@ public class WaitingRoom implements Initializable {
     @FXML
     private Text players;
 
-
-    /**Construtor of the waiting room scene class controller
-     * @param mainCtrl the maincntrl of the application
-     * @throws InterruptedException
-     */
     @Inject
-    public WaitingRoom(MainCtrl mainCtrl) throws InterruptedException {
-
+    public WaitingRoom(MainCtrl mainCtrl, ServerSelectorCtrl serverSelectorCtrl) {
         this.mainCtrl = mainCtrl;
-
+        this.serverSelectorCtrl = serverSelectorCtrl;
         this.players = new Text();
     }
-
-    //no real functionality yet
 
     /**
      * @param location url we use to acces scene
@@ -98,7 +67,7 @@ public class WaitingRoom implements Initializable {
      */
     public void startGame(ActionEvent event) throws IOException{
         ClientBuilder.newClient(new ClientConfig()) //
-                .target(mainCtrl.SERVER).path("/game/start") //
+                .target(serverSelectorCtrl.getServer()).path("/game/start") //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .post(Entity.entity(mainCtrl.getPlayer(), APPLICATION_JSON));
@@ -129,7 +98,7 @@ public class WaitingRoom implements Initializable {
     public void longpollUpdateLobby(){
         //this get requests gets all the players that are connected/connecting to the server
         Response playersResponse = ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("/game/getPlayers/0") //
+                .target(serverSelectorCtrl.getServer()).path("/game/getPlayers/0") //
                 .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.TRUE)//
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
@@ -142,7 +111,7 @@ public class WaitingRoom implements Initializable {
         System.out.println(playersstring.toString());
         while(playersstring.size()>=1){
             playersResponse = ClientBuilder.newClient(new ClientConfig()) //
-                    .target(SERVER).path("/game/getPlayers/0") //
+                    .target(serverSelectorCtrl.getServer()).path("/game/getPlayers/0") //
                     .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.TRUE)//
                     .request(APPLICATION_JSON) //
                     .accept(APPLICATION_JSON) //

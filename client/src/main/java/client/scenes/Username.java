@@ -24,6 +24,7 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 public class Username implements Initializable {
 
     private MainCtrl mainCtrl;
+    private ServerSelectorCtrl serverSelectorCtrl;
 
     @FXML
     private TextField username;
@@ -32,8 +33,9 @@ public class Username implements Initializable {
     private Text missingUser;
 
     @Inject
-    public Username(MainCtrl mainCtrl) {
+    public Username(MainCtrl mainCtrl, ServerSelectorCtrl serverSelectorCtrl) {
         this.mainCtrl = mainCtrl;
+        this.serverSelectorCtrl = serverSelectorCtrl;
     }
 
     //no real functionality yet
@@ -73,7 +75,7 @@ public class Username implements Initializable {
         else{
             mainCtrl.setPlayer(new Player(username.getText()));
             Response response = ClientBuilder.newClient(new ClientConfig()) //
-                    .target(mainCtrl.SERVER).path("/game/connect") //
+                    .target(serverSelectorCtrl.getServer()).path("/game/connect") //
                     .request(APPLICATION_JSON) //
                     .accept(APPLICATION_JSON) //
                     .post(Entity.entity(mainCtrl.getPlayer(), APPLICATION_JSON));

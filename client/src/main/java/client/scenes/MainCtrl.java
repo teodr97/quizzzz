@@ -1,25 +1,11 @@
 package client.scenes;
 
 import client.MyFXML;
-
 import commons.models.Player;
-
-
-
-import javafx.fxml.FXML;
-
-
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-
-
-import javafx.scene.control.TextField;
-
 import javafx.stage.Stage;
 import javafx.util.Pair;
-
-
-
 
 import java.io.IOException;
 
@@ -28,19 +14,13 @@ import java.io.IOException;
 
 public class MainCtrl {
 
-    public static final String SERVER = "http://localhost:8080/";
     private static MyFXML myFXML;
     private Player player;
 
     private Stage primaryStage;
-    private Stage stage;
-    private Scene scene;
-
-    @FXML
-    private TextField username;
-
 
     public MainCtrl() {
+
     }
 
     /**
@@ -164,12 +144,8 @@ public class MainCtrl {
      * Switches the scene to the waiting room scene for multiplayer.
      */
     public void switchToWaitingRoom(){
-
         var overview = myFXML.load(WaitingRoom.class, "client", "scenes", "WaitingRoom.fxml");
         setAndShowScenes(new Scene(overview.getValue()));
-
-
-
     }
 
     /**
@@ -177,6 +153,14 @@ public class MainCtrl {
      */
     public void switchToAdmin() {
         var overview = myFXML.load(WaitingRoom.class, "client", "scenes", "Admin.fxml");
+        setAndShowScenes(new Scene(overview.getValue()));
+    }
+
+    /**
+     * Switches the scene to the admin panel
+     */
+    public void switchToServerSelection() {
+        var overview = myFXML.load(WaitingRoom.class, "client", "scenes", "ServerSelection.fxml");
         setAndShowScenes(new Scene(overview.getValue()));
     }
 
