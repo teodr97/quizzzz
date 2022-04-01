@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="783.0" prefWidth="1119.0" style="-fx-background-color: linear-gradient(#02274f, #101b25);" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.MainCtrl">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="783.0" prefWidth="1119.0" style="-fx-background-color: linear-gradient(#02274f, #101b25);" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.HowToPlay">
     <children>
         <Button layoutX="897.0" layoutY="685.0" mnemonicParsing="false" onAction="#switchToSplash" prefHeight="55.0" prefWidth="174.0" style="-fx-background-color: #f73444;" text="Back to menu" textAlignment="CENTER" textFill="WHITE">
             <font>
@@ -20,32 +20,32 @@
          </cursor>
         </Button>
       <Line endX="1022.0" layoutX="99.0" layoutY="179.0" startX="-100.0" stroke="#fdecfa" strokeWidth="4.0" />
-      <Text fill="WHITE" layoutX="42.0" layoutY="236.0" strokeType="OUTSIDE" strokeWidth="0.0" text="How to play" textAlignment="CENTER">
+      <Text fill="WHITE" layoutX="107.0" layoutY="235.0" strokeType="OUTSIDE" strokeWidth="0.0" text="How to play" textAlignment="CENTER">
          <font>
             <Font name="Arial Bold" size="36.0" />
          </font>
       </Text>
-      <Text fill="WHITE" layoutX="45.0" layoutY="290.0" strokeType="OUTSIDE" strokeWidth="0.0" text="- Try to get the right answer for each question " wrappingWidth="326.294921875">
+      <Text fill="WHITE" layoutX="45.0" layoutY="290.0" strokeType="OUTSIDE" strokeWidth="0.0" text="- Try to get the correct answer for each question " wrappingWidth="326.294921875">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
       </Text>
-      <Text fill="WHITE" layoutX="45.0" layoutY="368.0" strokeType="OUTSIDE" strokeWidth="0.0" text="- Each question gives you a certain amount of points" wrappingWidth="326.294921875">
+      <Text fill="WHITE" layoutX="45.0" layoutY="368.0" strokeType="OUTSIDE" strokeWidth="0.0" text="- Correct answers earn you points" wrappingWidth="326.294921875">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
       </Text>
-      <Text fill="WHITE" layoutX="45.0" layoutY="445.0" strokeType="OUTSIDE" strokeWidth="0.0" text="- Get points to get to the top of the leaderboard " wrappingWidth="326.294921875">
+      <Text fill="WHITE" layoutX="45.0" layoutY="477.0" strokeType="OUTSIDE" strokeWidth="0.0" text="- Compete with others to the top of the leaderboard " wrappingWidth="326.294921875">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
       </Text>
-      <Text fill="WHITE" layoutX="45.0" layoutY="526.0" strokeType="OUTSIDE" strokeWidth="0.0" text="- Use the jokers to disadvantage your opponents" wrappingWidth="326.294921875">
+      <Text fill="WHITE" layoutX="45.0" layoutY="558.0" strokeType="OUTSIDE" strokeWidth="0.0" text="- Use jokers to gain an advantage over your opponents" wrappingWidth="326.294921875">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
       </Text>
-      <Text fill="WHITE" layoutX="439.0" layoutY="240.0" strokeType="OUTSIDE" strokeWidth="0.0" text="The Jokers:" textAlignment="CENTER">
+      <Text fill="WHITE" layoutX="716.0" layoutY="233.0" strokeType="OUTSIDE" strokeWidth="0.0" text="The Jokers:" textAlignment="CENTER">
          <font>
             <Font name="Arial Bold" size="30.0" />
          </font>
@@ -55,24 +55,41 @@
             <Font name="System Bold" size="20.0" />
          </font>
       </Text>
-      <Text fill="WHITE" layoutX="739.0" layoutY="460.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Remove a wrong answer" wrappingWidth="291.294921875">
+      <Text fill="WHITE" layoutX="739.0" layoutY="552.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Remove a wrong answer" wrappingWidth="291.294921875">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
       </Text>
-      <Text fill="WHITE" layoutX="739.0" layoutY="587.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Double points" wrappingWidth="168.3984375">
+      <Text fill="WHITE" layoutX="739.0" layoutY="431.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Double points" wrappingWidth="291.294921875">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
       </Text>
-      <ImageView fitHeight="107.0" fitWidth="56.0" layoutX="616.0" layoutY="278.0" pickOnBounds="true" preserveRatio="true">
-            <Image url="@../../images/hourglass.png" />
-      </ImageView>
       <ImageView fitHeight="107.0" fitWidth="56.0" layoutX="495.0" layoutY="400.0" pickOnBounds="true" preserveRatio="true" />
       <ImageView fitHeight="107.0" fitWidth="56.0" layoutX="484.0" layoutY="526.0" pickOnBounds="true" preserveRatio="true" />
       <Text fill="#fdecfa" layoutX="51.0" layoutY="108.0" strokeType="OUTSIDE" strokeWidth="0.0" text="QUIZZ" textAlignment="CENTER">
          <font>
             <Font name="Arial Bold" size="72.0" />
+         </font>
+      </Text>
+      <ImageView fx:id="joker2X" fitHeight="150.0" fitWidth="81.0" layoutX="598.0" layoutY="350.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
+         <image>
+            <Image url="@../../images/Joker2X.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="jokerHG" fitHeight="150.0" fitWidth="238.0" layoutX="598.0" layoutY="230.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
+         <image>
+            <Image url="@../../images/JokerHG.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="jokerMB" fitHeight="150.0" fitWidth="238.0" layoutX="598.0" layoutY="470.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
+         <image>
+            <Image backgroundLoading="True" url="@../../images/JokerMB.png" />
+         </image>
+      </ImageView>
+      <Text fill="WHITE" layoutX="45.0" layoutY="422.0" strokeType="OUTSIDE" strokeWidth="0.0" text="- Answer quick to get more points" wrappingWidth="326.294921875">
+         <font>
+            <Font name="System Bold" size="20.0" />
          </font>
       </Text>
     </children>
