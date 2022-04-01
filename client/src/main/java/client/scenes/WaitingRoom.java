@@ -39,7 +39,6 @@ import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 
 import java.io.IOException;
@@ -70,10 +69,8 @@ public class WaitingRoom implements Initializable {
 
     private Scene overview;
 
-    private Thread httpclientthread;
     private Thread wsclientthread;
 
-    private WebSocketStompClient stompClient;
 
     private boolean dontstop;
     public boolean gamestarted;
@@ -89,6 +86,8 @@ public class WaitingRoom implements Initializable {
     @FXML
     public Text greetings;
 
+    @FXML
+    public Text waitingPlayers;
 
 
     @Inject
@@ -110,11 +109,7 @@ public class WaitingRoom implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
-
         //in the waiting we room we will start the longspamming thread and the websocket thread
-
-
 
         //the websocket client thread
         //the websocket runnable takes as paramter the controller so we can edit things inside
@@ -178,6 +173,13 @@ public class WaitingRoom implements Initializable {
         this.wsclientthread.start();
     }
 
+    /**
+     *Stops websocket thread.
+     */
+    public void stopWebSocket(){
+        System.out.println(wsclientthread.getState());
+        this.wsclientthread.interrupt();
+    }
 
     /**
      * Sends a request to start the game. Sends the player who started as the parameter.
@@ -192,6 +194,7 @@ public class WaitingRoom implements Initializable {
                 .accept(APPLICATION_JSON) //
                 .post(Entity.entity(mainCtrl.getPlayer(), APPLICATION_JSON));
         stop();
+        sendstartGame();
         mainCtrl.switchToMultiplayer();
     }
 
@@ -206,7 +209,7 @@ public class WaitingRoom implements Initializable {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                .post(Entity.entity(mainCtrl.getPlayer(), APPLICATION_JSON));
-
+        stop();
         mainCtrl.switchToSplash();
     }
 
@@ -232,7 +235,6 @@ public class WaitingRoom implements Initializable {
 
                 System.out.println("After response." + playersResponse);
                 updatePlayerListText(playersResponse, players);
-                System.out.println("Hello");
                 System.out.println(playersResponse.toString());
                 try {
                     Thread.sleep(500);
@@ -244,9 +246,6 @@ public class WaitingRoom implements Initializable {
             System.out.println(Thread.currentThread().getState());
         });
     }
-
-
-
 
     /**
      * Updates the text displaying the list of players currently in lobby.
@@ -261,6 +260,7 @@ public class WaitingRoom implements Initializable {
         }
         playersText.setTextAlignment(TextAlignment.LEFT);
         playersText.setText(output);
+        waitingPlayers.setText(playersString.size() + " players in the lobby");
     }
 
     /**
@@ -276,9 +276,6 @@ public class WaitingRoom implements Initializable {
         Message startgamemsg = new Message(MessageType.GAME_STARTED, "", "someone started the game");
 
         this.mainCtrl.sessie.send("/app/start", startgamemsg);
-
-
-
     }
 
     /**
@@ -288,8 +285,6 @@ public class WaitingRoom implements Initializable {
         System.out.println("move to next screen plax");
         this.mainCtrl.switchToMultiplayer();
     }
-
-
 
     /**Leave the waiting rooom
      *

@@ -71,10 +71,11 @@ public class Utils {
             if (i != correctAnswerIndex) {
                 // Generate another result if the power draw to be displayed with this options is the
                 // same as the one of the correct answer.
-                while (result.get(i).getTitle().equals(result.get(correctAnswerIndex).getTitle()))
-                result.get(i).setTitle(Long.toString(
-                        result.get(correctAnswerIndex).getConsumption_in_wh() + (int) (Math.random() * 100)
-                ) + " Wh");
+                do {
+                    result.get(i).setTitle(Long.toString(
+                            result.get(correctAnswerIndex).getConsumption_in_wh() + (int) (Math.random() * 100)
+                    ) + " Wh");
+                } while (result.get(i).getTitle().equals(result.get(correctAnswerIndex).getTitle()));
             }
         }
         return result;

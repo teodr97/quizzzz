@@ -83,6 +83,7 @@ public class Question {
             default:
                 // Generate a random integer from 0 to 2 for getting an index for the correct answer
                 int correctActivityIndex = Utils.generateRandomIntSmallerThan(3);
+                correctAnswerIndex = correctActivityIndex;
                 // Retrieve a random activity that will serve as the correct answer using indexes 0-3
                 this.question = "How much power does the following activity use:\n\"" + activityList.get(correctActivityIndex).getTitle() + "\"";
                 this.activityList = Utils.replaceActivitiesWithPowerDraws(activityList, correctActivityIndex);
