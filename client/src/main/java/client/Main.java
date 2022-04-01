@@ -15,8 +15,7 @@
  */
 package client;
 
-import client.scenes.MainCtrl;
-import client.scenes.Splash;
+import client.scenes.*;
 import com.google.inject.Injector;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -35,11 +34,20 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws IOException {
         //gets Splash.fxml file, which has the scene/parent set up via Scene Builder
         var overview = FXML.load(Splash.class, "client", "scenes", "Splash.fxml");
+        var waitingRoom = FXML.load(WaitingRoom.class, "client", "scenes", "WaitingRoom.fxml");
+        var usernameScreen = FXML.load(Username.class, "client", "scenes", "Username.fxml");
 
         //gets the mainCtrl class
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
         //passes the parameters to the mainCtrl class
-        mainCtrl.initialize(primaryStage, overview, FXML);
+        mainCtrl.initialize(primaryStage, waitingRoom, usernameScreen, overview, FXML);
+
+        primaryStage.setOnCloseRequest(e -> {
+            waitingRoom.getKey().stop();
+            usernameScreen.getKey().stop();
+            waitingRoom.getKey().stopWebSocket();
+
+        });
     }
 
     /**

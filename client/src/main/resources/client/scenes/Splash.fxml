@@ -10,7 +10,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="783.0" prefWidth="1119.0" style="-fx-background-color: linear-gradient(#02274f, #101b25);" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.Splash">
    <children>
-      <Button layoutX="894.0" layoutY="612.0" mnemonicParsing="false" onAction="#switchToPastGames" prefHeight="54.0" prefWidth="176.0" style="-fx-background-color: #032254;" styleClass="buttons" text="Past games" textFill="WHITE">
+      <Button layoutX="894.0" layoutY="543.0" mnemonicParsing="false" onAction="#switchToPastGames" prefHeight="54.0" prefWidth="176.0" style="-fx-background-color: #032254;" styleClass="buttons" text="Past games" textFill="WHITE">
          <font>
             <Font size="18.0" />
          </font>
@@ -38,7 +38,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button layoutX="894.0" layoutY="539.0" mnemonicParsing="false" onAction="#switchToHowToPlay" prefHeight="54.0" prefWidth="176.0" style="-fx-background-color: #032254;" styleClass="buttons" text="How to play" textFill="WHITE">
+      <Button layoutX="894.0" layoutY="613.0" mnemonicParsing="false" onAction="#switchToHowToPlay" prefHeight="54.0" prefWidth="176.0" style="-fx-background-color: #032254;" styleClass="buttons" text="How to play" textFill="WHITE">
          <font>
             <Font size="18.0" />
          </font>

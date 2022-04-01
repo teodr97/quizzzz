@@ -20,6 +20,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 
+
 @SpringBootApplication
 @EntityScan(basePackages = { "commons", "server" })
 public class Main {

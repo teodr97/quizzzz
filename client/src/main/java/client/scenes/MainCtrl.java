@@ -1,23 +1,37 @@
 package client.scenes;
 
 import client.MyFXML;
+import client.Networking.WsClient;
+import commons.models.Game;
 import commons.models.Player;
+import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import org.springframework.messaging.simp.stomp.StompSession;
 
 import java.io.IOException;
 
 
-
-
 public class MainCtrl {
-
     private static MyFXML myFXML;
     private Player player;
+    private Game game;
 
     private Stage primaryStage;
+
+    public StompSession sessie;
+
+    public WsClient wsclient;
+
+    private WaitingRoom room;
+    private Scene waitingRoom;
+
+    private Username usernameRoom;
+    private Scene userScene;
+
+
 
     public MainCtrl() {
 
@@ -45,9 +59,16 @@ public class MainCtrl {
      * @param overview Overview of the Splash scene.
      * @param myFXML The FXML injector used throughout the lifespan of the app.
      */
-    public void initialize(Stage primaryStage, Pair<Splash, Parent> overview, MyFXML myFXML) {
+    public void initialize(Stage primaryStage, Pair<WaitingRoom, Parent> waitingRoom, Pair<Username,
+            Parent> userScreen,Pair<Splash, Parent> overview, MyFXML myFXML) {
         this.primaryStage = primaryStage;
         MainCtrl.myFXML = myFXML;
+
+        this.room = waitingRoom.getKey();
+        this.waitingRoom = new Scene(waitingRoom.getValue());
+
+        this.usernameRoom = userScreen.getKey();
+        this.userScene = new Scene(userScreen.getValue());
 
         primaryStage.setTitle("QUIZZ");
         primaryStage.setScene(new Scene(overview.getValue()));
@@ -117,8 +138,25 @@ public class MainCtrl {
      * Switches to the multiplayer scene after the add name button is clicked
      */
     public void switchToMultiplayer() {
+
         var overview = myFXML.load(MultiPlayer.class, "client", "scenes", "MultiPlayer.fxml");
-        setAndShowScenes(new Scene(overview.getValue()));
+        try{
+            // in the meantime we created a websocket thread which where we try to call the swithtoMultplayer function from
+            //since java fx needs to be run in it's own thread w
+            // e need the Playform.runlater block
+            Platform.runLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    setAndShowScenes(new Scene(overview.getValue()));
+                }
+            });
+
+        }catch(Exception e){
+
+            System.out.println(e.getMessage());
+        }
+
     }
 
 
@@ -144,8 +182,55 @@ public class MainCtrl {
      * Switches the scene to the waiting room scene for multiplayer.
      */
     public void switchToWaitingRoom(){
-        var overview = myFXML.load(WaitingRoom.class, "client", "scenes", "WaitingRoom.fxml");
-        setAndShowScenes(new Scene(overview.getValue()));
+        setAndShowScenes(waitingRoom);
+    }
+
+    /**
+     * Start the long polling in Username.
+     */
+    public void startUserLongPolling(){
+        usernameRoom.longpollUpdateLobby();
+    }
+
+    /**
+     * Stops the thread
+     */
+    public void stopUserThread(){
+        usernameRoom.stop();
+    }
+
+    /**
+     * Starts the long polling in waitingroom.
+     */
+    public void startLongPolling(){
+        room.longpollUpdateLobby(player);
+    }
+
+    /**Leaves the games and remoes the player from the game
+     * @param event
+     * @throws IOException
+     *
+     * IMPORTANT:
+     * This method should be moved outside of the main controller so that it can inject the
+     * ServerSelectorCtrl and get access to .getServer();
+     */
+//    //If the event is executed then the scene switches to Splash.fxml
+//    public void leaveGame(ActionEvent event) throws IOException{
+//        ClientBuilder.newClient(new ClientConfig()) //
+//                .target(TODO<ServerSelectorCtrl.getServer() should be here>)
+//                .path("/game/leave") //
+//                .request(APPLICATION_JSON) //
+//                .accept(APPLICATION_JSON) //
+//                .post(Entity.entity(player, APPLICATION_JSON));
+//        var overview = myFXML.load(Splash.class, "client", "scenes", "Splash.fxml");
+//        setAndShowScenes(new Scene(overview.getValue()));
+//    }
+
+    /**
+     * Stops the thread
+     */
+    public void stopThread(){
+        room.leaveGame();
     }
 
     /**

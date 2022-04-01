@@ -14,35 +14,37 @@ public class Utils {
     }
 
     /**
-     * Compares the activities in a given list and retrieves the activity
-     * that draws the least power.
+     * Compares the activities in a given list and retrieves the index of
+     * the activity (within the given list) that draws the least power.
      * @param activityList the list of activities to compare
-     * @return the activity which draws the least power
+     * @return the index of the activity which draws the least power
      */
-    public static Activity retrieveActivityLeastEnergy(List<Activity> activityList) {
+    public static int retrieveActivityLeastEnergy(List<Activity> activityList) {
         Activity smallestEnergy = activityList.get(0);
+        int index = 0;
 
         for (int i = 1; i < activityList.size(); i++) {
             if (smallestEnergy.getConsumption_in_wh() >
-                    activityList.get(i).getConsumption_in_wh()) smallestEnergy = activityList.get(i);
+                    activityList.get(i).getConsumption_in_wh()) { smallestEnergy = activityList.get(i); index = i; }
         }
-        return smallestEnergy;
+        return index;
     }
 
     /**
-     * Compares the activities in a given list and retrieves the activity
-     * that draws the most power.
+     * Compares the activities in a given list and retrieves the index of
+     * the activity (within the given list) that draws the most power.
      * @param activityList the list of activities to compare
-     * @return the activity which draws the most power
+     * @return the index of the activity which draws the most power
      */
-    public static Activity retrieveActivityMostEnergy(List<Activity> activityList) {
+    public static int retrieveActivityMostEnergy(List<Activity> activityList) {
         Activity biggestEnergy = activityList.get(0);
+        int index = 0;
 
         for (int i = 1; i < activityList.size(); i++) {
             if (biggestEnergy.getConsumption_in_wh()<
-                    activityList.get(i).getConsumption_in_wh()) biggestEnergy = activityList.get(i);
+                    activityList.get(i).getConsumption_in_wh()) { biggestEnergy = activityList.get(i); index = i; }
         }
-        return biggestEnergy;
+        return index;
     }
 
     /**
@@ -63,16 +65,17 @@ public class Utils {
         // We replace every string containing the activity by the power it draws,
         // as that is what we need to show for the answers the player will choose from.
         for (int i = 0; i < result.size(); i++) {
-            result.get(i).setTitle(Long.toString(result.get(i).getConsumption_in_wh()));
+            result.get(i).setTitle(Long.toString(result.get(i).getConsumption_in_wh()) + " Wh");
             // We change the power amounts used within other answers to amounts that
             // are different to the amount in the correct answer.
             if (i != correctAnswerIndex) {
                 // Generate another result if the power draw to be displayed with this options is the
                 // same as the one of the correct answer.
-                while (result.get(i).getTitle().equals(result.get(correctAnswerIndex).getTitle()))
-                result.get(i).setTitle(Long.toString(
-                        result.get(correctAnswerIndex).getConsumption_in_wh() + (int) (Math.random() * 100)
-                ));
+                do {
+                    result.get(i).setTitle(Long.toString(
+                            result.get(correctAnswerIndex).getConsumption_in_wh() + (int) (Math.random() * 100)
+                    ) + " Wh");
+                } while (result.get(i).getTitle().equals(result.get(correctAnswerIndex).getTitle()));
             }
         }
         return result;

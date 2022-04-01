@@ -4,7 +4,6 @@ import client.utils.QuestionRetriever;
 import client.utils.SingleplayerHighscoreHandler;
 import client.utils.StatSharerSingleplayer;
 import com.google.inject.Inject;
-import commons.game.Activity;
 import commons.game.Question;
 import commons.models.Game;
 import javafx.animation.AnimationTimer;
@@ -18,9 +17,7 @@ import javafx.scene.text.Text;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.ResourceBundle;
+import java.util.*;
 
 
 public class SinglePlayer implements Initializable {
@@ -64,7 +61,7 @@ public class SinglePlayer implements Initializable {
     private double progress;
 
     private static final double EPSILON = 0.00001;
-    Button[] answerbuttons = new Button[3];
+    List<Button> answerButtons = new ArrayList<>(3);
 
     //game object to generate all questions and answers
     private Game game;
@@ -75,8 +72,8 @@ public class SinglePlayer implements Initializable {
     //questionIterator to get the next question
     private Iterator<Question> questionIterator;
 
-    //answersIterator to get the next correct answer
-    private Iterator<Activity> answersIterator;
+    // The question being currently displayed
+    private Question currentQuestion;
 
     //declare an animation timer
     private AnimationTimer tm = new TimerMethod();
@@ -118,14 +115,14 @@ public class SinglePlayer implements Initializable {
 
         //assigns the game questions, answers, and points list to the questionIterator
         this.questionIterator = Arrays.stream(game.questions).iterator();
-        this.answersIterator = Arrays.stream(game.answers).iterator();
 
         //makes an array with references to the answer buttons
-        answerbuttons[0] = answerA;
-        answerbuttons[1] = answerB;
-        answerbuttons[2] = answerC;
+        answerButtons.add(0, answerA);
+        answerButtons.add(1, answerB);
+        answerButtons.add(2, answerC);
 
-        displayQuestion(this.questionIterator.next());
+        currentQuestion = this.questionIterator.next();
+        displayQuestion(currentQuestion);
 
         progress = 0;
 
@@ -150,26 +147,26 @@ public class SinglePlayer implements Initializable {
 
         //gets the amount of points to be handed, and assigns the correct answer to a variable
         int questionpoints = (int)(500 - 250*progress);
-        String correctanswer = answersIterator.next().getTitle();
+        String correctanswer = currentQuestion.getActivityList().get(currentQuestion.getCorrectAnswerIndex()).getTitle();
         System.out.println("correct answer: "+ correctanswer);
         System.out.println("your answer: "+ useranswer.getText());
 
         //since we made an iterator of the answers the program checks if  the users button clicked is the right corresponding click
         //this function should definitely be tested
 
-        //make the buttons there "correct colors" green for right answer red for the wrong answers
-        for(Button answerbutton: answerbuttons){
-            //the one corresponding with he next answers entry is the correct answer and  becomes green
-            if(answerbutton.getText().equals(correctanswer)){
-                answerbutton.setStyle("-fx-background-color: #309500;");
+        // make the buttons there "correct colors" green for right answer red for the wrong answers
+        for(Button answerbutton: answerButtons){
+            // the one corresponding with he next answers entry is the correct answer and  becomes green
+            if(Question.hasCorrectAnswer(currentQuestion, answerButtons.indexOf(answerbutton))){
+                setButtonsStyle(currentQuestion.getCorrectAnswerIndex());
             }else{ //we make it red
-                answerbutton.setStyle("-fx-background-color: #BD0000;");
+                setButtonsStyle(currentQuestion.getCorrectAnswerIndex());
             }
         }
 
         //after accordingly change the buttons colors
         //we retrieve the current style of all the buttons and add a border to the user chosen button
-        for(Button answerbutton: answerbuttons){
+        for(Button answerbutton: answerButtons){
 
             String currentstyle = answerbutton.getStyle();
             StringBuilder currentstylebuilder = new StringBuilder(currentstyle);
@@ -181,9 +178,9 @@ public class SinglePlayer implements Initializable {
                 answerbutton.setStyle(newstyle);
             }
         }
-        //after that we have to prompt of if the user was correct or not
-        //user got the answer correct
-        if(correctanswer.equals(useranswer.getText())){
+        // after that we have to prompt of if the user was correct or not
+        // user got the answer correct
+        if(Question.hasCorrectAnswer(currentQuestion, answerButtons.indexOf(useranswer))){
             int currentpoints = Integer.parseInt(userpoint.getText());
             int newpoints = currentpoints + questionpoints;
             this.pointsInt = newpoints;
@@ -194,8 +191,8 @@ public class SinglePlayer implements Initializable {
             prompt.setText("Incorrect");
         }
 
-        //change scene state to the one where someone has answered the question
-        //in which case the buttons should be disabled and change colors
+        // change scene state to the one where someone has answered the question
+        // in which case the buttons should be disabled and change colors
         disableAnswers();
 
         return;
@@ -224,16 +221,49 @@ public class SinglePlayer implements Initializable {
     }
 
     /**
+     * Sets the font size of the button texts to a variable size, depending on the length
+     * of the text displayed on each button. The button also has its color switch to the
+     * one indicated by the argument.
+     * @param color The color the button should have
+     */
+    private void setButtonsStyle(String color) {
+        for (Button bttn : answerButtons) {
+            bttn.setStyle(String.format("-fx-background-color: %s; -fx-font-size: %d;", color,
+                    (int)(-Math.pow((bttn.getText().length() - 20), -3) * 0.5 + 2) * 10));
+        }
+    }
+
+    /**
+     * Sets the font size of the button texts to a variable size, depending on the length
+     * of the text displayed on each button. The button also has its color switch to either
+     * green or red depending on whether the answer is correct or not.
+     * @param correctAnswerIndex The index of the correct answer button
+     */
+    private void setButtonsStyle(int correctAnswerIndex) {
+        String color = "#000000";
+
+        for (Button bttn : answerButtons) {
+            if (answerButtons.indexOf(bttn) == correctAnswerIndex) color = "#309500";
+            else color = "#BD0000";
+            bttn.setStyle(String.format("-fx-background-color: %s; -fx-font-size: %d;", color,
+                    (int)(-Math.pow((bttn.getText().length() - 20), -3) * 0.5 + 2) * 10));
+        }
+    }
+
+    /**
      * Resets the game screen for the next round.
      */
     public void resetGamescreen(){
         //resetting the answer buttons
         //color and clickability, the timer bar and the text prompt
 
-        //buttons
-        answerA.setStyle("-fx-background-color: #0249bd;");
-        answerB.setStyle("-fx-background-color: #0249bd;");
-        answerC.setStyle("-fx-background-color: #0249bd;");
+        // Buttons.
+        for (Button bttn : answerButtons) {
+            bttn.setMinSize(408, 50);
+            bttn.setPrefSize(408, 50);
+            bttn.setMaxSize(408, 50);
+        }
+        setButtonsStyle("#0249bd");
         enableAnswers();
 
         //timerbar
@@ -287,7 +317,8 @@ public class SinglePlayer implements Initializable {
             if((timerBar.getProgress() + EPSILON > 1.5 && timerBar.getProgress() - EPSILON <1.5)){
                 //when timer ends and game hasn't ended we want to display the next question;
                 if(questionIterator.hasNext()){
-                    displayQuestion(questionIterator.next());
+                    currentQuestion = questionIterator.next();
+                    displayQuestion(currentQuestion);
                 }else{
                     loadEndscreen();
                 }
@@ -297,7 +328,7 @@ public class SinglePlayer implements Initializable {
     }
 
     /**
-     * displays the question and answers on the window and resets the game
+     * Displays the question and answers on the window and resets the game.
      * @param question: a Question entity to display
      */
     public void displayQuestion(Question question){
@@ -306,6 +337,7 @@ public class SinglePlayer implements Initializable {
         answerA.setText(question.getActivityList().get(0).getTitle());
         answerB.setText(question.getActivityList().get(1).getTitle());
         answerC.setText(question.getActivityList().get(2).getTitle());
+
         resetGamescreen();
     }
 
