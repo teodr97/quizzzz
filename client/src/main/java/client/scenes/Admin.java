@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import commons.game.Activity;
+import commons.models.FileEntryPair;
+import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
@@ -16,6 +18,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.glassfish.jersey.client.ClientConfig;
@@ -24,9 +28,8 @@ import org.glassfish.jersey.client.ClientConfig;
 import javax.inject.Inject;
 import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.nio.file.Files;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -35,6 +38,9 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 public class Admin implements Initializable {
 
     private MainCtrl mainCtrl;
+
+    @FXML
+    private ImageView testImage;
 
     @FXML
     private Button dbBtn;
@@ -162,12 +168,48 @@ public class Admin implements Initializable {
             }
         }
 
+        //imports the images
+        importImages(zf);
+
+
+        //reset file
+        tableActivity.refresh();
         fileText.setText("Importing Complete");
-
         this.file = null;
-
     }
 
+    /**
+     * Copy all files into the server
+     * @param zf
+     */
+    private void importImages(ZipFile zf) throws IOException {
+        Iterator<? extends ZipEntry> zIterator = zf.entries().asIterator();
+        while(zIterator.hasNext()){
+            ZipEntry ze = zIterator.next();
+
+            //skip the activities.json file
+            if(ze.getName().equals("activities.json")){
+                continue;
+            }
+
+            testImage.setImage(new Image(zf.getInputStream(ze)));
+
+//            String fileName = ze.getName();
+//            InputStream is = zf.getInputStream(ze);
+//            File f = Files.copy(is, fileName);
+//
+//            FileEntryPair fep = new FileEntryPair(fileName, f);
+//
+//
+//            //at this point, the program chooses to trust the zip file and just copy each file directly
+//            //by sending a request
+//            Response r = ClientBuilder.newClient(new ClientConfig())
+//                    .target("http://localhost:8080").path("/images/upload")
+//                    .request(APPLICATION_JSON)
+//                    .post(Entity.entity(fep, APPLICATION_JSON));
+//
+        }
+    }
     /**
      * helper method to convert json to activityList
      */
@@ -242,7 +284,5 @@ public class Admin implements Initializable {
         //check setText
         textConsole.setText("Activity data has been changed");
     }
-
-
 
 }

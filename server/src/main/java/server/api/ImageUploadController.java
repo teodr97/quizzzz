@@ -1,14 +1,22 @@
 package server.api;
 
+import commons.models.FileEntryPair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import server.database.StorageService;
 
+import javax.websocket.server.PathParam;
+import java.io.*;
+import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
-@Controller
+@RestController
+@RequestMapping("/images")
 public class ImageUploadController {
     private final StorageService storageService;
 
@@ -17,8 +25,16 @@ public class ImageUploadController {
         this.storageService = storageService;
     }
 
-    @GetMapping
-    public List<MultipartFile> getImages(){
+    @GetMapping(path = "/get/{image_path}")
+    public File getImage(@PathParam("image_path")String image_path) throws FileNotFoundException {
+        Path actualImagePath = storageService.load(image_path);
+        return storageService.retrieve(actualImagePath);
+    }
+
+    @PostMapping(path = "/upload")
+    public void uploadImage(FileEntryPair fep) throws IOException {
+        //literally directly upload the file
+        storageService.store(fep);
     }
 
 }
