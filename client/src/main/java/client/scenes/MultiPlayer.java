@@ -1,10 +1,7 @@
 package client.scenes;
 
 import client.utils.GuiUtils;
-
-
 import commons.models.*;
-
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import javafx.application.Platform;
@@ -19,27 +16,18 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
+import org.glassfish.jersey.client.ClientConfig;
+import org.springframework.messaging.simp.stomp.StompFrameHandler;
+import org.springframework.messaging.simp.stomp.StompHeaders;
+import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 import javax.inject.Inject;
-
 import java.io.IOException;
-
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-
-import org.glassfish.jersey.client.ClientConfig;
-import org.springframework.messaging.simp.stomp.StompFrameHandler;
-import org.springframework.messaging.simp.stomp.StompHeaders;
-
-
-
-import org.springframework.web.socket.messaging.WebSocketStompClient;
-
-
-import java.util.Timer;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
@@ -106,7 +94,7 @@ public class MultiPlayer implements Initializable {
     private WebSocketStompClient stompClient;
 
     private Message incomingmsg;
-
+    private Emote incomingEmote;
     private Question incomingq;
 
     public boolean gamended;
@@ -167,6 +155,37 @@ public class MultiPlayer implements Initializable {
                         startBar();
                     }
                 });
+
+        /*
+         * The client-server communication handler for the emotes. To add more documentation.
+         */
+        this.mainCtrl.sessie.subscribe("/topic/emotes", new StompFrameHandler() {
+            @Override
+            public Type getPayloadType(StompHeaders headers) {
+                return Emote.class;
+            }
+
+            @Override
+            public void handleFrame(StompHeaders headers, Object payload) {
+                Image reactionImage;
+
+                incomingEmote = (Emote) payload;
+                switch (incomingEmote.getReactionId()) {
+                    case REACT_LOL: reactionImage = reactionLol; break;
+                    case REACT_ANGRY: reactionImage = reactionAngry; break;
+                    case REACT_SWEATY: reactionImage = reactionSweaty; break;
+                    case REACT_COOL: reactionImage = reactionCool; break;
+                    case REACT_CLAP: reactionImage = reactionClap; break;
+                    default: throw new IllegalArgumentException("The reaction id sent by the server to the client is invalid!");
+                }
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        displayReaction(incomingEmote.getUsername(), reactionImage);
+                    }
+                });
+            }
+        });
 
 //        this.mainCtrl.sessie.subscribe("/topic/questions", new StompFrameHandler() {
 //
@@ -407,36 +426,40 @@ public class MultiPlayer implements Initializable {
         bartimer.scheduleAtFixedRate(new IncreaseTimerBar(this), 0, 10);
     }
 
-    
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // THE USERNAME PASSED TO EACH OF THE BUTTON FUNCTIONS SHOULD BE
-    // REPLACED WITH THE ACTUAL USERNAME OF THE LOCAl PLAYER! THE
-    // USERNAME PARAMETER IS JUST A PLACEHOLDER.
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     /**
      * Used by the button for displaying a laugh reaction on the game screen.
      */
-    public void displayReactionLol() { displayReaction("Test", reactionLol); }
+    public void displayReactionLol() {
+        mainCtrl.sessie.send("/topic/emotes", new Emote(mainCtrl.getPlayer().getNickname(), MessageType.REACT_LOL));
+    }
 
     /**
      * Used by the button for displaying an angry reaction on the game screen.
      */
-    public void displayReactionAngry() { displayReaction("Test", reactionAngry); }
+    public void displayReactionAngry() {
+        mainCtrl.sessie.send("/app/sendEmote", new Emote(mainCtrl.getPlayer().getNickname(), MessageType.REACT_ANGRY));
+    }
 
     /**
      * Used by the button for displaying a clapping reaction on the game screen.
      */
-    public void displayReactionClap() { displayReaction("Test", reactionClap); }
+    public void displayReactionClap() {
+        mainCtrl.sessie.send("/app/sendEmote", new Emote(mainCtrl.getPlayer().getNickname(), MessageType.REACT_CLAP));
+    }
 
     /**
      * Used by the button for displaying a "cool" reaction on the game screen.
      */
-    public void displayReactionCool() { displayReaction("Test", reactionCool); }
+    public void displayReactionCool() {
+        mainCtrl.sessie.send("/app/sendEmote", new Emote(mainCtrl.getPlayer().getNickname(), MessageType.REACT_COOL));
+    }
 
     /**
      * Used by the button for displaying a "sweaty" reaction on the game screen.
      */
-    public void displayReactionSweaty() { displayReaction("Test", reactionSweaty); }
+    public void displayReactionSweaty() {
+        mainCtrl.sessie.send("/app/sendEmote", new Emote(mainCtrl.getPlayer().getNickname(), MessageType.REACT_SWEATY));
+    }
 
     /**
      * Displays a new reaction on the list to the right of the screen while also starting

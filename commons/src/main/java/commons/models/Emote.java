@@ -6,6 +6,8 @@ public class Emote extends Message {
 
     private MessageType reactionId;
 
+    public Emote() {}
+
     /**
      * Constructor function.
      * @param username The username of the player that has sent the reaction
