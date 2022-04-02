@@ -29,37 +29,25 @@ public class StorageService{
      * stores the file in a given path
      */
     public void store(String path) throws IOException {
-        System.out.println("StorageService method: " +path);
-        Path destinationFile = this.rootLocation;
-        Path initialPath = Paths.get(path);
-        File file = initialPath.toFile();
-        if(file.getName() == null){
-            System.out.println("BROOOOOOOOOOOOOOO");
-            return;
-        }
-        System.out.println("made it!!!!!! : " + file.getName());
-
-//        ZipFile zf = new ZipFile("whatever");
-//        ZipEntry ze = new ZipEntry("ignore");
-
-//        if(ze ==null){
-//            System.out.println("gah!");
-//            return;
-//        };
+        System.out.println("StorageService method: " + path);
+//        Path destinationFile = this.rootLocation;
+//        Path initialPath = Paths.get(path);
+//        File file = initialPath.toFile();
 //
 //        //get a path with the file as the path destination
-//        Path newDest = destinationFile.resolve(ze.getName());
+//        Path newDest = destinationFile.resolve(file.getName());
+//        System.out.println(newDest.toUri().toString());
+//
 //        File newDestFile = newDest.toFile();
 //
 //        //if its a directory create new directory
-//        if(ze.isDirectory()){
+//        if(file.isDirectory()){
 //            newDestFile.mkdir();
 //            return;
 //        }
 //
 //        //otherwise convert ZipEntry to InputStream and copy file
-//        InputStream is = zf.getInputStream(ze);
-//        Files.copy(is,newDest,StandardCopyOption.REPLACE_EXISTING);
+//        Files.copy(file.toPath(),newDest,StandardCopyOption.REPLACE_EXISTING);
 
     }
 

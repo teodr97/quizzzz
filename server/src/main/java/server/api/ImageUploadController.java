@@ -1,6 +1,7 @@
 package server.api;
 
 import commons.models.FileEntryPair;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -32,10 +33,11 @@ public class ImageUploadController {
     }
 
     @PostMapping(path = "/upload")
-    public void uploadImage(String path) throws IOException {
+    public ResponseEntity<String> uploadImage(String path) throws IOException {
         //literally directly upload the file
         System.out.println("uploadImage method: " + path);
         storageService.store(path);
+        return ResponseEntity.ok(path);
     }
 
 }

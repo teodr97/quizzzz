@@ -21,18 +21,22 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.glassfish.jersey.client.ClientConfig;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 
 import javax.inject.Inject;
 import java.io.*;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+import static jakarta.ws.rs.core.MediaType.TEXT_PLAIN_TYPE;
 
 public class Admin implements Initializable {
 
@@ -154,13 +158,13 @@ public class Admin implements Initializable {
         List<Activity> activityList = null;
 
         //Gets the first entry of the zip file (assumed to be activities.json)
-        folder.listFiles();
         for(File file : folder.listFiles()){
             System.out.println(file.getName());
             if (file.getName().contains("activities.json")){
                 activityList = jsonToActivity(file);
             } else{
-                postFile(file.getPath());
+                Response r = postFile(file.getPath());
+                System.out.println(r);
             }
         }
 
@@ -174,14 +178,14 @@ public class Admin implements Initializable {
         }
 
         fileText.setText("Importing Complete");
-
+        tableActivity.refresh();
         this.folder = null;
 
     }
 
-    private void postFile(String path) {
+    public Response postFile(String path) {
         System.out.println("postFile method: " + path);
-        ClientBuilder.newClient(new ClientConfig())
+        return ClientBuilder.newClient(new ClientConfig())
                 .target("http://localhost:8080/images/upload")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
