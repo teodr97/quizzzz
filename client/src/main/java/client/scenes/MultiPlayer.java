@@ -1,10 +1,10 @@
 package client.scenes;
 
 import client.utils.GuiUtils;
-
-
-import commons.models.*;
-
+import commons.models.Game;
+import commons.models.Message;
+import commons.models.MessageType;
+import commons.models.Question;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import javafx.application.Platform;
@@ -19,27 +19,18 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
+import org.glassfish.jersey.client.ClientConfig;
+import org.springframework.messaging.simp.stomp.StompFrameHandler;
+import org.springframework.messaging.simp.stomp.StompHeaders;
+import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 import javax.inject.Inject;
-
 import java.io.IOException;
-
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-
-import org.glassfish.jersey.client.ClientConfig;
-import org.springframework.messaging.simp.stomp.StompFrameHandler;
-import org.springframework.messaging.simp.stomp.StompHeaders;
-
-
-
-import org.springframework.web.socket.messaging.WebSocketStompClient;
-
-
-import java.util.Timer;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
@@ -484,14 +475,6 @@ public class MultiPlayer implements Initializable {
         //we need to send that someone clicked this joker to every player
         mainCtrl.sessie.send("/topic/jokers", new Message(MessageType.TIME_JOKER, "client", "someone clicked the timer joker"));
     }
-
-
-
-
-
-
-
-
 }
 
 
