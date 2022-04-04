@@ -1,46 +1,25 @@
 package client.scenes;
 
 import client.MyFXML;
-
 import client.Networking.WsClient;
-
 import commons.models.Game;
 import commons.models.Player;
-
-import jakarta.ws.rs.client.ClientBuilder;
-import jakarta.ws.rs.client.Entity;
-
 import javafx.application.Platform;
-
-
-
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-
 import javafx.stage.Stage;
 import javafx.util.Pair;
-
-
-import javafx.event.ActionEvent;
-import org.glassfish.jersey.client.ClientConfig;
-
 import org.springframework.messaging.simp.stomp.StompSession;
 
 import java.io.IOException;
 
-import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
-
 
 public class MainCtrl {
-
-    public static final String SERVER = "http://localhost:8080/";
     private static MyFXML myFXML;
     private Player player;
     private Game game;
 
     private Stage primaryStage;
-    private Stage stage;
-    private Scene scene;
 
     public StompSession sessie;
 
@@ -49,9 +28,13 @@ public class MainCtrl {
     private WaitingRoom room;
     private Scene waitingRoom;
 
+    private Username usernameRoom;
+    private Scene userScene;
+
 
 
     public MainCtrl() {
+
     }
 
     /**
@@ -76,12 +59,16 @@ public class MainCtrl {
      * @param overview Overview of the Splash scene.
      * @param myFXML The FXML injector used throughout the lifespan of the app.
      */
-    public void initialize(Stage primaryStage, Pair<WaitingRoom, Parent> waitingRoom, Pair<Splash, Parent> overview, MyFXML myFXML) {
+    public void initialize(Stage primaryStage, Pair<WaitingRoom, Parent> waitingRoom, Pair<Username,
+            Parent> userScreen,Pair<Splash, Parent> overview, MyFXML myFXML) {
         this.primaryStage = primaryStage;
         MainCtrl.myFXML = myFXML;
 
         this.room = waitingRoom.getKey();
         this.waitingRoom = new Scene(waitingRoom.getValue());
+
+        this.usernameRoom = userScreen.getKey();
+        this.userScene = new Scene(userScreen.getValue());
 
         primaryStage.setTitle("QUIZZ");
         primaryStage.setScene(new Scene(overview.getValue()));
@@ -199,6 +186,20 @@ public class MainCtrl {
     }
 
     /**
+     * Start the long polling in Username.
+     */
+    public void startUserLongPolling(){
+        usernameRoom.longpollUpdateLobby();
+    }
+
+    /**
+     * Stops the thread
+     */
+    public void stopUserThread(){
+        usernameRoom.stop();
+    }
+
+    /**
      * Starts the long polling in waitingroom.
      */
     public void startLongPolling(){
@@ -208,18 +209,22 @@ public class MainCtrl {
     /**Leaves the games and remoes the player from the game
      * @param event
      * @throws IOException
+     *
+     * IMPORTANT:
+     * This method should be moved outside of the main controller so that it can inject the
+     * ServerSelectorCtrl and get access to .getServer();
      */
-    //If the event is executed then the scene switches to Splash.fxml
-    public void leaveGame(ActionEvent event) throws IOException{
-        ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("/game/leave") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .post(Entity.entity(player, APPLICATION_JSON));
-        var overview = this.myFXML.load(Splash.class, "client", "scenes", "Splash.fxml");
-        scene = new Scene(overview.getValue());
-        setAndShowScenes(new Scene(overview.getValue()));
-    }
+//    //If the event is executed then the scene switches to Splash.fxml
+//    public void leaveGame(ActionEvent event) throws IOException{
+//        ClientBuilder.newClient(new ClientConfig()) //
+//                .target(TODO<ServerSelectorCtrl.getServer() should be here>)
+//                .path("/game/leave") //
+//                .request(APPLICATION_JSON) //
+//                .accept(APPLICATION_JSON) //
+//                .post(Entity.entity(player, APPLICATION_JSON));
+//        var overview = myFXML.load(Splash.class, "client", "scenes", "Splash.fxml");
+//        setAndShowScenes(new Scene(overview.getValue()));
+//    }
 
     /**
      * Stops the thread
@@ -227,11 +232,20 @@ public class MainCtrl {
     public void stopThread(){
         room.leaveGame();
     }
+
     /**
      * Switches the scene to the admin panel
      */
     public void switchToAdmin() {
         var overview = myFXML.load(WaitingRoom.class, "client", "scenes", "Admin.fxml");
+        setAndShowScenes(new Scene(overview.getValue()));
+    }
+
+    /**
+     * Switches the scene to the admin panel
+     */
+    public void switchToServerSelection() {
+        var overview = myFXML.load(WaitingRoom.class, "client", "scenes", "ServerSelection.fxml");
         setAndShowScenes(new Scene(overview.getValue()));
     }
 

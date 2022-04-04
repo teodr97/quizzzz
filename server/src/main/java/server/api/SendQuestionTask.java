@@ -15,7 +15,7 @@ public class SendQuestionTask extends TimerTask {
     public void run(){
 
         if (controller.questionIterator.hasNext()) {
-            controller.template.convertAndSend("/topic/questions", new Message(MessageType.QUESTION, "Server", controller.questionIterator.next()));
+//            controller.template.convertAndSend("/topic/questions", new Message(MessageType.QUESTION, "Server", controller.questionIterator.next()));
             System.out.println("Sent question");
 
         } else {

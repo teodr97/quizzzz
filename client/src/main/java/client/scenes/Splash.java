@@ -28,7 +28,7 @@ public class Splash implements Initializable {
         this.mainCtrl = mainCtrl;
     }
 
-    //no real functionality yet
+
     @Override
     public void initialize(URL location, ResourceBundle resources){
         Path path = Paths.get("src", "main","resources","images","quizz.jpg");
@@ -68,6 +68,7 @@ public class Splash implements Initializable {
      * @throws IOException
      */
     public void switchToUsername(ActionEvent event) throws IOException {
+        mainCtrl.startUserLongPolling();
         mainCtrl.switchToUsername();
     }
 
@@ -87,6 +88,14 @@ public class Splash implements Initializable {
      */
     public void switchToAdmin(ActionEvent event) throws IOException {
         mainCtrl.switchToAdmin();
+    }
+
+    /**
+     * Switches the scene to the Server Selection screen.
+     * @param event The button click event.
+     */
+    public void switchToServerSelection(ActionEvent event) {
+        mainCtrl.switchToServerSelection();
     }
 
 }

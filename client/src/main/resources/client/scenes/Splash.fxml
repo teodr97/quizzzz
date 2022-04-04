@@ -10,7 +10,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="783.0" prefWidth="1119.0" style="-fx-background-color: linear-gradient(#02274f, #101b25);" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.Splash">
    <children>
-      <Button layoutX="894.0" layoutY="687.0" mnemonicParsing="false" onAction="#switchToPastGames" prefHeight="54.0" prefWidth="176.0" style="-fx-background-color: #032254;" styleClass="buttons" text="Past games" textFill="WHITE">
+      <Button layoutX="894.0" layoutY="543.0" mnemonicParsing="false" onAction="#switchToPastGames" prefHeight="54.0" prefWidth="176.0" style="-fx-background-color: #032254;" styleClass="buttons" text="Past games" textFill="WHITE">
          <font>
             <Font size="18.0" />
          </font>
@@ -57,5 +57,13 @@
          </cursor>
       </Button>
       <Button layoutX="14.0" layoutY="741.0" mnemonicParsing="false" onAction="#switchToMultiPlayer" text="MultiplayerScreenTest" />
+      <Button layoutX="894.0" layoutY="685.0" mnemonicParsing="false" onAction="#switchToServerSelection" prefHeight="54.0" prefWidth="176.0" style="-fx-background-color: #032254;" styleClass="buttons" text="Change Server" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
    </children>
 </AnchorPane>

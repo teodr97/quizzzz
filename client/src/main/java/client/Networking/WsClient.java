@@ -1,16 +1,7 @@
 package client.Networking;
 
-import java.io.*;
-import java.lang.reflect.Type;
-
-
-import java.util.concurrent.ExecutionException;
-
-
-
 import client.MySessionHandler;
 import client.scenes.MainCtrl;
-
 import client.scenes.WaitingRoom;
 import commons.models.Message;
 import commons.models.MessageType;
@@ -22,6 +13,9 @@ import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 import javax.inject.Inject;
+import java.io.*;
+import java.lang.reflect.Type;
+import java.util.concurrent.ExecutionException;
 
 
 public class WsClient {
@@ -29,9 +23,6 @@ public class WsClient {
 
 //    private MultiPlayer multiplayer;
     private WaitingRoom waitingroom;
-
-
-
 
     private String nickname;
 
@@ -48,13 +39,7 @@ public class WsClient {
     public WsClient(WaitingRoom waitingroom){
         this.waitingroom = waitingroom;
         //this.multiplayer =multiplayer;
-
-
-
     }
-
-
-
 
 //
 //    /** Construcotr for the clientstream class
@@ -109,7 +94,6 @@ public class WsClient {
 
         stompSession.subscribe("/topic/greetings", new StompFrameHandler() {
 
-
             /**
              * @param stompHeaders
              * @return Sets the payload type
@@ -118,7 +102,6 @@ public class WsClient {
                 return Message.class;
             }
 
-
             /** Function that handels the payload of received message from the greetings endpoint
              * @param stompHeaders
              * @param payload paload received
@@ -126,17 +109,9 @@ public class WsClient {
             public void handleFrame(StompHeaders stompHeaders, Object payload) {
                 incomingmsg = (Message) payload;
                 handlePayload(incomingmsg);
-
-
             }
-
-
         });
-
-
-
     }
-
 
     /**Auxillary handle payload message (probably gonna delete)s
      * @param incomingmsg handle a message
@@ -149,10 +124,7 @@ public class WsClient {
             //java fx thread need to be edited after the current websocket thread
 
             waitingroom.startGame();
-
         }
-
-
         //System.out.println("Received : " + incomingmsg.getContent() + " from : " + incomingmsg.getUsername());
     }
 
