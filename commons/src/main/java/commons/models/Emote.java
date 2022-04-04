@@ -6,6 +6,10 @@ public class Emote extends Message {
 
     private MessageType reactionId;
 
+    /**
+     * Empty constructor. Needed to ensure client-server communication.
+     * Only used by Spring Boot.
+     */
     public Emote() {}
 
     /**

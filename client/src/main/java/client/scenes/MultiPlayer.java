@@ -39,11 +39,11 @@ public class MultiPlayer implements Initializable {
     private static final String SERVER = "http://localhost:8080/";
 
 
-    private final Image reactionAngry = new Image(Paths.get("src", "main","resources","images","reactAngry.png").toUri().toString());
-    private final Image reactionLol = new Image(Paths.get("src", "main","resources","images","reactLol.png").toUri().toString());
-    private final Image reactionClap = new Image(Paths.get("src", "main","resources","images","reactClap.png").toUri().toString());
-    private final Image reactionCool = new Image(Paths.get("src", "main","resources","images","reactCool.png").toUri().toString());
-    private final Image reactionSweaty = new Image(Paths.get("src", "main","resources","images","reactSweaty.png").toUri().toString());
+    private Image reactionAngry;
+    private Image reactionLol;
+    private Image reactionClap;
+    private Image reactionCool;
+    private Image reactionSweaty;
 
     @FXML private ImageView jokerHG;
     @FXML private ImageView joker2X;
@@ -99,39 +99,72 @@ public class MultiPlayer implements Initializable {
 
     public boolean gamended;
 
+    /**
+     * Constructor function.
+     * @param mainCtrl The UI controller for the screen
+     */
     @Inject
     public MultiPlayer(MainCtrl mainCtrl) {
         this.mainCtrl = mainCtrl;
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources){
-
-        buttons = new ArrayList<>();
-        buttons.add(answerA);
-        buttons.add(answerB);
-        buttons.add(answerC);
-
+    /**
+     * Draws the button images for the jokers and the emotes, getting the path of
+     * those within the project. Caution: if the images are moved to another folder,
+     * the paths used in this method must be changed accordingly.
+     */
+    private void drawButtonImages() {
+        reactionAngry = new Image(Paths.get("src", "main","resources","images","reactAngry.png").toUri().toString());
+        reactionLol = new Image(Paths.get("src", "main","resources","images","reactLol.png").toUri().toString());
+        reactionClap = new Image(Paths.get("src", "main","resources","images","reactClap.png").toUri().toString());
+        reactionCool = new Image(Paths.get("src", "main","resources","images","reactCool.png").toUri().toString());
+        reactionSweaty = new Image(Paths.get("src", "main","resources","images","reactSweaty.png").toUri().toString());
         Path hgPath = Paths.get("src", "main","resources","images","JokerHG.png");
         Path twoxPath = Paths.get("src", "main","resources","images","Joker2X.png");
         Path mbPath = Paths.get("src", "main","resources","images","JokerMB.png");
 
-        jokerHG.setImage(new Image(hgPath.toUri().toString()));
-        joker2X.setImage(new Image(twoxPath.toUri().toString()));
-        jokerMB.setImage(new Image(mbPath.toUri().toString()));
         imgBttnReactAngry.setImage(reactionAngry);
         imgBttnReactClap.setImage(reactionClap);
         imgBttnReactCool.setImage(reactionCool);
         imgBttnReactSweaty.setImage(reactionSweaty);
         imgBttnReactLol.setImage(reactionLol);
+        jokerHG.setImage(new Image(hgPath.toUri().toString()));
+        joker2X.setImage(new Image(twoxPath.toUri().toString()));
+        jokerMB.setImage(new Image(mbPath.toUri().toString()));
+    }
+
+    /**
+     * Initialises the multiplayer game screen, rendering the UI elements and
+     * subscribing to the game events on the server.
+     * @param location The location of the game screen
+     * @param resources The resource bundle
+     */
+    @Override
+    public void initialize(URL location, ResourceBundle resources){
+        buttons = new ArrayList<>();
+        buttons.add(answerA);
+        buttons.add(answerB);
+        buttons.add(answerC);
+
+        // Wrapper. Ensures that the UI elements are drawn in the JFX thread.
+        // Not drawing in the JFX thread results in exceptions.
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                drawButtonImages();
+            }
+        });
+
         System.out.println(timerBar.getStyle());
 
+        // Subscribes to the path through which the questions are provided.
         this.mainCtrl.sessie.subscribe("/topic/questions", new StompFrameHandler() {
-
+                    // The type of the object sent by the server.
                     public Type getPayloadType(StompHeaders stompHeaders) {
                         return Question.class;
                     }
 
+                    // The method called when the client receives a packet from the server.
                     public void handleFrame(StompHeaders stompHeaders, Object payload) {
                         // if we get new question we reset the score multiplier to 1
                         //since someone could have clicked a double points joker in the previous round
@@ -146,6 +179,7 @@ public class MultiPlayer implements Initializable {
                         System.out.println(incomingq.toString());
                         System.out.println(incomingq.getShuffledAnswers().toString());
                         //questionField.setText(incomingq.getQuestion());
+                        // Wrapper to run the UI elements on the JFX thread.
                         Platform.runLater(new Runnable() {
                             @Override
                             public void run() {
@@ -157,18 +191,25 @@ public class MultiPlayer implements Initializable {
                 });
 
         /*
-         * The client-server communication handler for the emotes. To add more documentation.
+         * The client-server communication handler for the emotes. Subscribes to the path
+         * through which the server sends the player reactions.
          */
         this.mainCtrl.sessie.subscribe("/topic/emotes", new StompFrameHandler() {
+            // Get the object type sent through the path.
             @Override
             public Type getPayloadType(StompHeaders headers) {
                 return Emote.class;
             }
 
+            // The method which is called when the client receives a packet from the server.
             @Override
             public void handleFrame(StompHeaders headers, Object payload) {
+                // The reaction sent by a player over the server.
                 Image reactionImage;
 
+                // The packet sent through the server. Contains a String representing
+                // the username of the player, and a MessageType that holds the type
+                // of reaction (reaction id).
                 incomingEmote = (Emote) payload;
                 switch (incomingEmote.getReactionId()) {
                     case REACT_LOL: reactionImage = reactionLol; break;
@@ -178,6 +219,7 @@ public class MultiPlayer implements Initializable {
                     case REACT_CLAP: reactionImage = reactionClap; break;
                     default: throw new IllegalArgumentException("The reaction id sent by the server to the client is invalid!");
                 }
+                // Wrapper to run the UI elements on the JFX thread.
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
@@ -212,12 +254,19 @@ public class MultiPlayer implements Initializable {
 
 //
 
+        /*
+         * The client-server communication handler for the jokers. Subscribes to the path
+         * through which the server sends the player reactions.
+         */
         this.mainCtrl.sessie.subscribe("/topic/jokers", new StompFrameHandler() {
-
+            // Get the object type sent through the path.
+            @Override
             public Type getPayloadType(StompHeaders stompHeaders) {
                 return Message.class;
             }
 
+            // The method which is called when the client receives a packet from the server.
+            @Override
             public void handleFrame(StompHeaders stompHeaders, Object payload) {
                 incomingmsg = (Message) payload;
 
@@ -278,7 +327,7 @@ public class MultiPlayer implements Initializable {
 
 
     /**
-     * displays the question and answers on the window and resets the game
+     * Displays the question and answers on the window and resets the game.
      * @param question: a Question entity to display
      */
     public void displayQuestion(Question question){

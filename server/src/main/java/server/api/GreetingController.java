@@ -140,7 +140,6 @@ public class GreetingController {
     @MessageMapping("/sendEmote")
     @SendTo("/topic/emotes")
     public Emote handleEmote(Emote emote) {
-        System.out.println("SCKUSCHUUU!!!");
         return new Emote(emote.getUsername(), emote.getReactionId());
     }
 }
