@@ -124,7 +124,12 @@ public class WaitingRoom implements Initializable {
                         }
                     });
                     Message greetingsMsg = new Message(MessageType.CONNECT, "client", "Hello server");
+
+                    //greet the server
                     thiswaiting.mainCtrl.sessie.send("/app/hello", greetingsMsg);
+
+                    //we receive the game state from the server
+                    //specifically when someone clicks on start GAME
                     thiswaiting.mainCtrl.sessie.subscribe("/topic/gamestate", new StompFrameHandler() {
 
                         public Type getPayloadType(StompHeaders stompHeaders) {
@@ -132,6 +137,8 @@ public class WaitingRoom implements Initializable {
                         }
 
                         public void handleFrame(StompHeaders stompHeaders, Object payload) {
+                            //we receive a message with msg type gamestate
+                            //the game id i sin the content
                             incomingmsg = (Message) payload;
                             if(incomingmsg.getMsgType() == MessageType.GAME_STARTED){
                                 System.out.println("someone started the game so we starting");
@@ -159,26 +166,17 @@ public class WaitingRoom implements Initializable {
     /**
      * Sends a request to start the game. Sends the player who started as the parameter.
      * Game will be set to ongoing state.
-     * @param event
      */
-    public void startGame(ActionEvent event) {
-        startGame();
-    }
-
-    /**
-     * Sends a request to start the game. Sends the player who started as the parameter.
-     * Game will be set to ongoing state.
-     */
-    public void startGame() {
-        ClientBuilder.newClient(new ClientConfig()) //
-                .target(serverSelectorCtrl.getServer()).path("/game/start") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .post(Entity.entity(mainCtrl.getPlayer(), APPLICATION_JSON));
-        stop();
-        sendstartGame();
-        mainCtrl.switchToMultiplayer();
-    }
+//    public void startGame() {
+//        ClientBuilder.newClient(new ClientConfig()) //
+//                .target(serverSelectorCtrl.getServer()).path("/game/start") //
+//                .request(APPLICATION_JSON) //
+//                .accept(APPLICATION_JSON) //
+//                .post(Entity.entity(mainCtrl.getPlayer(), APPLICATION_JSON));
+//        stop();
+//        sendstartGame();
+//        mainCtrl.switchToMultiplayer();
+//    }
 
 
     /**

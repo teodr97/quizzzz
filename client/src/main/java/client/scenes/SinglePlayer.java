@@ -89,6 +89,7 @@ public class SinglePlayer implements Initializable {
         this.singleplayerUsername = singleplayerUsername;
         this.statSharer = statSharer;
         this.serverSelectorCtrl = serverSelectorCtrl;
+
     }
 
     public SinglePlayer(){
@@ -114,7 +115,7 @@ public class SinglePlayer implements Initializable {
         this.statSharer.reset();
 
         ArrayList<Activity> alist = new ArrayList<>();
-        alist = (ArrayList<Activity>) new QuestionRetriever(mainCtrl).retrieveAllActivitySetFromServer();
+        alist = (ArrayList<Activity>) new QuestionRetriever(serverSelectorCtrl).retrieveAllActivitySetFromServer();
 
 
         //alist = (ArrayList<Activity>) new QuestionRetriever(mainCtrl).retrieveActivitySetFromServer();

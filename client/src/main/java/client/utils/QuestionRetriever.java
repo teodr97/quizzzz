@@ -34,7 +34,7 @@ public class QuestionRetriever implements Game.QuestionGenerator {
     @Override
     public ArrayList<Activity> retrieveAllActivitySetFromServer() {
         return ClientBuilder.newClient(new ClientConfig())
-                .target(mainCtrl.SERVER).path("/api/v1/activity/get/Activities")
+                .target(serverSelector.getServer()).path("/api/v1/activity/get/Activities")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<ArrayList<Activity>>() {});
