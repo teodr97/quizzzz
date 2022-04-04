@@ -32,14 +32,9 @@ import java.util.*;
 @Slf4j
 @EnableScheduling
 public class GreetingController {
-    private ArrayList<Question> questionList = new ArrayList<>();
-    private ArrayList<String> fakeanswerList  = new ArrayList<>();
 
-    private ArrayList<commons.game.Question> questionList2 = new ArrayList<>();
+
     public Iterator<Question> questionIterator;
-
-    //answersIterator to get the next correct answer
-    private Iterator<Activity> answersIterator;
 
    public Game game;
 

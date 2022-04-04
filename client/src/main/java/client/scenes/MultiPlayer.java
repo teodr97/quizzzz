@@ -108,7 +108,6 @@ public class MultiPlayer implements Initializable {
     private Message incomingmsg;
 
     private Question incomingq;
-    private commons.game.Question incomingq2;
 
 
     public boolean gamended;

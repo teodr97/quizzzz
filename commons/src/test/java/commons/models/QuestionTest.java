@@ -9,6 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -90,5 +92,17 @@ class QuestionTest {
         //question2.setCorrectAnswer(activity1);
         question1 = question2;
         assertEquals(question1, question2);
+    }
+
+    /**
+     * test getting correct answer
+     */
+    @Test
+    void getCorrectAnswer() {
+        String correctActivity = question.getCorrectAnswer().getTitle();
+        List<String> activityStringList = new LinkedList<>();
+
+        for (Activity act : activityList) activityStringList.add(act.getTitle());
+        assertTrue(activityStringList.contains(correctActivity));
     }
 }

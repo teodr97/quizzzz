@@ -109,7 +109,10 @@ public class SinglePlayer implements Initializable {
         this.statSharer.reset();
 
         ArrayList<Activity> alist = new ArrayList<>();
-        alist = (ArrayList<Activity>) new QuestionRetriever(mainCtrl).retrieveActivitySetFromServer();
+        alist = (ArrayList<Activity>) new QuestionRetriever(mainCtrl).retrieveAllActivitySetFromServer();
+
+
+        //alist = (ArrayList<Activity>) new QuestionRetriever(mainCtrl).retrieveActivitySetFromServer();
 
         game.createQuestionList(alist);
 
@@ -369,4 +372,6 @@ public class SinglePlayer implements Initializable {
             e.printStackTrace();
         }
     }
+
+
 }

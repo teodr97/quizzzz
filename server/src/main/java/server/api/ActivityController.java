@@ -21,7 +21,8 @@ public class ActivityController {
      */
     private final ActivityRepository repository;
 
-    private List<Activity> activityList;
+    private ArrayList<Activity> activityList;
+
 
     public ActivityController(ActivityRepository repo) {
         this.repository = repo;
@@ -41,7 +42,7 @@ public class ActivityController {
      * @return the amount of activities in the database
      */
     int getActivitiesSize() {
-        if (activityList == null || activityList.isEmpty()) activityList = (List<Activity>) repository.findAll();
+        if (activityList == null || activityList.isEmpty()) activityList = (ArrayList<Activity>) repository.findAll();
         return activityList.size();
     }
 
@@ -63,6 +64,13 @@ public class ActivityController {
             alreadyChosenIndexes.add(index);
         }
         return ResponseEntity.ok(activitySet);
+    }
+
+    //for testing
+    @GetMapping("/get/Activities")
+    public ResponseEntity<ArrayList<Activity>> getActivities(){
+        activityList = (ArrayList<Activity>) repository.findAll();
+        return ResponseEntity.ok(activityList);
     }
 
     /**

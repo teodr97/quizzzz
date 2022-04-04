@@ -250,6 +250,9 @@ public class Game {
 
     }
 
+    /**
+     * Exception we might want to throw
+     */
     private class IllegalChoiceException extends Throwable {
 
     }
@@ -260,5 +263,11 @@ public class Game {
          * @return
          */
         List<Activity> retrieveActivitySetFromServer();
+
+        /**
+         * @return all activities from the server
+         */
+        ArrayList<Activity> retrieveAllActivitySetFromServer();
+
     }
 }
