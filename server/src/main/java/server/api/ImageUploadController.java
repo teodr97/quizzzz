@@ -33,7 +33,7 @@ public class ImageUploadController {
     }
 
     @PostMapping(path = "/upload")
-    public ResponseEntity<String> uploadImage(String path) throws IOException {
+    public ResponseEntity<String> uploadImage(@RequestBody String path) throws IOException {
         //literally directly upload the file
         System.out.println("uploadImage method: " + path);
         storageService.store(path);
