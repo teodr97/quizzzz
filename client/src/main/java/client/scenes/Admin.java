@@ -162,9 +162,11 @@ public class Admin implements Initializable {
             System.out.println(file.getName());
             if (file.getName().contains("activities.json")){
                 activityList = jsonToActivity(file);
-            } else{
+            } else if(file.isDirectory()){
                 Response r = postFile(file.getPath());
-                System.out.println(r);
+                for(File image : file.listFiles()){
+                    postFile(image.getPath());
+                }
             }
         }
 

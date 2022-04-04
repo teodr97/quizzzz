@@ -22,49 +22,39 @@ public class StorageService{
     private final Path rootLocation;
 
     public StorageService() {
-        this.rootLocation = Paths.get("src","main","resources","images");
+        this.rootLocation = Paths.get("server","src","main","resources","images");
     }
 
     /**
      * stores the file in a given path
      */
     public void store(String path) throws IOException {
-        System.out.println("StorageService method: " + path);
-//        Path destinationFile = this.rootLocation;
-//        Path initialPath = Paths.get(path);
-//        File file = initialPath.toFile();
-//
-//        //get a path with the file as the path destination
-//        Path newDest = destinationFile.resolve(file.getName());
-//        System.out.println(newDest.toUri().toString());
-//
-//        File newDestFile = newDest.toFile();
-//
-//        //if its a directory create new directory
-//        if(file.isDirectory()){
-//            newDestFile.mkdir();
-//            return;
-//        }
-//
-//        //otherwise convert ZipEntry to InputStream and copy file
-//        Files.copy(file.toPath(),newDest,StandardCopyOption.REPLACE_EXISTING);
+        Path destinationFile = this.rootLocation;
+        Path initialPath = Paths.get(path);
+        File file = initialPath.toFile();
 
-    }
+        //if its a directory create new directory
+        if(file.isDirectory()){
+            Path directoryDest = destinationFile.resolve(file.getName());
+            File dirDestFile = directoryDest.toFile();
+            dirDestFile.mkdir();
+            return;
+        }
 
-    /**
-     * returns a path in relation to the root location
-     * @param filename
-     * @return
-     */
-    public Path load(String filename) {
-        return rootLocation.resolve(filename);
+        //get a path with the file as the path destination
+        Path newDest = destinationFile.resolve(file.getParentFile().getName() + "\\" + file.getName());
+
+        //otherwise, copy file directly
+        Files.copy(file.toPath(),newDest,StandardCopyOption.REPLACE_EXISTING);
+
     }
 
     /**
      * returns a file from path
      */
-    public File retrieve(Path path) throws FileNotFoundException {
-        File f = new File(path.toUri().toString());
+    public File retrieve(String image_path) throws FileNotFoundException {
+        Path p = rootLocation.resolve(image_path);
+        File f = new File(p.toUri().toString());
         if(f.exists()){
             return f;
         } else{
