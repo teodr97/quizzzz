@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="783.0" prefWidth="1119.0" style="-fx-background-color: linear-gradient(#02274f, #101b25);" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.ServerSelectorCtrl">
+    <children>
+        <Button layoutX="897.0" layoutY="685.0" mnemonicParsing="false" onAction="#switchToSplash" prefHeight="55.0" prefWidth="174.0" style="-fx-background-color: #f73444;" text="Back to menu" textAlignment="CENTER" textFill="WHITE">
+            <font>
+                <Font size="18.0" />
+            </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+        </Button>
+        <Line endX="1022.0" layoutX="99.0" layoutY="179.0" startX="-100.0" stroke="#fdecfa" strokeWidth="4.0" />
+        <Text fill="WHITE" layoutX="63.0" layoutY="151.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Server Selection" textAlignment="CENTER">
+            <font>
+                <Font name="Arial Bold" size="18.0" />
+            </font>
+        </Text>
+        <Text fill="#fdecfa" layoutX="51.0" layoutY="108.0" strokeType="OUTSIDE" strokeWidth="0.0" text="QUIZZ" textAlignment="CENTER">
+            <font>
+                <Font name="Arial Bold" size="72.0" />
+            </font>
+        </Text>
+        <Text fx:id="missingUser" fill="RED" layoutX="450.0" layoutY="339.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER">
+            <font>
+                <Font name="Arial" size="18.0" />
+            </font>
+        </Text>
+      <Text fx:id="curServerMsg" fill="WHITE" layoutX="47.0" layoutY="385.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current Server: XXXX" textAlignment="CENTER" wrappingWidth="1026.6713562011719">
+         <font>
+            <Font name="Arial Bold" size="24.0" />
+         </font>
+      </Text>
+      <TextField fx:id="newServerField" alignment="CENTER" layoutX="318.0" layoutY="407.0" prefHeight="52.0" prefWidth="354.0" promptText="Server">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </TextField>
+      <Button fx:id="updateButton" layoutX="687.0" layoutY="405.0" mnemonicParsing="false" onAction="#updateServer" prefHeight="55.0" prefWidth="113.0" style="-fx-background-color: #0249bd;" text="Update" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font size="24.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Text fx:id="feedbackMsg" fill="WHITE" layoutX="349.0" layoutY="489.0" strokeType="OUTSIDE" strokeWidth="0.0" text="&lt;feedback&gt;" textAlignment="CENTER" wrappingWidth="417.873291015625">
+         <font>
+            <Font name="Arial Bold" size="18.0" />
+         </font>
+      </Text>
+    </children>
+</AnchorPane>
