@@ -28,10 +28,9 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 public class Username implements Initializable {
 
-    private static final String SERVER = "http://localhost:8080/";
-
     private MainCtrl mainCtrl;
     private static ExecutorService exec = Executors.newSingleThreadExecutor();
+    private ServerSelectorCtrl serverSelectorCtrl;
 
     @FXML
     private TextField username;
@@ -43,8 +42,9 @@ public class Username implements Initializable {
     private Text activePlayers;
 
     @Inject
-    public Username(MainCtrl mainCtrl) {
+    public Username(MainCtrl mainCtrl, ServerSelectorCtrl serverSelectorCtrl) {
         this.mainCtrl = mainCtrl;
+        this.serverSelectorCtrl = serverSelectorCtrl;
     }
 
     //no real functionality yet
@@ -82,7 +82,7 @@ public class Username implements Initializable {
         else{
             mainCtrl.setPlayer(new Player(username.getText()));
             Response response = ClientBuilder.newClient(new ClientConfig()) //
-                    .target(mainCtrl.SERVER).path("/game/connect") //
+                    .target(serverSelectorCtrl.getServer()).path("/game/connect") //
                     .request(APPLICATION_JSON) //
                     .accept(APPLICATION_JSON) //
                     .post(Entity.entity(mainCtrl.getPlayer(), APPLICATION_JSON));
@@ -110,7 +110,7 @@ public class Username implements Initializable {
             while(!Thread.interrupted()){
                 System.out.println("Starting thread2.");
                 int playersResponse = ClientBuilder.newClient(new ClientConfig()) //
-                        .target(SERVER).path("/game/getAllPlayers") //
+                        .target(serverSelectorCtrl.getServer()).path("/game/getAllPlayers") //
                         .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.TRUE)
                         .request(APPLICATION_JSON) //
                         .accept(APPLICATION_JSON) //

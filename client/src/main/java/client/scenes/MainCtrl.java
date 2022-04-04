@@ -1,46 +1,25 @@
 package client.scenes;
 
 import client.MyFXML;
-
 import client.Networking.WsClient;
-
 import commons.models.Game;
 import commons.models.Player;
-
-import jakarta.ws.rs.client.ClientBuilder;
-import jakarta.ws.rs.client.Entity;
-
 import javafx.application.Platform;
-
-
-
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-
 import javafx.stage.Stage;
 import javafx.util.Pair;
-
-
-import javafx.event.ActionEvent;
-import org.glassfish.jersey.client.ClientConfig;
-
 import org.springframework.messaging.simp.stomp.StompSession;
 
 import java.io.IOException;
 
-import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
-
 
 public class MainCtrl {
-
-    public static final String SERVER = "http://localhost:8080/";
     private static MyFXML myFXML;
     private Player player;
     private Game game;
 
     private Stage primaryStage;
-    private Stage stage;
-    private Scene scene;
 
     public StompSession sessie;
 
@@ -55,6 +34,7 @@ public class MainCtrl {
 
 
     public MainCtrl() {
+
     }
 
     /**
@@ -134,7 +114,8 @@ public class MainCtrl {
      * Switches the scene to the Username selection scene.
      */
     public void switchToUsername() {
-        setAndShowScenes(userScene);
+        var overview = myFXML.load(Username.class, "client", "scenes", "Username.fxml");
+        setAndShowScenes(new Scene(overview.getValue()));
     }
 
     /**
@@ -230,18 +211,22 @@ public class MainCtrl {
     /**Leaves the games and remoes the player from the game
      * @param event
      * @throws IOException
+     *
+     * IMPORTANT:
+     * This method should be moved outside of the main controller so that it can inject the
+     * ServerSelectorCtrl and get access to .getServer();
      */
-    //If the event is executed then the scene switches to Splash.fxml
-    public void leaveGame(ActionEvent event) throws IOException{
-        ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("/game/leave") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .post(Entity.entity(player, APPLICATION_JSON));
-        var overview = this.myFXML.load(Splash.class, "client", "scenes", "Splash.fxml");
-        scene = new Scene(overview.getValue());
-        setAndShowScenes(new Scene(overview.getValue()));
-    }
+//    //If the event is executed then the scene switches to Splash.fxml
+//    public void leaveGame(ActionEvent event) throws IOException{
+//        ClientBuilder.newClient(new ClientConfig()) //
+//                .target(TODO<ServerSelectorCtrl.getServer() should be here>)
+//                .path("/game/leave") //
+//                .request(APPLICATION_JSON) //
+//                .accept(APPLICATION_JSON) //
+//                .post(Entity.entity(player, APPLICATION_JSON));
+//        var overview = myFXML.load(Splash.class, "client", "scenes", "Splash.fxml");
+//        setAndShowScenes(new Scene(overview.getValue()));
+//    }
 
     /**
      * Stops the thread
@@ -255,6 +240,14 @@ public class MainCtrl {
      */
     public void switchToAdmin() {
         var overview = myFXML.load(WaitingRoom.class, "client", "scenes", "Admin.fxml");
+        setAndShowScenes(new Scene(overview.getValue()));
+    }
+
+    /**
+     * Switches the scene to the admin panel
+     */
+    public void switchToServerSelection() {
+        var overview = myFXML.load(WaitingRoom.class, "client", "scenes", "ServerSelection.fxml");
         setAndShowScenes(new Scene(overview.getValue()));
     }
 

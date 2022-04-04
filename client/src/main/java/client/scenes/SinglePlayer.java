@@ -33,6 +33,7 @@ public class SinglePlayer implements Initializable {
     private SingleplayerUsername singleplayerUsername;
 
     private MainCtrl mainCtrl;
+    private ServerSelectorCtrl serverSelectorCtrl;
 
     @FXML
     private ProgressBar timerBar;
@@ -80,10 +81,14 @@ public class SinglePlayer implements Initializable {
     private AnimationTimer tm = new TimerMethod();
 
     @Inject
-    public SinglePlayer(StatSharerSingleplayer statSharer, SingleplayerUsername singleplayerUsername, MainCtrl mainCtrl) {
+    public SinglePlayer(StatSharerSingleplayer statSharer,
+                        SingleplayerUsername singleplayerUsername,
+                        MainCtrl mainCtrl,
+                        ServerSelectorCtrl serverSelectorCtrl) {
         this.mainCtrl = mainCtrl;
         this.singleplayerUsername = singleplayerUsername;
         this.statSharer = statSharer;
+        this.serverSelectorCtrl = serverSelectorCtrl;
     }
 
     public SinglePlayer(){

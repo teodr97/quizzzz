@@ -1,16 +1,7 @@
 package client.Networking;
 
-import java.io.*;
-import java.lang.reflect.Type;
-
-
-import java.util.concurrent.ExecutionException;
-
-
-
 import client.MySessionHandler;
 import client.scenes.MainCtrl;
-
 import client.scenes.WaitingRoom;
 import commons.models.Message;
 import commons.models.MessageType;
@@ -22,6 +13,9 @@ import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 import javax.inject.Inject;
+import java.io.*;
+import java.lang.reflect.Type;
+import java.util.concurrent.ExecutionException;
 
 
 public class WsClient {
@@ -29,9 +23,6 @@ public class WsClient {
 
 //    private MultiPlayer multiplayer;
     private WaitingRoom waitingroom;
-
-
-
 
     private String nickname;
 

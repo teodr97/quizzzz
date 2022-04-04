@@ -1,6 +1,6 @@
 package client.utils;
 
-import client.scenes.MainCtrl;
+import client.scenes.ServerSelectorCtrl;
 import com.google.inject.Inject;
 import commons.game.Activity;
 import commons.models.Game;
@@ -15,17 +15,17 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 public class QuestionRetriever implements Game.QuestionGenerator {
 
-    private final MainCtrl mainCtrl;
+    private ServerSelectorCtrl serverSelector;
 
     @Inject
-    public QuestionRetriever(MainCtrl mainCtrl) {
-        this.mainCtrl = mainCtrl;
+    public QuestionRetriever(ServerSelectorCtrl serverSelector) {
+        this.serverSelector = serverSelector;
     }
 
     @Override
     public List<Activity> retrieveActivitySetFromServer() {
         return ClientBuilder.newClient(new ClientConfig())
-                .target(mainCtrl.SERVER).path("/api/v1/activity/get/randomSetActivities")
+                .target(serverSelector.getServer()).path("/api/v1/activity/get/randomSetActivities")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<List<Activity>>() {});

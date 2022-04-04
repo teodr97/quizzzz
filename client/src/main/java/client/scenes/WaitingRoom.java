@@ -1,37 +1,19 @@
 package client.scenes;
 
-import client.MyFXML;
-import client.MyModule;
-
-
 import client.Networking.WsClient;
+import com.google.inject.Inject;
 import commons.models.Message;
 import commons.models.MessageType;
-
 import commons.models.Player;
+import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
-import javafx.fxml.FXML;
-
-
-
-import com.google.inject.Inject;
-import com.google.inject.Injector;
-import jakarta.ws.rs.client.ClientBuilder;
-
 import javafx.event.ActionEvent;
-
-
-
-
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-
 import javafx.scene.control.ListView;
-
 import javafx.scene.text.Text;
-
-
 import javafx.scene.text.TextAlignment;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
@@ -40,28 +22,22 @@ import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.util.concurrent.ListenableFuture;
 
-
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
-
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static com.google.inject.Guice.createInjector;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 public class WaitingRoom implements Initializable {
 
-    private static final Injector INJECTOR = createInjector(new MyModule());
-    private static final MyFXML FXML = new MyFXML(INJECTOR);
-    private static final String SERVER = "http://localhost:8080/";
-
-
     private final MultiPlayer multiplayer;
     private final MainCtrl mainCtrl;
+    private final ServerSelectorCtrl serverSelectorCtrl;
 
 
     private static ExecutorService exec = Executors.newSingleThreadExecutor();
@@ -91,8 +67,9 @@ public class WaitingRoom implements Initializable {
 
 
     @Inject
-    public WaitingRoom( MainCtrl mainCtrl, MultiPlayer multiplayer) throws InterruptedException {
+    public WaitingRoom(MainCtrl mainCtrl, ServerSelectorCtrl serverSelectorCtrl, MultiPlayer multiplayer) throws InterruptedException {
         this.mainCtrl = mainCtrl;
+        this.serverSelectorCtrl = serverSelectorCtrl;
         this.dontstop = true;
         this.multiplayer = multiplayer;
 
@@ -100,8 +77,6 @@ public class WaitingRoom implements Initializable {
 
         this.gamestarted = false;
     }
-
-    //no real functionality yet
 
     /**
      * @param location url we use to acces scene
@@ -185,11 +160,18 @@ public class WaitingRoom implements Initializable {
      * Sends a request to start the game. Sends the player who started as the parameter.
      * Game will be set to ongoing state.
      * @param event
-     * @throws IOException
      */
-    public void startGame(ActionEvent event) throws IOException{
+    public void startGame(ActionEvent event) {
+        startGame();
+    }
+
+    /**
+     * Sends a request to start the game. Sends the player who started as the parameter.
+     * Game will be set to ongoing state.
+     */
+    public void startGame() {
         ClientBuilder.newClient(new ClientConfig()) //
-                .target(mainCtrl.SERVER).path("/game/start") //
+                .target(serverSelectorCtrl.getServer()).path("/game/start") //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .post(Entity.entity(mainCtrl.getPlayer(), APPLICATION_JSON));
@@ -198,6 +180,7 @@ public class WaitingRoom implements Initializable {
         mainCtrl.switchToMultiplayer();
     }
 
+
     /**
      * If the event is executed then the scene switches to Splash.fxml
      * @param event
@@ -205,7 +188,7 @@ public class WaitingRoom implements Initializable {
      */
     public void leaveGame(ActionEvent event) throws IOException {
         ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("/game/leave")
+                .target(serverSelectorCtrl.getServer()).path("/game/leave")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                .post(Entity.entity(mainCtrl.getPlayer(), APPLICATION_JSON));
@@ -226,7 +209,7 @@ public class WaitingRoom implements Initializable {
             while(!Thread.interrupted()){
                 System.out.println("Starting thread.");
                 ArrayList<Player> playersResponse = ClientBuilder.newClient(new ClientConfig()) //
-                        .target(SERVER).path("/game/getPlayers") //
+                        .target(serverSelectorCtrl.getServer()).path("/game/getPlayers") //
                         .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.TRUE)
                         .queryParam("player", player.getNickname())//
                         .request(APPLICATION_JSON) //
@@ -234,7 +217,7 @@ public class WaitingRoom implements Initializable {
                         .get(new GenericType<ArrayList<Player>>() {});
 
                 System.out.println("After response." + playersResponse);
-                updatePlayerListText(playersResponse, players);
+                updatePlayerListText(playersResponse.stream().map(Player::getNickname).toList(), players);
                 System.out.println(playersResponse.toString());
                 try {
                     Thread.sleep(500);
@@ -252,11 +235,11 @@ public class WaitingRoom implements Initializable {
      * @param playersString the list of the usernames of players waiting in the lobby
      * @param playersText the text displaying the list of player usernames
      */
-    private void updatePlayerListText(ArrayList<Player> playersString, Text playersText) {
+    private void updatePlayerListText(List<String> playersString, Text playersText) {
         String output = "Players in lobby:\n";
 
-        for (Player player : playersString) {
-            output += "\u2022 " + player.getNickname() + "\n";
+        for (String username : playersString) {
+            output += "\u2022 " + username + "\n";
         }
         playersText.setTextAlignment(TextAlignment.LEFT);
         playersText.setText(output);
@@ -279,7 +262,7 @@ public class WaitingRoom implements Initializable {
     }
 
     /**
-     * Starts the game and switches the screen to the multiplayer screen
+     * makes you leave the game.
      */
     public void startGame(){
 

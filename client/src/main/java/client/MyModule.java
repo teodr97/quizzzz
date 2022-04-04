@@ -41,5 +41,6 @@ public class MyModule implements Module {
         binder.bind(WaitingRoom.class).in(Scopes.SINGLETON);
         binder.bind(Admin.class).in(Scopes.SINGLETON);
         binder.bind(SingleplayerUsername.class).in(Scopes.SINGLETON);
+        binder.bind(ServerSelectorCtrl.class).in(Scopes.SINGLETON);
     }
 }
