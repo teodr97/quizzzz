@@ -31,6 +31,7 @@ public class SinglePlayer implements Initializable {
     private SingleplayerUsername singleplayerUsername;
 
     private MainCtrl mainCtrl;
+    private ServerSelectorCtrl serverSelectorCtrl;
 
     @FXML
     private ProgressBar timerBar;
@@ -78,10 +79,14 @@ public class SinglePlayer implements Initializable {
     private AnimationTimer tm = new TimerMethod();
 
     @Inject
-    public SinglePlayer(StatSharerSingleplayer statSharer, SingleplayerUsername singleplayerUsername, MainCtrl mainCtrl) {
+    public SinglePlayer(StatSharerSingleplayer statSharer,
+                        SingleplayerUsername singleplayerUsername,
+                        MainCtrl mainCtrl,
+                        ServerSelectorCtrl serverSelectorCtrl) {
         this.mainCtrl = mainCtrl;
         this.singleplayerUsername = singleplayerUsername;
         this.statSharer = statSharer;
+        this.serverSelectorCtrl = serverSelectorCtrl;
     }
 
     public SinglePlayer(){
@@ -105,7 +110,7 @@ public class SinglePlayer implements Initializable {
         //When this screen starts, it will create a new game entity and fetch a question
         this.game = new Game();
         this.statSharer.reset();
-        game.createQuestionList(new QuestionRetriever(mainCtrl));
+        game.createQuestionList(new QuestionRetriever(serverSelectorCtrl));
         this.statSharer.totalAnswers = game.getTotalRounds();
 
         //assigns the game questions, answers, and points list to the questionIterator
