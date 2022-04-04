@@ -132,14 +132,14 @@ public class GreetingController {
         return new Message(message.getMsgType(), "Server", message.getContent());
     }
 
-
-
-
-
-
-
-
-
-
-
+    /**
+     * Handler method for emotes sending.
+     * @param emote the emote being sent over the server through "/app/sendEmote"
+     * @return emote to be received by the clients subscribed to "/topic/jokers"
+     */
+    @MessageMapping("/sendEmote")
+    @SendTo("/topic/emotes")
+    public Emote handleEmote(Emote emote) {
+        return new Emote(emote.getUsername(), emote.getReactionId());
+    }
 }
