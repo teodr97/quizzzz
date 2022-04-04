@@ -66,6 +66,9 @@ public class ActivityController {
         return ResponseEntity.ok(activitySet);
     }
 
+    /**
+     * @return provide client with all activites fromt he repository
+     */
     //for testing
     @GetMapping("/get/Activities")
     public ResponseEntity<ArrayList<Activity>> getActivities(){
