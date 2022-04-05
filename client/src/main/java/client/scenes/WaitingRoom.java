@@ -142,7 +142,7 @@ public class WaitingRoom implements Initializable {
                             incomingmsg = (Message) payload;
                             if(incomingmsg.getMsgType() == MessageType.GAME_STARTED){
                                 System.out.println("someone started the game so we starting");
-                                startGame();
+                                startGame2();
                             }
                         }
                     });
@@ -167,16 +167,16 @@ public class WaitingRoom implements Initializable {
      * Sends a request to start the game. Sends the player who started as the parameter.
      * Game will be set to ongoing state.
      */
-//    public void startGame() {
-//        ClientBuilder.newClient(new ClientConfig()) //
-//                .target(serverSelectorCtrl.getServer()).path("/game/start") //
-//                .request(APPLICATION_JSON) //
-//                .accept(APPLICATION_JSON) //
-//                .post(Entity.entity(mainCtrl.getPlayer(), APPLICATION_JSON));
-//        stop();
-//        sendstartGame();
-//        mainCtrl.switchToMultiplayer();
-//    }
+    public void startGame(ActionEvent event) {
+        ClientBuilder.newClient(new ClientConfig()) //
+                .target(serverSelectorCtrl.getServer()).path("/game/start") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .post(Entity.entity(mainCtrl.getPlayer(), APPLICATION_JSON));
+        stop();
+        sendstartGame();
+        mainCtrl.switchToMultiplayer();
+    }
 
 
     /**
@@ -262,7 +262,7 @@ public class WaitingRoom implements Initializable {
     /**
      * makes you leave the game.
      */
-    public void startGame(){
+    public void startGame2(){
 
         this.mainCtrl.switchToMultiplayer();
     }
