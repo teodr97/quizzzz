@@ -266,7 +266,8 @@ public class SinglePlayer implements Initializable {
         //resetting the answer buttons
         //color and clickability, the timer bar and the text prompt
 
-        int prefWidth, prefHeight;
+        int prefWidth;
+        int prefHeight;
 
         // Buttons.
         for (Button bttn : answerButtons) {
