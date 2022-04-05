@@ -4,18 +4,15 @@ package server.api;
 import commons.models.Message;
 import commons.models.MessageType;
 import commons.models.Question;
-import commons.models.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor;
 import org.springframework.stereotype.Controller;
-
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -101,7 +98,7 @@ public class GreetingController {
         if(gamestarted){
 
             //this.template.convertAndSend("/topic/questions", new Message(MessageType.QUESTION, "server", this.questionIterator.next()));
-            this.template.convertAndSend("/topic/questions", questionIterator.next());
+            if(template != null) this.template.convertAndSend("/topic/questions", questionIterator.next());
             System.out.println("sent a question");
         }
         if(!questionIterator.hasNext()){

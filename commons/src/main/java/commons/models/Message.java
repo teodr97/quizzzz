@@ -1,5 +1,7 @@
 package commons.models;
 
+import java.util.Objects;
+
 public class Message {
 
     private MessageType msgType;
@@ -80,6 +82,25 @@ public class Message {
         return this.username + "(" + this.msgType.toString() + "): " + this.content;
     }
 
+    /**
+     * The equals method.
+     * @param o the object to compare this instance against
+     * @return true/false, whether the objects are equal or not
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Message message = (Message) o;
+        return msgType == message.msgType && Objects.equals(content, message.content) && Objects.equals(username, message.username);
+    }
 
-
+    /**
+     * The hash function.
+     * @return a hash code of this instance
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(msgType, content, username);
+    }
 }
