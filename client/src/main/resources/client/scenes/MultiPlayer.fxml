@@ -84,23 +84,8 @@
             <Font name="Arial Bold" size="25.0" />
          </font>
       </Text>
-      <ImageView fx:id="jokerHG" fitHeight="150.0" fitWidth="238.0" layoutX="103.0" layoutY="277.0" pickOnBounds="true" preserveRatio="true" rotate="45.0">
-         <image>
-            <Image url="@../../images/JokerHG.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="joker2X" fitHeight="150.0" fitWidth="238.0" layoutX="156.0" layoutY="413.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
-         <image>
-            <Image url="@../../images/Joker2X.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="jokerMB" fitHeight="150.0" fitWidth="238.0" layoutX="103.0" layoutY="553.0" pickOnBounds="true" preserveRatio="true" rotate="135.0">
-         <image>
-            <Image backgroundLoading="True" url="@../../images/JokerMB.png" />
-         </image>
-      </ImageView>
       <ListView fx:id="listViewReactions" focusTraversable="false" layoutX="814.0" layoutY="219.0" pickOnBounds="false" prefHeight="426.0" prefWidth="250.0" />
-      <Button fx:id="bttnReactLol" layoutX="1060.0" layoutY="230.0" mnemonicParsing="false" onAction="#displayReactionLol" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: transparent;">
+      <Button fx:id="bttnReactLol" layoutX="1060.0" layoutY="230.0" mnemonicParsing="false" onMouseReleased="#displayReactionLol" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: transparent;">
          <graphic>
             <ImageView fx:id="imgBttnReactLol" fitHeight="40.0" fitWidth="40.0" layoutX="1070.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -108,7 +93,7 @@
                </image>
             </ImageView>
          </graphic></Button>
-      <Button fx:id="bttnReactAngry" layoutX="1060.0" layoutY="270.0" mnemonicParsing="false" onAction="#displayReactionAngry" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: transparent;">
+      <Button fx:id="bttnReactAngry" layoutX="1060.0" layoutY="270.0" mnemonicParsing="false" onMouseReleased="#displayReactionAngry" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: transparent;">
          <graphic>
             <ImageView fx:id="imgBttnReactAngry" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -117,7 +102,7 @@
             </ImageView>
          </graphic>
       </Button>
-      <Button fx:id="bttnReactClap" layoutX="1060.0" layoutY="310.0" mnemonicParsing="false" onAction="#displayReactionClap" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: transparent;">
+      <Button fx:id="bttnReactClap" layoutX="1060.0" layoutY="310.0" mnemonicParsing="false" onMouseReleased="#displayReactionClap" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: transparent;">
          <graphic>
             <ImageView fx:id="imgBttnReactClap" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -126,7 +111,7 @@
             </ImageView>
          </graphic>
       </Button>
-      <Button fx:id="bttnReactCool" layoutX="1060.0" layoutY="350.0" mnemonicParsing="false" onAction="#displayReactionCool" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: transparent;">
+      <Button fx:id="bttnReactCool" layoutX="1060.0" layoutY="350.0" mnemonicParsing="false" onMouseReleased="#displayReactionCool" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: transparent;">
          <graphic>
             <ImageView fx:id="imgBttnReactCool" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -135,7 +120,7 @@
             </ImageView>
          </graphic>
       </Button>
-      <Button fx:id="bttnReactSweaty" layoutX="1060.0" layoutY="390.0" mnemonicParsing="false" onAction="#displayReactionSweaty" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: transparent;">
+      <Button fx:id="bttnReactSweaty" layoutX="1060.0" layoutY="390.0" mnemonicParsing="false" onMouseReleased="#displayReactionSweaty" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: transparent;">
          <graphic>
             <ImageView fx:id="imgBttnReactSweaty" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -144,29 +129,50 @@
             </ImageView>
          </graphic>
       </Button>
-      <Button fx:id="timeJoker" layoutX="640.0" layoutY="674.0" mnemonicParsing="false" onAction="#senddecreaseTimeForAll" prefHeight="55.0" prefWidth="174.0" style="-fx-background-color: #f73444;" text="timerJoker" textAlignment="CENTER" textFill="WHITE">
+      <Button fx:id="timeJoker" layoutX="91.0" layoutY="252.0" mnemonicParsing="false" onMouseReleased="#senddecreaseTimeForAll" prefHeight="55.0" prefWidth="100.0" rotate="45.0" style="-fx-background-color: invisible;" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="18.0" />
          </font>
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
+         <graphic>
+            <ImageView fx:id="jokerHG" fitHeight="150.0" fitWidth="238.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../images/JokerHG.png" />
+               </image>
+            </ImageView>
+         </graphic>
       </Button>
-      <Button fx:id="removeJoker" layoutX="452.0" layoutY="674.0" mnemonicParsing="false" onAction="#handleRemovalJoker" prefHeight="55.0" prefWidth="174.0" style="-fx-background-color: #f73444;" text="removeJoker" textAlignment="CENTER" textFill="WHITE">
+      <Button fx:id="removeJoker" layoutX="91.0" layoutY="545.0" mnemonicParsing="false" onMouseReleased="#handleRemovalJoker" prefHeight="55.0" prefWidth="100.0" rotate="135.0" style="-fx-background-color: invisible;" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="18.0" />
          </font>
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
+         <graphic>
+            <ImageView fx:id="jokerMB" fitHeight="150.0" fitWidth="238.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image backgroundLoading="True" url="@../../images/JokerMB.png" />
+               </image>
+            </ImageView>
+         </graphic>
       </Button>
-      <Button fx:id="doubleJoker" layoutX="269.0" layoutY="674.0" mnemonicParsing="false" onAction="#handleDoubleJoker" prefHeight="55.0" prefWidth="174.0" style="-fx-background-color: #f73444;" text="Double Points" textAlignment="CENTER" textFill="WHITE">
+      <Button fx:id="doubleJoker" layoutX="143.0" layoutY="401.0" mnemonicParsing="false" onMouseReleased="#handleDoubleJoker" prefHeight="55.0" prefWidth="100.0" rotate="90.0" style="-fx-background-color: invisible;" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="18.0" />
          </font>
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
+         <graphic>
+            <ImageView fx:id="joker2X" fitHeight="150.0" fitWidth="238.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../images/Joker2X.png" />
+               </image>
+            </ImageView>
+         </graphic>
       </Button>
     </children>
 </AnchorPane>
