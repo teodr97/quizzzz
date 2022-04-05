@@ -556,14 +556,6 @@ public class MultiPlayer implements Initializable {
         //we need to send that someone clicked this joker to every player
         mainCtrl.sessie.send("/topic/jokers", new Message(MessageType.TIME_JOKER, "client", "someone clicked the timer joker"));
     }
-
-
-
-
-
-
-
-
 }
 
 
