@@ -1,6 +1,6 @@
 package client.utils;
 
-import client.scenes.MainCtrl;
+import client.scenes.ServerSelectorCtrl;
 import commons.game.Activity;
 import jakarta.ws.rs.client.Client;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +14,7 @@ import java.util.List;
 class QuestionRetrieverTest {
 
     @Mock
-    MainCtrl mainControllerMock;
+    ServerSelectorCtrl serverSelectorCtrlMock;
 
     @Mock
     Client clientMock;
@@ -28,7 +28,7 @@ class QuestionRetrieverTest {
     @BeforeEach
     private void initialiseTests() {
         MockitoAnnotations.openMocks(this);
-        questionRetriever = new QuestionRetriever(mainControllerMock);
+        questionRetriever = new QuestionRetriever(serverSelectorCtrlMock);
         activityList.add(new Activity("Test", "Test", 1, "Test"));
     }
 
