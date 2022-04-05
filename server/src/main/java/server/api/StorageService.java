@@ -4,16 +4,13 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
-import commons.game.exceptions.ImageUploadException;
-import commons.models.FileEntryPair;
+
+import commons.models.FileInfo;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
-import org.springframework.web.multipart.MultipartFile;
+
 
 
 @Service
@@ -21,6 +18,9 @@ public class StorageService{
 
     private final Path rootLocation;
 
+    /**
+     * initialize on the images folder for resources
+     */
     public StorageService() {
         this.rootLocation = Paths.get("server","src","main","resources","images");
     }
@@ -28,24 +28,28 @@ public class StorageService{
     /**
      * stores the file in a given path
      */
-    public void store(String path) throws IOException {
+    public void store(FileInfo file) throws IOException {
+        //assign image folder
         Path destinationFile = this.rootLocation;
-        Path initialPath = Paths.get(path);
-        File file = initialPath.toFile();
 
-        //if its a directory create new directory
-        if(file.isDirectory()){
-            Path directoryDest = destinationFile.resolve(file.getName());
-            File dirDestFile = directoryDest.toFile();
-            dirDestFile.mkdir();
+        //if given file is a directory, create the directory and return it
+        if(file.getDirectory()){
+            Path dirPath = destinationFile.resolve(file.getPathname());
+            Files.createDirectories(dirPath);
             return;
         }
 
-        //get a path with the file as the path destination
-        Path newDest = destinationFile.resolve(file.getParentFile().getName() + "\\" + file.getName());
+        //decode received file
+        byte[] decodedImage = Base64.decodeBase64(file.getEncoding());
 
-        //otherwise, copy file directly
-        Files.copy(file.toPath(),newDest,StandardCopyOption.REPLACE_EXISTING);
+        //get a path with the file as the path destination
+        Path newDest = destinationFile.resolve(file.getPathname());
+
+        //copy file directly
+        Path p = Files.createFile(newDest);
+        try(OutputStream stream = new FileOutputStream(p.toFile())){
+            stream.write(decodedImage);
+        }
 
     }
 
