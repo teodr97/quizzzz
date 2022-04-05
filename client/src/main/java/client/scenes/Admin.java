@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import commons.game.Activity;
+import commons.models.FileInfo;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
@@ -16,19 +17,22 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.stage.FileChooser;
+import javafx.scene.image.ImageView;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.glassfish.jersey.client.ClientConfig;
 
 
 import javax.inject.Inject;
 import java.io.*;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
+
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
@@ -79,16 +83,29 @@ public class Admin implements Initializable {
     @FXML
     private TableColumn<Activity,String> colSource;
 
+    @FXML
+    private ImageView testImage;
+
     private Stage stage;
 
-    private File file;
+    private File folder;
 
+    /**
+     * injects main controller
+     * @param mainCtrl : main controller
+     * @param serverSelectorCtrl : server selector controller
+     */
     @Inject
     public Admin(MainCtrl mainCtrl, ServerSelectorCtrl serverSelectorCtrl) {
         this.mainCtrl = mainCtrl;
         this.serverSelectorCtrl = serverSelectorCtrl;
     }
 
+    /**
+     * initializes table
+     * @param location : location
+     * @param resources : resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources){
         colAutoId.setCellValueFactory(q -> new SimpleIntegerProperty(q.getValue().getAutoId()).asObject());
@@ -103,8 +120,8 @@ public class Admin implements Initializable {
 
     /**
      * Switches the scene to Splash.
-     * @param event
-     * @throws IOException
+     * @param event : button click
+     * @throws IOException : if it fails to find screen to switch
      */
     public void switchToSplash(ActionEvent event) throws IOException{
         mainCtrl.switchToSplash();
@@ -115,45 +132,47 @@ public class Admin implements Initializable {
      * takes the file and stores it, changes name of button.
      */
     public void uploadFile(){
-        FileChooser fileChooser = new FileChooser();
-        File tempFile = fileChooser.showOpenDialog(stage);
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        File tempFile = directoryChooser.showDialog(stage);
         //if no file assigned just quit method
         if(tempFile==null){return;}
         //check if temp file is zip
-        if(isExtension(tempFile.getName(), "zip")){
-            this.file = tempFile;
-            fileText.setText(file.getName());
+        if(tempFile.isDirectory()){
+            this.folder = tempFile;
+            fileText.setText(folder.getName());
             return;
         }
-        fileText.setText("Please provide a zip file.");
-    }
-
-    /**
-     * helper method that checks if given file is of certain extension
-     * @param fileName: a string with the name of the file
-     * @param extension: the string of the extension you want to check for e.g "zip"
-     * @return
-     */
-    private Boolean isExtension(String fileName, String extension){
-        String[] nameSplit = fileName.split("\\.");
-        if(nameSplit[1].equals(extension)){
-            return true;
-        }
-        return false;
+        fileText.setText("Please provide a directory.");
     }
 
     /**
      * takes the zip file, takes the activities.json file, converts to a list of activities, and adds
      * each activity to the database
-     * @throws IOException
+     * @throws IOException : if file not found
      */
     public void uploadToDatabase() throws IOException {
+        List<Activity> activityList = null;
 
         //Gets the first entry of the zip file (assumed to be activities.json)
-        ZipFile zf = new ZipFile(this.file);
-        ZipEntry ze = zf.getEntry("activities.json");
+        for(File file : folder.listFiles()){
+            System.out.println(file.getName());
+            if (file.getName().contains("activities.json")){
+                activityList = jsonToActivity(file);
+            } else if(file.isDirectory()){
 
-        List<Activity> activityList = jsonToActivity(zf,ze);
+                //send the directory path so that it can create the directory first
+                Response r = postFile(new FileInfo(file.getName(), null, true));
+                for(File image : file.listFiles()){
+                    //encode each file in the directory and send it to the server for copying
+                    String encoded = encodeFileToBase64Binary(image.getPath());
+                    String pathName = image.getParentFile().getName() + "\\" + image.getName();
+
+                    //create a file info class to send path to store in and file
+                    FileInfo f = new FileInfo(pathName, encoded, false);
+                    postFile(f);
+                }
+            }
+        }
 
         for (Activity activity : activityList) {
 
@@ -165,26 +184,56 @@ public class Admin implements Initializable {
         }
 
         fileText.setText("Importing Complete");
-
-        this.file = null;
+        tableActivity.refresh();
+        this.folder = null;
 
     }
 
     /**
-     * helper method to convert json to activityList
+     * sends an encoded string of file to store
+     * @param file : an instance of FileInfo containing information about the file
+     * @return : a response from server
      */
-    private List<Activity> jsonToActivity(ZipFile zf, ZipEntry ze) throws IOException {
+    public Response postFile(FileInfo file) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target("http://localhost:8080/images/upload")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(file, APPLICATION_JSON));
+    }
+
+    /**
+     * converts file to base64 to send
+     * @param fileName : name of the file
+     * @return : an encoded string of the file contents
+     * @throws IOException : if file not found
+     */
+    private String encodeFileToBase64Binary(String fileName) throws IOException {
+        File file = new File(fileName);
+        //convert file to byte array
+        byte[] bytes = Base64.encodeBase64(Files.readAllBytes(file.toPath()));
+        return new String(bytes, StandardCharsets.US_ASCII);
+    }
+
+    /**
+     * helper method to deserialize json to a list of activities
+     * @param file : the file to deserialize
+     * @return : a list of activities
+     * @throws IOException : if file not found
+     */
+    private List<Activity> jsonToActivity(File file) throws IOException {
         //converts input stream into activityList
         ObjectMapper om = new ObjectMapper();
         om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        InputStream is = new FileInputStream(file);
 
-        return om.readValue(zf.getInputStream(ze), new TypeReference<ArrayList<Activity>>(){});
+        return om.readValue(is, new TypeReference<ArrayList<Activity>>(){});
     }
 
     /**
      * posts an activity to the database
-     * @param activity
-     * @return
+     * @param activity : instance of activity class
+     * @return : response from server if post successful
      */
     public Response postActivity(Activity activity) {
         return ClientBuilder.newClient(new ClientConfig())
