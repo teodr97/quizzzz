@@ -1,6 +1,7 @@
 package server.api;
 
 
+import commons.models.Emote;
 import commons.models.Message;
 import commons.models.MessageType;
 import commons.models.Question;
