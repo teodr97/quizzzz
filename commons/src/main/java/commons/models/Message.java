@@ -84,14 +84,14 @@ public class Message {
 
     /**
      * The equals method.
-     * @param o the object to compare this instance against
+     * @param other the object to compare this instance against
      * @return true/false, whether the objects are equal or not
      */
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Message message = (Message) o;
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
+        Message message = (Message) other;
         return msgType == message.msgType && Objects.equals(content, message.content) && Objects.equals(username, message.username);
     }
 
