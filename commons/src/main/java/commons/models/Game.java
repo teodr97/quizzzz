@@ -9,6 +9,7 @@ import commons.game.exceptions.NotFoundException;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Data
@@ -72,6 +73,13 @@ public class Game {
      * The current question given to the players.
      */
     private Question curQuestion;
+
+    /**
+     * Question iterator
+     */
+    public Iterator<Question> questionIterator;
+
+
 
     /**
      * The list of players currently playing.
@@ -209,6 +217,13 @@ public class Game {
         System.out.println("=================================================");
         this.questions = questions;
 
+    }
+
+    /**
+     * @return get the question iterator
+     */
+    public Iterator<Question> getQuestionIterator() {
+        return questionIterator;
     }
 
     /**

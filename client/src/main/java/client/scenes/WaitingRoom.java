@@ -2,12 +2,14 @@ package client.scenes;
 
 import client.Networking.WsClient;
 import com.google.inject.Inject;
+import commons.models.Game;
 import commons.models.Message;
 import commons.models.MessageType;
 import commons.models.Player;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -138,11 +140,28 @@ public class WaitingRoom implements Initializable {
 
                         public void handleFrame(StompHeaders stompHeaders, Object payload) {
                             //we receive a message with msg type gamestate
-                            //the game id i sin the content
+                            //the game id in the content
+                            //when we receive the message that someone started the game we creat the game object corresponding
+                            //to the game
+                            //we should also get the players in the game for printing on screen
+
                             incomingmsg = (Message) payload;
                             if(incomingmsg.getMsgType() == MessageType.GAME_STARTED){
-                                System.out.println("someone started the game so we starting");
-                                startGame2();
+                                System.out.println(incomingmsg.getContent());
+
+
+
+                                //set the gameid client side
+                                String gameid=incomingmsg.getContent().split(":")[1];
+
+
+
+
+                                //System.out.println("The client started game:"+ thisgame.getGameID());
+
+
+
+                                startGame2(gameid);
                             }
                         }
                     });
@@ -217,12 +236,12 @@ public class WaitingRoom implements Initializable {
                 System.out.println("After response." + playersResponse);
                 updatePlayerListText(playersResponse.stream().map(Player::getNickname).toList(), players);
                 System.out.println(playersResponse.toString());
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    exec.shutdownNow();
-                    e.printStackTrace();
-                }
+//                try {
+//                    Thread.sleep(500);
+//                } catch (InterruptedException e) {
+//                    exec.shutdownNow();
+//                    e.printStackTrace();
+//                }
             }
             System.out.println(Thread.currentThread().getState());
         });
@@ -255,15 +274,21 @@ public class WaitingRoom implements Initializable {
         this.dontstop = false;
         gamestarted = true;
         Message startgamemsg = new Message(MessageType.GAME_STARTED, "", "someone started the game");
+        //"/topic/gamestate"
 
         this.mainCtrl.sessie.send("/app/start", startgamemsg);
+
+        //this.mainCtrl.sessie.send("/topic/gamestate", startgamemsg);
     }
 
     /**
      * makes you leave the game.
      */
-    public void startGame2(){
+    public void startGame2(String gameid){
+        this.mainCtrl.game = new Game();
+        //mapybe add player or sum
 
+        this.mainCtrl.game.setGameID(gameid);
         this.mainCtrl.switchToMultiplayer();
     }
 

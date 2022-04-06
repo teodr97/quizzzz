@@ -17,7 +17,7 @@ import java.io.IOException;
 public class MainCtrl {
     private static MyFXML myFXML;
     private Player player;
-    private Game game;
+    public Game game;
 
     private Stage primaryStage;
 
@@ -156,6 +156,7 @@ public class MainCtrl {
             });
 
         }catch(Exception e){
+            System.out.println("sesese");
             System.out.println(e.getMessage());
         }
 

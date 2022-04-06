@@ -13,10 +13,12 @@ import commons.models.*;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor;
@@ -44,10 +46,13 @@ public class GreetingController {
     private ArrayList<Activity> activitySet = new ArrayList<>();
 
 
-    private ArrayList<Activity> testList = new ArrayList<>();
+    public ArrayList<Game> gamestorage = new ArrayList<>();
 
     private Question testq;
     private Question current;
+
+    @Autowired
+    public TaskScheduler taskScheduler;
 
 
     @Autowired
@@ -69,10 +74,6 @@ public class GreetingController {
         this.allactivies = (ArrayList<Activity>) repository.findAll();
         List<Integer> alreadyChosenIndexes = new ArrayList<>();
 
-        this.game = new Game();
-        this.game.createQuestionList(allactivies);
-        this.questionIterator = Arrays.stream(game.questions).iterator();
-        qtimer = new Timer();
     }
 
 
@@ -101,30 +102,50 @@ public class GreetingController {
 
         //will be replaced  with game state functionality:
         gamestarted = true;
-        return new Message(MessageType.GAME_STARTED, "Server", "Someone started the game");
+        Game game = new Game();
+        game.createQuestionList(allactivies);
+        game.questionIterator = Arrays.stream(game.questions).iterator();
+        game.setGameID(String.valueOf(gamestorage.size()));
+        gamestorage.add(game);
+
+        questionIterator = game.getQuestionIterator();
+
+        return new Message(MessageType.GAME_STARTED, "Server", "Someone started the game:"+game.getGameID());
+        //taskScheduler.scheduleAtFixedRate(new SendQuestionTask(this), 10000);
     }
+
+    @MessageMapping("/getquestions/{gameid}")
+    public void gq(Message message, @DestinationVariable String gameid){
+        System.out.println(gameid);
+        System.out.println(message.getContent());
+        taskScheduler.scheduleAtFixedRate(new SendQuestionTask(this, gameid), 10000);
+
+        //taskScheduler.scheduleAtFixedRate(new SendQuestionTask(this), 10000);
+    }
+
+
 
     /**After someone clicked the startgame button we start sending every questoin to the client every 10 seconds
      *
      */
-    @Scheduled(fixedRate = 10000)
-    public void sendQuestion(){
-        //the game started reference will probably be a game class attribute
-
-        if(gamestarted){
-            //Question current = questionIterator.next();
-
-            //this.template.convertAndSend("/topic/questions", new Message(MessageType.QUESTION, "server", this.questionIterator.next()));
-            this.template.convertAndSend("/topic/questions", questionIterator.next());
-            System.out.println("sent a question");
-        }
-        if(!questionIterator.hasNext()) {
-            //send game over screen and stop the scheduled sending of questions
-            //TO-DO:
-            //this.template.convertAndSend("/topic/greetings", new Message());
-            stopSending();
-        }
-    }
+//    @Scheduled(fixedRate = 10000)
+//    public void sendQuestion(){
+//        //the game started reference will probably be a game class attribute
+//
+//        if(gamestarted){
+//            //Question current = questionIterator.next();
+//
+//            //this.template.convertAndSend("/topic/questions", new Message(MessageType.QUESTION, "server", this.questionIterator.next()));
+//            this.template.convertAndSend("/topic/questions", questionIterator.next());
+//            System.out.println("sent a question");
+//        }
+//        if(!questionIterator.hasNext()) {
+//            //send game over screen and stop the scheduled sending of questions
+//            //TO-DO:
+//            //this.template.convertAndSend("/topic/greetings", new Message());
+//            stopSending();
+//        }
+//    }
 
     /**
      * Stops sending quesitons every 10 seconds

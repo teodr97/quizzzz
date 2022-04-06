@@ -1,29 +1,36 @@
 package server.api;
 
+import commons.models.Game;
 import commons.models.Message;
 import commons.models.MessageType;
+import commons.models.Question;
 
 import java.util.TimerTask;
 
-public class SendQuestionTask extends TimerTask {
+class SendQuestionTask implements Runnable {
     private GreetingController controller;
-    public SendQuestionTask(GreetingController controller){
+    private String gameid;
+
+    public SendQuestionTask(GreetingController controller, String gameid){
         this.controller = controller;
+        this.gameid = gameid;
+
     }
 
     @Override
     public void run(){
+//        try{
+//            Thread.sleep(1000);
+//        }catch(Exception e){
+//            System.out.println(e.getMessage());
+//        }
+        Game currentgame = controller.gamestorage.get(Integer.parseInt(gameid));
 
-        if (controller.questionIterator.hasNext()) {
-//            controller.template.convertAndSend("/topic/questions", new Message(MessageType.QUESTION, "Server", controller.questionIterator.next()));
-            System.out.println("Sent question");
+        Question current = currentgame.questionIterator.next();
+        String url = "/topic/questions/"+gameid;
+        System.out.println("sending questoin for game:"+currentgame.getGameID());
 
-        } else {
-            controller.template.convertAndSend("/topic/questions", new Message(MessageType.GAME_ENDED, "Server", "GAME ENDED"));
-            System.out.println("game has ended");
-            this.cancel();
-
-        }
+        controller.template.convertAndSend(url, current);
 
 
 

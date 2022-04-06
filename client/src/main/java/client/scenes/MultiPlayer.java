@@ -139,7 +139,18 @@ public class MultiPlayer implements Initializable {
         imgBttnReactLol.setImage(reactionLol);
         System.out.println(timerBar.getStyle());
 
-        this.mainCtrl.sessie.subscribe("/topic/questions", new StompFrameHandler() {
+
+        String urlsend = "/app/getquestions/"+this.mainCtrl.game.getGameID();
+        //System.out.println(urlsend);
+        String urlsubscribe = "/topic/questions/"+this.mainCtrl.game.getGameID();
+
+
+
+        Message qMsg = new Message(MessageType.CONNECT, "client", "I want question");
+        this.mainCtrl.sessie.send(urlsend, qMsg);
+
+
+        this.mainCtrl.sessie.subscribe(urlsubscribe, new StompFrameHandler() {
 
                     public Type getPayloadType(StompHeaders stompHeaders) {
                         return Question.class;
@@ -170,6 +181,7 @@ public class MultiPlayer implements Initializable {
                     }
                 });
 
+        System.out.println("we subscribed to url: "+urlsubscribe);
         this.mainCtrl.sessie.subscribe("/topic/jokers", new StompFrameHandler() {
 
             public Type getPayloadType(StompHeaders stompHeaders) {
