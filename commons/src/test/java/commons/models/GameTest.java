@@ -1,13 +1,14 @@
 package commons.models;
 
 import commons.game.Activity;
-import commons.game.Question;
+
 import commons.game.exceptions.NicknameTakenException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,14 +28,14 @@ class GameTest {
      */
     @BeforeEach
     private void initialiseTests() {
-        List<Activity> activityList = new LinkedList<>();
+        ArrayList<Activity> activityList = new ArrayList<>();
 
         MockitoAnnotations.openMocks(this);
         activityList.add(new Activity("Test_1", "Test_1", 0, "Test_2"));
         activityList.add(new Activity("Test_2", "Test_2", 2314567, "Test_2"));
         activityList.add(new Activity("Test_3","Test_3", 1010010100, "Test_3"));
         game = new Game();
-        question = new Question((LinkedList<Activity>) activityList);
+        question = new Question((ArrayList<Activity>) activityList);
         player = new Player("Test");
     }
 

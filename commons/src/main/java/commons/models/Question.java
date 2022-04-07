@@ -1,8 +1,12 @@
 package commons.models;
 
+import commons.game.Activity;
+import commons.game.Utils;
+
 import java.util.ArrayList;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 //question class extends from the mesasge class
@@ -11,43 +15,76 @@ import java.util.Objects;
 // we retrieve content by calling this.getQuestion.
 public class Question extends Message{
 
-
-    private String content;
+    public String question;
     private String answer;
-    private ArrayList<String> fakeAnswers;
-    private ArrayList<String> shuffledAnswers;
-
-
-
+    private int correctAnswerIndex;
+    private ArrayList<Activity> activityList = new ArrayList<>();
+    private int questionNo;
 
     public Question(){
 
     }
 
-    public Question(String content, String answer){
-        super(MessageType.QUESTION, "server", content);
-        this.answer = answer;
+
+    /**
+     * This function compares a given answer against the
+     * correct one and decides if it's correct or not.
+     * @param question The question that's currently on-screen
+     * @param answerIndex The index of the player's answer within the option list contained
+     *                    by the question
+     * @return True or false, depending on whether the answer is correct or not
+     */
+    public static boolean hasCorrectAnswer(Question question, int answerIndex) {
+        return answerIndex == question.correctAnswerIndex;
     }
+
 
     /** Constructtor of the message object
      * is extends from class message and we give is message type question
      *
-     * @param content content of the message object
+     * @param
      */
-    public Question(String content, String answer, ArrayList<String> fakeAnswers){
-        super(MessageType.QUESTION, "server", content);
-        this.answer = answer;
-        this.fakeAnswers = fakeAnswers;
+    public Question(ArrayList<Activity> allactivites){
+        super(MessageType.QUESTION, "server", "");
 
-        //shuffle the answers when the question object is initiliazed
-        shuffledAnswers = new ArrayList<>();
-        shuffledAnswers.add(this.answer);
-        for(String fake: fakeAnswers){
-            shuffledAnswers.add(fake);
+        List<Integer> alreadyChosenIndexes = new ArrayList<>();
+
+        for (int i = 0; i < 3; i++) {
+            int index = (int)(Math.random() * allactivites.size());
+
+            while (alreadyChosenIndexes.contains(index)) index = (int)(Math.random() * allactivites.size());
+            this.activityList.add(allactivites.get(index));
+            alreadyChosenIndexes.add(index);
         }
-        Collections.shuffle(shuffledAnswers);
-    }
 
+
+        Collections.shuffle(activityList);
+
+        // Generate a new random integer to determine the type of question that will be used.
+        // Not a good solution for a greater amount of questions, they should be stored in a
+        // database instead.
+        int randomFactor = Utils.generateRandomIntSmallerThan(4);
+        switch (randomFactor) {
+            case 1:
+                this.question = "Which activity uses the most amount of power?";
+                this.correctAnswerIndex = Utils.retrieveActivityMostEnergy(activityList);
+                break;
+            case 2:
+                this.question = "Which activity uses the least amount of power?";
+                this.correctAnswerIndex = Utils.retrieveActivityLeastEnergy(activityList);
+                break;
+            default:
+                // Generate a random integer from 0 to 2 for getting an index for the correct answer
+                int correctActivityIndex = Utils.generateRandomIntSmallerThan(3);
+                correctAnswerIndex = correctActivityIndex;
+                // Retrieve a random activity that will serve as the correct answer using indexes 0-3
+                this.question = "How much power does the following activity use:\n\"" + activityList.get(correctActivityIndex).getTitle() + "\"";
+                this.activityList = Utils.replaceActivitiesWithPowerDraws(activityList, correctActivityIndex);
+                break;
+        }
+
+
+    }
 
 
     /**
@@ -75,20 +112,45 @@ public class Question extends Message{
         return this.answer;
     }
 
+    public String getQuestion() { return this.question; }
+
+    public List<Activity> getActivityList() { return activityList; }
+
+
     /**
-     * @return returns the arraylist with fake answers usually two fake answers
+     * @return returns the index of the correct answer
      */
-    public ArrayList<String> getFakeAnswers(){
-        return this.fakeAnswers;
+    public int getCorrectAnswerIndex() {
+        return correctAnswerIndex;
     }
+
+    /**
+     * @return returns the correct answer
+     */
+    public Activity getCorrectAnswer() { return this.activityList.get(correctAnswerIndex); }
+
 
     /** Set the question for this question
      * @param question question to be set as a string
      */
     public void setQuestion(String question){
-        super.setContent(question);
+        this.question = question;
     }
 
+
+    /**
+     * @return gets the question number
+     */
+    public int getQuestionNo() {
+        return questionNo;
+    }
+
+    /**
+     * @param questionNo sets the queston number
+     */
+    public void setQuestionNo(int questionNo) {
+        this.questionNo = questionNo;
+    }
 
     /**
      * @param answer Sets the answers to this question
@@ -97,17 +159,11 @@ public class Question extends Message{
         this.answer = answer;
     }
 
-    /**
-     * @param fakeAnswers Sets the array of fake asnwers to this question
-     */
-    public void setFakeAnswers(ArrayList<String> fakeAnswers) {
-        this.fakeAnswers = fakeAnswers;
-    }
 
     /**
      * @return returns the content of the messge as a string
      */
-    public String getQuestion() {return super.getContent();}
+    public String getContent() {return super.getContent();}
 
 
     /**
@@ -118,11 +174,18 @@ public class Question extends Message{
 
     /**
      * @return returns the message object as a readable string
+     * the to string methode causes problems with the sending of the object through websockets
+     * if the string is to complicated I don't know why this is but that's why
+     * we keep it so small and simple
      */
     public String toString()
     {
-        return super.toString();
+        return (super.toString()+this.question);
+
     }
+
+
+
 
     /**
      * @param other object to check equality with
@@ -133,18 +196,8 @@ public class Question extends Message{
         if (this == other) return true;
         if (other == null || getClass() != other.getClass()) return false;
         Question question = (Question) other;
-        return Objects.equals(content, question.content) && Objects.equals(answer, question.answer)
-                && Objects.equals(fakeAnswers, question.fakeAnswers);
+        return Objects.equals(question, question.question)
+                && Objects.equals(activityList, question.activityList);
     }
-
-    /**
-     * @return The array of shuffled answers
-     */
-    public ArrayList<String> getShuffledAnswers(){
-
-        return this.shuffledAnswers;
-
-    }
-
 
 }
