@@ -304,6 +304,7 @@ public class Admin implements Initializable {
      * refreshes the table
      */
     public void refreshTable(){
+        fetchActivities();
         tableActivity.refresh();
         textConsole.setText("Table has been refreshed.");
     }
