@@ -14,11 +14,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.*;
 
 
@@ -38,14 +41,16 @@ public class SinglePlayer implements Initializable {
     @FXML
     private ProgressBar timerBar;
 
-    @FXML
-    private Button answerA;
+    private final Image optionPlaceholderImage =
+            new Image(Paths.get("src", "main","resources","images","Test!.png").toUri().toString());
 
-    @FXML
-    private Button answerB;
+    @FXML private Button answerA;
+    @FXML private Button answerB;
+    @FXML private Button answerC;
 
-    @FXML
-    private Button answerC;
+    @FXML private ImageView imgBttnA;
+    @FXML private ImageView imgBttnB;
+    @FXML private ImageView imgBttnC;
 
     @FXML
     private Text prompt;
@@ -134,6 +139,10 @@ public class SinglePlayer implements Initializable {
         answerButtons.add(0, answerA);
         answerButtons.add(1, answerB);
         answerButtons.add(2, answerC);
+
+        imgBttnA.setImage(optionPlaceholderImage);
+        imgBttnB.setImage(optionPlaceholderImage);
+        imgBttnC.setImage(optionPlaceholderImage);
 
         currentQuestion = this.questionIterator.next();
         displayQuestion(currentQuestion);
@@ -271,11 +280,32 @@ public class SinglePlayer implements Initializable {
         //resetting the answer buttons
         //color and clickability, the timer bar and the text prompt
 
+        int prefWidth;
+        int prefHeight;
+
         // Buttons.
         for (Button bttn : answerButtons) {
-            bttn.setMinSize(408, 50);
-            bttn.setPrefSize(408, 50);
-            bttn.setMaxSize(408, 50);
+            if (bttn.getText().contains(" Wh")) {
+                prefWidth = 300;
+                prefHeight = 100;
+                imgBttnA.setVisible(false);
+                imgBttnB.setVisible(false);
+                imgBttnC.setVisible(false);
+                //bttn.setContentDisplay(ContentDisplay.CENTER);
+                //bttn.setTranslateY(75);
+            }
+            else {
+                prefWidth = 300;
+                prefHeight = 100;
+                imgBttnA.setVisible(true);
+                imgBttnB.setVisible(true);
+                imgBttnC.setVisible(true);
+                //bttn.setContentDisplay(ContentDisplay.TOP);
+                //bttn.setTranslateY(25);
+            }
+            bttn.setMinSize(prefWidth, prefHeight);
+            bttn.setPrefSize(prefWidth, prefHeight);
+            bttn.setMaxSize(prefWidth, prefHeight);
         }
         setButtonsStyle("#0249bd");
         enableAnswers();
