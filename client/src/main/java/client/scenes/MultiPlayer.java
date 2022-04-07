@@ -146,8 +146,12 @@ public class MultiPlayer implements Initializable {
         answerButtons.add(answerA);
         answerButtons.add(answerB);
         answerButtons.add(answerC);
+        settingUp();
     }
 
+    /**
+     * Setting up the game properties.
+     */
     public void settingUp(){
         System.out.println(timerBar.getStyle());
 
