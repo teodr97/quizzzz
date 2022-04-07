@@ -53,7 +53,7 @@
             <Font name="Arial" size="16.0" />
          </font>
       </Label>
-      <ImageView fx:id="testImage" fitHeight="150.0" fitWidth="200.0" layoutX="758.0" layoutY="609.0" pickOnBounds="true" preserveRatio="true" />
-      <Button fx:id="testImg" layoutX="666.0" layoutY="626.0" mnemonicParsing="false" onAction="#testImage" text="Button" />
+      <ImageView fx:id="testImage" fitHeight="192.0" fitWidth="345.0" layoutX="758.0" layoutY="577.0" pickOnBounds="true" preserveRatio="true" />
+      <Button fx:id="testImg" layoutX="643.0" layoutY="609.0" mnemonicParsing="false" onAction="#testImage" prefHeight="25.0" prefWidth="98.0" text="Check Image" />
    </children>
 </AnchorPane>

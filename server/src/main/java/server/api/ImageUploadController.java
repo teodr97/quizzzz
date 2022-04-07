@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-import javax.websocket.server.PathParam;
 import java.io.*;
 
 
@@ -27,15 +26,15 @@ public class ImageUploadController {
 
     /**
      * takes an image path and returns an image
-     * @param image_path : the image path of file
-     * @return : the file of the image
+     * @param image_path : the image path of the activity
+     * @return : the file details of the image
      * @throws FileNotFoundException : if file not found
      */
-    @GetMapping(path = "/get/{image_path}")
-    public ResponseEntity<String> getImage(@PathVariable String image_path) throws IOException {
+    @GetMapping(path = "/get")
+    public FileInfo getImage(@RequestParam String image_path) throws IOException {
         String s = storageService.retrieve(image_path);
-        System.out.println("hello?");
-        return ResponseEntity.ok(s);
+        FileInfo f = new FileInfo(image_path, s, false);
+        return f;
     }
 
     /**

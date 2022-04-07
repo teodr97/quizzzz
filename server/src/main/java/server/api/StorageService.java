@@ -9,7 +9,6 @@ import java.nio.file.Paths;
 
 import commons.models.FileInfo;
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 

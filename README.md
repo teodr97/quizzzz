@@ -17,13 +17,12 @@ Add your own name (do not add the names for others!) to the section below.
 | ![](https://eu.ui-avatars.com/api/?name=Stiliyan+Nanovski&length=2&size=50&color=FFF&background=FFC0CB&font-size=0.325) | Stiliyan Nanovski | S.I.Nanovski@student.tudelft.nl |
 | ![](https://eu.ui-avatars.com/api/?name=Divit+Mittal&length=2&size=50&color=FF0&background=FFCCB&font-size=0.325) | Divit Mittal | D.Mittal-1@student.tudelft.nl |
 
-<!-- Instructions (remove once assignment has been completed -->
-<!-- - Add (only!) your own name to the table above (use Markdown formatting) -->
-<!-- - Mention your *student* email address -->
-<!-- - Preferably add a recognizable photo, otherwise add your GitLab photo -->
-<!-- - (please make sure the photos have the same size) -->
-
 ## How to run it
+
+
+## How to import activities
+You need an extracted folder (not zip) containing an activities.json file with all the activities you wish to add
+and folders with the images. You can select this folder in the admin screen and import activities.
 
 ## How to contribute to it
 
