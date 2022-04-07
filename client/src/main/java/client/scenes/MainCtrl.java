@@ -174,7 +174,7 @@ public class MainCtrl {
      * @throws IOException
      */
     public void switchToEndscreenMultiplayer() {
-        var overview = myFXML.load(EndscreenMultiplayer.class, "client", "scenes", "EndscreenSingleplayer.fxml");
+        var overview = myFXML.load(EndscreenMultiplayer.class, "client", "scenes", "EndscreenMultiplayer.fxml");
         setAndShowScenes(new Scene(overview.getValue()));
     }
 
