@@ -7,8 +7,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import server.database.ActivityRepository;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.ArrayList;
+
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -46,7 +46,7 @@ class ActivityControllerTest {
      */
     @Test
     void retrieveRandomActivitiesSet() {
-        List<Activity> activityList = new LinkedList<>();
+        ArrayList<Activity> activityList = new ArrayList<>();
 
         activityList.add(new Activity("Test", "Test", 1, "Test"));
         activityList.add(new Activity("Test", "Test", 1, "Test"));

@@ -1,11 +1,14 @@
 package server.api;
 
-
-import commons.models.Emote;
+import commons.game.Activity;
 import commons.models.Message;
 import commons.models.MessageType;
 import commons.models.Question;
+import commons.models.Emote;
+import commons.models.Game;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -15,26 +18,34 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor;
 import org.springframework.stereotype.Controller;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Timer;
-
+import server.database.ActivityRepository;
+import java.util.*;
 
 @Controller
 @Slf4j
 @EnableScheduling
 public class GreetingController {
-//    private ArrayList<String> questionList  = new ArrayList<>();
-    private ArrayList<Question> questionList = new ArrayList<>();
-    private ArrayList<String> fakeanswerList  = new ArrayList<>();
 
-   public Iterator<Question> questionIterator;
+
+    public Iterator<Question> questionIterator;
+
+   public Game game;
+
+   private final ActivityRepository repository;
+   private ArrayList<Activity> allactivies;
+
+    private ArrayList<Activity> activitySet = new ArrayList<>();
+
+
+    private ArrayList<Activity> testList = new ArrayList<>();
+
+    private int questoincounter;
+
 
     @Autowired
     public SimpMessagingTemplate template;
 
     public Timer qtimer;
-
 
     //to stop the sending of question we need this field
     @Autowired
@@ -44,23 +55,24 @@ public class GreetingController {
     public boolean gamestarted = false;
 
     @Autowired
-    public GreetingController(){
+    public GreetingController(ActivityRepository repo){
+        this.repository = repo;
+        //retrieve all activites from the database
+        this.allactivies = (ArrayList<Activity>) repository.findAll();
+        List<Integer> alreadyChosenIndexes = new ArrayList<>();
 
-        fakeanswerList.add("40");
-        fakeanswerList.add("30");
-
-        questionList.add(new Question("Nuclear reactors huuh?", "20", fakeanswerList));
-        questionList.add(new Question("Nuclear physicist whet?", "20", fakeanswerList));
-        questionList.add(new Question("Tesla who?", "20", fakeanswerList));
-        questionList.add(new Question("Edison BOO", "20", fakeanswerList));
-        questionList.add(new Question("Elon to the moon?", "20", fakeanswerList));
-        questionList.add(new Question("Bitcoin green?", "20", fakeanswerList));
-
-        questionIterator = questionList.iterator();
+        this.game = new Game();
+        this.game.createQuestionList(allactivies);
+        this.questionIterator = Arrays.stream(game.questions).iterator();
         qtimer = new Timer();
     }
 
-
+    /**
+     * For testing purposes.
+     */
+    public GreetingController() {
+        repository = null;
+    }
 
     /**
      * @param message get message user sends to endpoint "/app/hello"
@@ -82,6 +94,7 @@ public class GreetingController {
     @MessageMapping("/start")
     @SendTo("/topic/gamestate")
     public Message start(Message message){
+
         System.out.println(message.toString());
 
         //will be replaced  with game state functionality:
@@ -96,19 +109,23 @@ public class GreetingController {
     public void sendQuestion(){
         //the game started reference will probably be a game class attribute
 
+
         if(gamestarted){
+            //Question current = questionIterator.next();
 
             //this.template.convertAndSend("/topic/questions", new Message(MessageType.QUESTION, "server", this.questionIterator.next()));
             if(template != null) this.template.convertAndSend("/topic/questions", questionIterator.next());
             System.out.println("sent a question");
         }
-        if(!questionIterator.hasNext()){
+        if(!questionIterator.hasNext()) {
             //send game over screen and stop the scheduled sending of questions
             //TO-DO:
             //this.template.convertAndSend("/topic/greetings", new Message());
+            gamestarted = false;
+            Message gamestopmsg = new Message(MessageType.GAME_ENDED, "Server", "The game has ended");
+            this.template.convertAndSend("/topic/gamestate", gamestopmsg);
             stopSending();
         }
-        //Timer qtimer = new Timer();
     }
 
     /**
@@ -128,6 +145,34 @@ public class GreetingController {
     public Message handleJoker(Message message){
         System.out.println("someone clicked a joker");
         return new Message(message.getMsgType(), "Server", message.getContent());
+    }
+
+    /**
+     * Get the amount of activities in the database
+     * @return the amount of activities in the database
+     */
+    int getActivitiesSize() {
+        if (allactivies == null || allactivies.isEmpty()) allactivies = (ArrayList<Activity>) repository.findAll();
+        return allactivies.size();
+    }
+
+    /**
+     * This function returns a set of three random questions upon request from
+     * the client.
+     * @return List of three random, different activities from the database
+     */
+    public List<Activity> retrieveRandomActivitiesSet() {
+        List<Activity> activitySet = new LinkedList<>();
+        List<Integer> alreadyChosenIndexes = new ArrayList<>();
+
+        for (int i = 0; i < 3; i++) {
+            int index = (int)(Math.random() * getActivitiesSize());
+
+            while (alreadyChosenIndexes.contains(index)) index = (int)(Math.random() * getActivitiesSize());
+            activitySet.add(allactivies.get(index));
+            alreadyChosenIndexes.add(index);
+        }
+        return activitySet;
     }
 
     /**
