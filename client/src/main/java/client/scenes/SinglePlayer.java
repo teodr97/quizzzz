@@ -4,7 +4,9 @@ import client.utils.QuestionRetriever;
 import client.utils.SingleplayerHighscoreHandler;
 import client.utils.StatSharerSingleplayer;
 import com.google.inject.Inject;
-import commons.game.Question;
+import commons.game.Activity;
+import commons.models.Question;
+//import commons.game.Question;
 import commons.models.Game;
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
@@ -87,6 +89,7 @@ public class SinglePlayer implements Initializable {
         this.singleplayerUsername = singleplayerUsername;
         this.statSharer = statSharer;
         this.serverSelectorCtrl = serverSelectorCtrl;
+
     }
 
     public SinglePlayer(){
@@ -110,11 +113,22 @@ public class SinglePlayer implements Initializable {
         //When this screen starts, it will create a new game entity and fetch a question
         this.game = new Game();
         this.statSharer.reset();
-        game.createQuestionList(new QuestionRetriever(serverSelectorCtrl));
+
+        ArrayList<Activity> alist = new ArrayList<>();
+        alist = (ArrayList<Activity>) new QuestionRetriever(serverSelectorCtrl).retrieveAllActivitySetFromServer();
+
+
+        //alist = (ArrayList<Activity>) new QuestionRetriever(mainCtrl).retrieveActivitySetFromServer();
+
+        game.createQuestionList(alist);
+
+        //game.createQuestionList(alist);
         this.statSharer.totalAnswers = game.getTotalRounds();
 
         //assigns the game questions, answers, and points list to the questionIterator
         this.questionIterator = Arrays.stream(game.questions).iterator();
+
+
 
         //makes an array with references to the answer buttons
         answerButtons.add(0, answerA);
@@ -364,4 +378,6 @@ public class SinglePlayer implements Initializable {
             e.printStackTrace();
         }
     }
+
+
 }

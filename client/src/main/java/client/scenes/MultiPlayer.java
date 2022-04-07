@@ -58,7 +58,7 @@ public class MultiPlayer implements Initializable {
     @FXML private Button answerB;
     @FXML private Button answerC;
 
-    private ArrayList<Button> buttons;
+    private ArrayList<Button> answerButtons;
 
     //joker buttons
     @FXML private Button timeJoker;
@@ -96,6 +96,7 @@ public class MultiPlayer implements Initializable {
     private Message incomingmsg;
     private Emote incomingEmote;
     private Question incomingq;
+
 
     public boolean gamended;
 
@@ -141,10 +142,10 @@ public class MultiPlayer implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources){
-        buttons = new ArrayList<>();
-        buttons.add(answerA);
-        buttons.add(answerB);
-        buttons.add(answerC);
+        answerButtons = new ArrayList<>();
+        answerButtons.add(answerA);
+        answerButtons.add(answerB);
+        answerButtons.add(answerC);
 
         // Wrapper. Ensures that the UI elements are drawn in the JFX thread.
         // Not drawing in the JFX thread results in exceptions.
@@ -168,16 +169,17 @@ public class MultiPlayer implements Initializable {
                     public void handleFrame(StompHeaders stompHeaders, Object payload) {
                         // if we get new question we reset the score multiplier to 1
                         //since someone could have clicked a double points joker in the previous round
-                        scoreMultiplier = 1;
                         try{
+                            System.out.println("Client received question from server");
+                            scoreMultiplier = 1;
                             bartimer.cancel();
                         }catch(Exception e){
                             System.out.println(e.getMessage());
                         }
                         incomingq= (Question) payload;
 
-                        System.out.println(incomingq.toString());
-                        System.out.println(incomingq.getShuffledAnswers().toString());
+
+
                         //questionField.setText(incomingq.getQuestion());
                         // Wrapper to run the UI elements on the JFX thread.
                         Platform.runLater(new Runnable() {
@@ -277,11 +279,14 @@ public class MultiPlayer implements Initializable {
                     timerBar.setStyle("-fx-accent: red");
                 }
                 if(incomingmsg.getMsgType() == MessageType.REMOVE_JOKER){
-                    handleRemovalJoker();
+                    //maybe we want functionality here to notify the other
+                    //client that someone used a joker
+                    System.out.println("someone used a joker");
                 }
 
                 if(incomingmsg.getMsgType() == MessageType.DOUBLE_JOKER){
-                    handleDoubleJoker();
+                    //handleDoubleJoker();
+                    System.out.println("someone used a joker");
                 }
             }
         });
@@ -291,14 +296,14 @@ public class MultiPlayer implements Initializable {
     /**
      * Send that the double points joker has been used to all clients subscriped to the /topic/joker endpoint
      */
-    //this joker can be handled fully on client since it doens't effect the other players
+    //this joker can be handled fully on client side since it doens't effect the other players
     public void handleDoubleJoker(){
         prompt.setText("Double joker used");
         //disable the button if  clicked
-
-        doubleJoker.setDisable(true);
         scoreMultiplier = 2;
-        //we do send a message to the server for stat tracking
+        doubleJoker.setDisable(true);
+
+        //we could send a message to the server for stat tracking
         //mainCtrl.sessie.send("/app/clickedJoker", new Message(MessageType.DOUBLE_JOKER, "client", "someone clicked the double points joker"));
     }
 
@@ -309,20 +314,16 @@ public class MultiPlayer implements Initializable {
     //this joker can be handled fully on client since it doens't effect the other players
     public void handleRemovalJoker(){
         //disable the button if  clicked
-
         removeJoker.setDisable(true);
-
-        //we do send a message to the server for stat tracking
-        //mainCtrl.sessie.send("/app/clickedJoker", new Message(MessageType.REMOVE_JOKER, "client", "someone clicked the remove joker"));
-        prompt.setText("removal joker used");
-        System.out.println("handling removal");
-        int randomindex= new Random().nextInt(2);
-        String toremove = incomingq.getFakeAnswers().get(randomindex);
-        for(Button b: buttons){
-            if(b.getText().equals(toremove)){
-                b.setDisable(true);
+        ArrayList<Button> wrongbuttons = new ArrayList<Button>();
+        for(Button button : answerButtons){
+            if(answerButtons.indexOf(button) != incomingq.getCorrectAnswerIndex()){
+                wrongbuttons.add(button);
             }
         }
+        int randomindex= new Random().nextInt(2);
+        wrongbuttons.get(randomindex).setDisable(true);
+
     }
 
 
@@ -332,13 +333,10 @@ public class MultiPlayer implements Initializable {
      */
     public void displayQuestion(Question question){
         questionField.setText(question.getQuestion());
-        //qNumber.setText(game.getCurRound() + " / 20");
-        answerA.setText(question.getShuffledAnswers().get(0));
-        answerB.setText(question.getShuffledAnswers().get(1));
-        answerC.setText(question.getShuffledAnswers().get(2));
-//        answerA.setText(question.getActivityList().get(0).getTitle());
-//        answerB.setText(question.getActivityList().get(1).getTitle());
-//        answerC.setText(question.getActivityList().get(2).getTitle());
+        qNumber.setText(question.getQuestionNo() + " / 20");
+        answerA.setText(question.getActivityList().get(0).getTitle());
+        answerB.setText(question.getActivityList().get(1).getTitle());
+        answerC.setText(question.getActivityList().get(2).getTitle());
         resetGamescreen();
     }
 
@@ -392,26 +390,26 @@ public class MultiPlayer implements Initializable {
 
         //gets the amount of points to be handed, and assigns the correct answer to a variable
         int questionpoints = (int)((500 - 250*progress)*scoreMultiplier);
-        String correctanswer = incomingq.getAnswer();
+        String correctanswer = incomingq.getActivityList().get(incomingq.getCorrectAnswerIndex()).getTitle();
         System.out.println("correct answer: "+ correctanswer);
         System.out.println("your answer: "+ useranswer.getText());
 
         //since we made an iterator of the answers the program checks if  the users button clicked is the right corresponding click
         //this function should definitely be tested
 
-        //make the buttons there "correct colors" green for right answer red for the wrong answers
-        for(Button answerbutton: buttons){
-            //the one corresponding with he next answers entry is the correct answer and  becomes green
-            if(answerbutton.getText().equals(correctanswer)){
-                answerbutton.setStyle("-fx-background-color: #309500;");
+        // make the buttons there "correct colors" green for right answer red for the wrong answers
+        for(Button answerbutton: answerButtons){
+            // the one corresponding with he next answers entry is the correct answer and  becomes green
+            if(Question.hasCorrectAnswer(incomingq, answerButtons.indexOf(answerbutton))){
+                setButtonsStyle(incomingq.getCorrectAnswerIndex());
             }else{ //we make it red
-                answerbutton.setStyle("-fx-background-color: #BD0000;");
+                setButtonsStyle(incomingq.getCorrectAnswerIndex());
             }
         }
 
         //after accordingly change the buttons colors
         //we retrieve the current style of all the buttons and add a border to the user chosen button
-        for(Button answerbutton: buttons){
+        for(Button answerbutton: answerButtons){
 
             String currentstyle = answerbutton.getStyle();
             StringBuilder currentstylebuilder = new StringBuilder(currentstyle);
@@ -423,30 +421,44 @@ public class MultiPlayer implements Initializable {
                 answerbutton.setStyle(newstyle);
             }
         }
-        //after that we have to prompt of if the user was correct or not
-        //user got the answer correct
-        if(correctanswer.equals(useranswer.getText())){
+        // after that we have to prompt of if the user was correct or not
+        // user got the answer correct
+        if(Question.hasCorrectAnswer(incomingq, answerButtons.indexOf(useranswer))){
             int currentpoints = Integer.parseInt(userpoint.getText());
             int newpoints = currentpoints + questionpoints;
             this.pointsInt = newpoints;
             userpoint.setText(String.valueOf(newpoints));
             prompt.setText("Correct");
             //this.statSharer.correctAnswers++;
+
         } else{
             prompt.setText("Incorrect");
         }
 
-        //change scene state to the one where someone has answered the question
-        //in which case the buttons should be disabled and change colors
+        // change scene state to the one where someone has answered the question
+        // in which case the buttons should be disabled and change colors
         disableAnswers();
 
         return;
+
     }
 
+    /**
+     * Sets the font size of the button texts to a variable size, depending on the length
+     * of the text displayed on each button. The button also has its color switch to either
+     * green or red depending on whether the answer is correct or not.
+     * @param correctAnswerIndex The index of the correct answer button
+     */
+    private void setButtonsStyle(int correctAnswerIndex) {
+        String color = "#000000";
 
-
-
-
+        for (Button bttn : answerButtons) {
+            if (answerButtons.indexOf(bttn) == correctAnswerIndex) color = "#309500";
+            else color = "#BD0000";
+            bttn.setStyle(String.format("-fx-background-color: %s; -fx-font-size: %d;", color,
+                    (int)(-Math.pow((bttn.getText().length() - 20), -3) * 0.5 + 2) * 10));
+        }
+    }
 
     /**
      * If the event is executed then the scene switches to Splash.fxml

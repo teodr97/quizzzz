@@ -269,6 +269,7 @@ public class Admin implements Initializable {
         //first needs to check if an activity is selected
         Activity activity = tableActivity.getSelectionModel().getSelectedItem();
 
+
         if(activity == null){
             textConsole.setText("Please select an activity from the table to edit");
             return;
@@ -326,3 +327,4 @@ public class Admin implements Initializable {
 
 
 }
+
