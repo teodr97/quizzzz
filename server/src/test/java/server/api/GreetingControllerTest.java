@@ -53,12 +53,12 @@ class GreetingControllerTest {
                 greetingController.start(new Message(MessageType.TEST, "Test", "Test")));
     }
 
-    @Test
+    /*@Test
     void sendQuestion() {
         greetingController.start(new Message(MessageType.TEST, "Test", "Test"));
         greetingController.sendQuestion();
         assertTrue(outContent.toString().contains("sent a question"));
-    }
+    }*/
 
     @Test
     void handleJoker() {

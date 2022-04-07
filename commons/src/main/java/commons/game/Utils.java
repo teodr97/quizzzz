@@ -1,5 +1,6 @@
 package commons.game;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Utils {
@@ -59,8 +60,9 @@ public class Utils {
      * @return the list of activities with their string variables holding
      * power draw values
      */
-    public static List<Activity> replaceActivitiesWithPowerDraws(List<Activity> activityList, int correctAnswerIndex) {
-        List<Activity> result = List.copyOf(activityList);
+    public static ArrayList<Activity> replaceActivitiesWithPowerDraws(ArrayList<Activity> activityList, int correctAnswerIndex) {
+        ArrayList<Activity> result = new ArrayList<>();
+        result.addAll(activityList);
 
         // We replace every string containing the activity by the power it draws,
         // as that is what we need to show for the answers the player will choose from.
@@ -79,5 +81,7 @@ public class Utils {
             }
         }
         return result;
+
     }
+
 }

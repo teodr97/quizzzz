@@ -2,6 +2,7 @@ package commons.game;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -57,7 +58,7 @@ class UtilsTest {
      */
     @Test
     void replaceActivitiesWithPowerDraws() {
-        LinkedList<Activity> activityList = new LinkedList<>();
+        ArrayList<Activity> activityList = new ArrayList<>();
 
         activityList.add(new Activity("Path","Test", 1, "Source"));
         activityList.add(new Activity("Path","Test", 3414, "Source"));

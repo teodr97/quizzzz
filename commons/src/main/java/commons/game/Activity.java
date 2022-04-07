@@ -4,10 +4,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-public class Activity {
+public class Activity implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int autoId; // PRIMARY KEY
@@ -170,13 +171,7 @@ public class Activity {
      */
     @Override
     public String toString() {
-        return "Activity{" +
-                "autoId=" + autoId +
-                ", image_path='" + image_path + '\'' +
-                ", title='" + title + '\'' +
-                ", consumption_in_wh=" + consumption_in_wh +
-                ", source='" + source + '\'' +
-                '}';
+        return "Activity";
     }
 }
 
