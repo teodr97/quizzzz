@@ -67,6 +67,12 @@ public class GreetingController {
         qtimer = new Timer();
     }
 
+    /**
+     * For testing purposes.
+     */
+    public GreetingController() {
+        repository = null;
+    }
 
     /**
      * @param message get message user sends to endpoint "/app/hello"
