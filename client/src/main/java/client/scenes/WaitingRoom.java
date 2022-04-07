@@ -118,8 +118,8 @@ public class WaitingRoom implements Initializable {
                         public void handleFrame(StompHeaders stompHeaders, Object payload) {
                             incomingmsg = (Message) payload;
                             if(incomingmsg.getMsgType() == MessageType.CONNECTED){
-                                System.out.println("You;ve joined the waiting room");
-                                greetings.setText("You;ve joined the waiting room");
+                                System.out.println("You've joined the waiting room");
+                                greetings.setText("You've joined the waiting room");
                             }
                         }
                     });

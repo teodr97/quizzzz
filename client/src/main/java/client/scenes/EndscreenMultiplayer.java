@@ -1,7 +1,7 @@
 package client.scenes;
 
-import com.google.inject.Inject;
 import commons.models.Player;
+import com.google.inject.Inject;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.core.GenericType;
 import javafx.fxml.FXML;
@@ -43,7 +43,6 @@ public class EndscreenMultiplayer implements Initializable {
 
     }
 
-
     //no real functionality yet
     @Override
     public void initialize(URL location, ResourceBundle resources){
@@ -51,9 +50,13 @@ public class EndscreenMultiplayer implements Initializable {
             getPlayers();
     }
 
+    /**
+     * Gets the players that are in the same game as the player.
+     */
     private void getPlayers(){
         System.out.println("before");
-        ArrayList<Player> playersResponse = ClientBuilder.newClient(new ClientConfig()) //
+        ArrayList<Player> playersResponse;
+        playersResponse = ClientBuilder.newClient(new ClientConfig()) //
                 .target(serverSelectorCtrl.getServer()).path("/game/getPlayers") //
                 .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.TRUE)
                 .queryParam("player", mainCtrl.getPlayer().getNickname())//
@@ -64,7 +67,9 @@ public class EndscreenMultiplayer implements Initializable {
         leaderBoard(playersResponse);
     }
 
-
+    /**
+     * Orders the players in decreasing order.
+     */
     private Player[] leaderBoard(List<Player> players){
         Player[] list = new Player[players.size()];
         int max = Integer.MIN_VALUE;

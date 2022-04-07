@@ -115,6 +115,16 @@ public class MultiPlayer implements Initializable {
      * the paths used in this method must be changed accordingly.
      */
     private void drawButtonImages() {
+    }
+
+    /**
+     * Initialises the multiplayer game screen, rendering the UI elements and
+     * subscribing to the game events on the server.
+     * @param location The location of the game screen
+     * @param resources The resource bundle
+     */
+    @Override
+    public void initialize(URL location, ResourceBundle resources){
         reactionAngry = new Image(Paths.get("src", "main","resources","images","reactAngry.png").toUri().toString());
         reactionLol = new Image(Paths.get("src", "main","resources","images","reactLol.png").toUri().toString());
         reactionClap = new Image(Paths.get("src", "main","resources","images","reactClap.png").toUri().toString());
@@ -132,65 +142,50 @@ public class MultiPlayer implements Initializable {
         jokerHG.setImage(new Image(hgPath.toUri().toString()));
         joker2X.setImage(new Image(twoxPath.toUri().toString()));
         jokerMB.setImage(new Image(mbPath.toUri().toString()));
-    }
-
-    /**
-     * Initialises the multiplayer game screen, rendering the UI elements and
-     * subscribing to the game events on the server.
-     * @param location The location of the game screen
-     * @param resources The resource bundle
-     */
-    @Override
-    public void initialize(URL location, ResourceBundle resources){
         answerButtons = new ArrayList<>();
         answerButtons.add(answerA);
         answerButtons.add(answerB);
         answerButtons.add(answerC);
+        settingUp();
+    }
 
-        // Wrapper. Ensures that the UI elements are drawn in the JFX thread.
-        // Not drawing in the JFX thread results in exceptions.
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                drawButtonImages();
-            }
-        });
-
+    /**
+     * Setting up the game properties.
+     */
+    public void settingUp(){
         System.out.println(timerBar.getStyle());
 
         // Subscribes to the path through which the questions are provided.
         this.mainCtrl.sessie.subscribe("/topic/questions", new StompFrameHandler() {
-                    // The type of the object sent by the server.
-                    public Type getPayloadType(StompHeaders stompHeaders) {
-                        return Question.class;
-                    }
+            // The type of the object sent by the server.
+            public Type getPayloadType(StompHeaders stompHeaders) {
+                return Question.class;
+            }
 
-                    // The method called when the client receives a packet from the server.
-                    public void handleFrame(StompHeaders stompHeaders, Object payload) {
-                        // if we get new question we reset the score multiplier to 1
-                        //since someone could have clicked a double points joker in the previous round
-                        try{
-                            System.out.println("Client received question from server");
-                            scoreMultiplier = 1;
-                            bartimer.cancel();
-                        }catch(Exception e){
-                            System.out.println(e.getMessage());
-                        }
-                        incomingq= (Question) payload;
+            // The method called when the client receives a packet from the server.
+            public void handleFrame(StompHeaders stompHeaders, Object payload) {
+                // if we get new question we reset the score multiplier to 1
+                //since someone could have clicked a double points joker in the previous round
+                try{
+                    System.out.println("Client received question from server");
+                    scoreMultiplier = 1;
+                    bartimer.cancel();
+                }catch(Exception e){
+                    System.out.println(e.getMessage());
+                }
+                incomingq= (Question) payload;
 
-
-
-                        //questionField.setText(incomingq.getQuestion());
-                        // Wrapper to run the UI elements on the JFX thread.
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                displayQuestion(incomingq);
-                            }
-                        });
-                        startBar();
+                //questionField.setText(incomingq.getQuestion());
+                // Wrapper to run the UI elements on the JFX thread.
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        displayQuestion(incomingq);
                     }
                 });
+                startBar();
+            }
+        });
 
         /*
          * The client-server communication handler for the emotes. Subscribes to the path
@@ -231,31 +226,6 @@ public class MultiPlayer implements Initializable {
             }
         });
 
-//        this.mainCtrl.sessie.subscribe("/topic/questions", new StompFrameHandler() {
-//
-//            public Type getPayloadType(StompHeaders stompHeaders) {
-//                return Message.class;
-//            }
-//
-//            public void handleFrame(StompHeaders stompHeaders, Object payload) {
-//                incomingmsg = (Message) payload;
-//                if (incomingmsg.getMsgType() == MessageType.QUESTION) {
-//                    System.out.println("Gotten question");
-//                    questionField.setText(incomingmsg.getContent());
-//                    startBar();
-//
-//                }
-//                if(incomingmsg.getMsgType() == MessageType.GAME_ENDED){
-//                    //variable will probably be replaced by a game class atrribute
-//                    gamended = false;
-//                    timerBar.setProgress(0);
-//                    questionField.setText(incomingmsg.getContent());
-//                }
-//            }
-//        });
-
-//
-
         /*
          * The client-server communication handler for the jokers. Subscribes to the path
          * through which the server sends the player reactions.
@@ -274,7 +244,7 @@ public class MultiPlayer implements Initializable {
 
                 if(incomingmsg.getMsgType() == MessageType.TIME_JOKER){
                     prompt.setText("Timer joker used");
-                    progressInc = 0.002;
+                    progressInc = progressInc*2;
 
                     timerBar.setStyle("-fx-accent: red");
                 }
@@ -541,7 +511,7 @@ public class MultiPlayer implements Initializable {
         if (reactionList.size() > 8) reactionList.remove(reactionList.size() - 1);
         // Update the list.
         listViewReactions.setItems(FXCollections.observableArrayList(reactionList));
-        //listViewReactions.setStyle("-fx-background-color: #000000");
+        //listViewReactions.setStyle("-fx-background-color:  linear-gradient(#02274f, #101b25)");
         // Start the display timer for the newly added reaction.
         newReaction.start();
     }
