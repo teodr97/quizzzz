@@ -46,8 +46,7 @@ public class GreetingController {
 
     private ArrayList<Activity> testList = new ArrayList<>();
 
-    private Question testq;
-    private Question current;
+    private int questoincounter;
 
 
     @Autowired
@@ -107,9 +106,10 @@ public class GreetingController {
     /**After someone clicked the startgame button we start sending every questoin to the client every 10 seconds
      *
      */
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(fixedRate = 1000)
     public void sendQuestion(){
         //the game started reference will probably be a game class attribute
+
 
         if(gamestarted){
             //Question current = questionIterator.next();
@@ -122,6 +122,9 @@ public class GreetingController {
             //send game over screen and stop the scheduled sending of questions
             //TO-DO:
             //this.template.convertAndSend("/topic/greetings", new Message());
+            gamestarted = false;
+            Message gamestopmsg = new Message(MessageType.GAME_ENDED, "Server", "The game has ended");
+            this.template.convertAndSend("/topic/gamestate", gamestopmsg);
             stopSending();
         }
     }

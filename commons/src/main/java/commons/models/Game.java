@@ -201,7 +201,11 @@ public class Game {
         Question[] questions = new Question[this.totalRounds];
         System.out.println("=============QUESTIONS AND ANSWERS===============");
         for(int i = 0; i < totalRounds; i++){
-            questions[i] = new Question(alist);
+            Question createdq = new Question(alist);
+            createdq.setQuestionNo(i+1);
+            questions[i] = createdq;
+
+
             System.out.println(questions[i].toString());
             
             //System.out.println(questions[i].toString());

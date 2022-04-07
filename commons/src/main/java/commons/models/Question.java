@@ -19,6 +19,7 @@ public class Question extends Message{
     private String answer;
     private int correctAnswerIndex;
     private ArrayList<Activity> activityList = new ArrayList<>();
+    private int questionNo;
 
     public Question(){
 
@@ -137,6 +138,19 @@ public class Question extends Message{
     }
 
 
+    /**
+     * @return gets the question number
+     */
+    public int getQuestionNo() {
+        return questionNo;
+    }
+
+    /**
+     * @param questionNo sets the queston number
+     */
+    public void setQuestionNo(int questionNo) {
+        this.questionNo = questionNo;
+    }
 
     /**
      * @param answer Sets the answers to this question

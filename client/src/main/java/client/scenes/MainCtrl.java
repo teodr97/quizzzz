@@ -176,8 +176,23 @@ public class MainCtrl {
      * @throws IOException
      */
     public void switchToEndscreenMultiplayer() {
-        var overview = myFXML.load(EndscreenMultiplayer.class, "client", "scenes", "EndscreenSingleplayer.fxml");
-        setAndShowScenes(new Scene(overview.getValue()));
+        try{
+            var overview = myFXML.load(MultiPlayer.class, "client", "scenes", "EndscreenMultiPlayer.fxml");
+            // in the meantime we created a websocket thread which where we try to call the swithtoMultplayer function from
+            //since java fx needs to be run in it's own thread w
+            // e need the Playform.runlater block
+
+            Platform.runLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    setAndShowScenes(new Scene(overview.getValue()));
+                }
+            });
+
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 
     /**

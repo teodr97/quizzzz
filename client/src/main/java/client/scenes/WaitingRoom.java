@@ -144,6 +144,11 @@ public class WaitingRoom implements Initializable {
                                 System.out.println("someone started the game so we starting");
                                 startGame2();
                             }
+
+                            if(incomingmsg.getMsgType() == MessageType.GAME_ENDED){
+                                System.out.println(incomingmsg.getContent());
+                                thiswaiting.mainCtrl.switchToEndscreenMultiplayer();
+                            }
                         }
                     });
                 }catch(Exception e){

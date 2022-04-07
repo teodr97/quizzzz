@@ -240,6 +240,7 @@ public class MultiPlayer implements Initializable {
      */
     public void displayQuestion(Question question){
         questionField.setText(question.getQuestion());
+        qNumber.setText(question.getQuestionNo() + " / 20");
         answerA.setText(question.getActivityList().get(0).getTitle());
         answerB.setText(question.getActivityList().get(1).getTitle());
         answerC.setText(question.getActivityList().get(2).getTitle());
