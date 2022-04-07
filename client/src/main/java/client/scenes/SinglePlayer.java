@@ -271,7 +271,7 @@ public class SinglePlayer implements Initializable {
 
         // Buttons.
         for (Button bttn : answerButtons) {
-            if (bttn.getText().contains("Wh")) {
+            if (bttn.getText().contains(" Wh")) {
                 prefWidth = 300;
                 prefHeight = 100;
                 imgBttnA.setVisible(false);
