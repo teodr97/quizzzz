@@ -17,6 +17,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -85,6 +86,9 @@ public class Admin implements Initializable {
 
     @FXML
     private ImageView testImage;
+
+    @FXML
+    private Button testImg;
 
     private Stage stage;
 
@@ -285,7 +289,7 @@ public class Admin implements Initializable {
 
         //update request to server
         Response r = ClientBuilder.newClient(new ClientConfig())
-                .target("http://localhost:8080/api/v1/activity/update")
+                .target(serverSelectorCtrl.getServer()).path("/api/v1/activity/update")
                 .request(APPLICATION_JSON).accept(APPLICATION_JSON)
                 .post(Entity.entity(activity, APPLICATION_JSON));
 
@@ -295,6 +299,32 @@ public class Admin implements Initializable {
         //check setText
         textConsole.setText("Activity data has been changed");
     }
+
+
+    /**
+     * displays the image on the admin panel
+     */
+    public void testImage(){
+        //get the activtiy from the table
+        Activity a = tableActivity.getSelectionModel().getSelectedItem();
+        String imagepath = a.getImage_path();
+
+        //request its image path
+        FileInfo fileInfo = ClientBuilder.newClient(new ClientConfig())
+                .target(serverSelectorCtrl.getServer()).path("/images/get")
+                .queryParam("image_path", imagepath )
+                .request(APPLICATION_JSON).accept(APPLICATION_JSON)
+                .get(new GenericType<>() {});
+
+        //decode encoded string
+        String s = fileInfo.getEncoding();
+        InputStream in = new ByteArrayInputStream(Base64.decodeBase64(s));
+
+        //set the test image
+        testImage.setImage(new Image(in));
+    }
+
+
 
 }
 
