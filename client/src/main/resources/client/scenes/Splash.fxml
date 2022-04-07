@@ -56,7 +56,6 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button layoutX="14.0" layoutY="741.0" mnemonicParsing="false" onAction="#switchToMultiPlayer" text="MultiplayerScreenTest" />
       <Button layoutX="894.0" layoutY="685.0" mnemonicParsing="false" onAction="#switchToServerSelection" prefHeight="54.0" prefWidth="176.0" style="-fx-background-color: #032254;" styleClass="buttons" text="Change Server" textFill="WHITE">
          <font>
             <Font size="18.0" />
