@@ -104,6 +104,18 @@ public class GameController {
     }
 
     /**
+     * Add point to player
+     * @param player
+     * @return
+     * @throws NotFoundException
+     */
+    @GetMapping("/addPoint")
+    public ResponseEntity<Integer> addPoint(@RequestParam String player, String point) throws NotFoundException{
+        int points = Integer.parseInt(point);
+        return ResponseEntity.ok(gameService.incrementPoint(points, player));
+    }
+
+    /**
      * @param player
      * @return the player with id playerid
      * @throws InterruptedException

@@ -147,7 +147,8 @@ public class WaitingRoom implements Initializable {
 
                             if(incomingmsg.getMsgType() == MessageType.GAME_ENDED){
                                 System.out.println(incomingmsg.getContent());
-                                thiswaiting.mainCtrl.switchToEndscreenMultiplayer();
+                                wsclientthread.interrupt();
+                                mainCtrl.switchToEndscreenMultiplayer();
                             }
                         }
                     });

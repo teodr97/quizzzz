@@ -4,6 +4,7 @@ import client.utils.GuiUtils;
 import commons.models.*;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.GenericType;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -17,6 +18,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientProperties;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
@@ -99,14 +101,16 @@ public class MultiPlayer implements Initializable {
 
 
     public boolean gamended;
+    private ServerSelectorCtrl serverSelectorCtrl;
 
     /**
      * Constructor function.
      * @param mainCtrl The UI controller for the screen
      */
     @Inject
-    public MultiPlayer(MainCtrl mainCtrl) {
+    public MultiPlayer(MainCtrl mainCtrl, ServerSelectorCtrl serverSelectorCtrl) {
         this.mainCtrl = mainCtrl;
+        this.serverSelectorCtrl = serverSelectorCtrl;
     }
 
     /**
@@ -397,6 +401,15 @@ public class MultiPlayer implements Initializable {
             int currentpoints = Integer.parseInt(userpoint.getText());
             int newpoints = currentpoints + questionpoints;
             this.pointsInt = newpoints;
+            int points = ClientBuilder.newClient(new ClientConfig())
+                    .target(serverSelectorCtrl.getServer()).path("/game/addPoint")
+                    .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.TRUE)
+                    .queryParam( "player",  mainCtrl.getPlayer().getNickname())
+                    .queryParam("point", questionpoints)
+                    .request(APPLICATION_JSON)
+                    .accept(APPLICATION_JSON)
+                    .get(new GenericType<Integer>() {});
+            System.out.println("Incremented points" + points);
             userpoint.setText(String.valueOf(newpoints));
             prompt.setText("Correct");
             //this.statSharer.correctAnswers++;
