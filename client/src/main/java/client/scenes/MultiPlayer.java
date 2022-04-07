@@ -109,16 +109,6 @@ public class MultiPlayer implements Initializable {
         this.mainCtrl = mainCtrl;
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources){
-
-        answerButtons = new ArrayList<>();
-        answerButtons.add(answerA);
-        answerButtons.add(answerB);
-        answerButtons.add(answerC);
-        drawButtonImages();
-    }
-
     /**
      * Draws the button images for the jokers and the emotes, getting the path of
      * those within the project. Caution: if the images are moved to another folder,
@@ -152,10 +142,10 @@ public class MultiPlayer implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources){
-        buttons = new ArrayList<>();
-        buttons.add(answerA);
-        buttons.add(answerB);
-        buttons.add(answerC);
+        answerButtons = new ArrayList<>();
+        answerButtons.add(answerA);
+        answerButtons.add(answerB);
+        answerButtons.add(answerC);
 
         // Wrapper. Ensures that the UI elements are drawn in the JFX thread.
         // Not drawing in the JFX thread results in exceptions.
