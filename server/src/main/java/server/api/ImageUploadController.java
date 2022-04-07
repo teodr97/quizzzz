@@ -32,8 +32,10 @@ public class ImageUploadController {
      * @throws FileNotFoundException : if file not found
      */
     @GetMapping(path = "/get/{image_path}")
-    public File getImage(@PathParam("image_path")String image_path) throws FileNotFoundException {
-        return storageService.retrieve(image_path);
+    public ResponseEntity<String> getImage(@PathVariable String image_path) throws IOException {
+        String s = storageService.retrieve(image_path);
+        System.out.println("hello?");
+        return ResponseEntity.ok(s);
     }
 
     /**

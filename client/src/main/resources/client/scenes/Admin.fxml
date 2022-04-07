@@ -54,5 +54,6 @@
          </font>
       </Label>
       <ImageView fx:id="testImage" fitHeight="150.0" fitWidth="200.0" layoutX="758.0" layoutY="609.0" pickOnBounds="true" preserveRatio="true" />
+      <Button fx:id="testImg" layoutX="666.0" layoutY="626.0" mnemonicParsing="false" onAction="#testImage" text="Button" />
    </children>
 </AnchorPane>

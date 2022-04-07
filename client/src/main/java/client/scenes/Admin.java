@@ -17,11 +17,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.glassfish.jersey.client.ClientConfig;
+import org.springframework.http.ResponseEntity;
 
 
 import javax.inject.Inject;
@@ -85,6 +87,9 @@ public class Admin implements Initializable {
 
     @FXML
     private ImageView testImage;
+
+    @FXML
+    private Button testImg;
 
     private Stage stage;
 
@@ -284,7 +289,7 @@ public class Admin implements Initializable {
 
         //update request to server
         Response r = ClientBuilder.newClient(new ClientConfig())
-                .target("http://localhost:8080/api/v1/activity/update")
+                .target(serverSelectorCtrl.getServer()).path("/api/v1/activity/update")
                 .request(APPLICATION_JSON).accept(APPLICATION_JSON)
                 .post(Entity.entity(activity, APPLICATION_JSON));
 
@@ -293,6 +298,20 @@ public class Admin implements Initializable {
 
         //check setText
         textConsole.setText("Activity data has been changed");
+    }
+
+
+    public void testImage(){
+        Activity a = tableActivity.getSelectionModel().getSelectedItem();
+        String imagepath = a.getImage_path();
+        System.out.println(imagepath);
+        ResponseEntity<String> imageEncoding = ClientBuilder.newClient(new ClientConfig())
+                .target(serverSelectorCtrl.getServer()).path("/images/get/" + imagepath)
+                .request(APPLICATION_JSON).accept(APPLICATION_JSON)
+                .get(new GenericType<>() {});
+        String s = imageEncoding.getBody();
+        InputStream in = new ByteArrayInputStream(Base64.decodeBase64(s));
+        testImage.setImage(new Image(in));
     }
 
 

@@ -1,6 +1,7 @@
 package server.api;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -8,6 +9,7 @@ import java.nio.file.Paths;
 
 import commons.models.FileInfo;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 
@@ -54,16 +56,23 @@ public class StorageService{
     }
 
     /**
-     * returns a file from path
+     * retrieves an image from a given image path
+     * @param image_path : the image path to look for
+     * @return : an encoded string containing the image
+     * @throws FileNotFoundException : if file not found
      */
-    public File retrieve(String image_path) throws FileNotFoundException {
+    public String retrieve(String image_path) throws IOException {
+        System.out.println("Input: " + image_path);
         Path p = rootLocation.resolve(image_path);
-        File f = new File(p.toUri().toString());
-        if(f.exists()){
-            return f;
-        } else{
-            throw new FileNotFoundException("No such file exists");
-        }
+        System.out.println(p);
+        File file = new File(p.toString());
+
+        //convert file to byte array
+        byte[] bytes = Base64.encodeBase64(Files.readAllBytes(file.toPath()));
+        String encoding = new String(bytes, StandardCharsets.US_ASCII);
+
+
+        return encoding;
     }
 
 
