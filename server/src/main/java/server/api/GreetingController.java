@@ -5,6 +5,7 @@ import commons.models.Message;
 import commons.models.MessageType;
 import commons.models.Question;
 import commons.models.Emote;
+import commons.models.Game;
 
 import lombok.extern.slf4j.Slf4j;
 
