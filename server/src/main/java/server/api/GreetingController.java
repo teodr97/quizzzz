@@ -106,7 +106,7 @@ public class GreetingController {
     /**After someone clicked the startgame button we start sending every questoin to the client every 10 seconds
      *
      */
-    @Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 10000)
     public void sendQuestion(){
         //the game started reference will probably be a game class attribute
 
