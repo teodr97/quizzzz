@@ -1,21 +1,16 @@
 package server.api;
 
-
 import commons.game.Activity;
 import commons.models.Message;
 import commons.models.MessageType;
 import commons.models.Question;
+import commons.models.Emote;
 
-
-
-
-import commons.models.*;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -23,10 +18,7 @@ import org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProc
 import org.springframework.stereotype.Controller;
 
 import server.database.ActivityRepository;
-
-
 import java.util.*;
-
 
 @Controller
 @Slf4j
@@ -115,7 +107,7 @@ public class GreetingController {
             //Question current = questionIterator.next();
 
             //this.template.convertAndSend("/topic/questions", new Message(MessageType.QUESTION, "server", this.questionIterator.next()));
-            this.template.convertAndSend("/topic/questions", questionIterator.next());
+            if(template != null) this.template.convertAndSend("/topic/questions", questionIterator.next());
             System.out.println("sent a question");
         }
         if(!questionIterator.hasNext()) {
@@ -174,5 +166,16 @@ public class GreetingController {
             alreadyChosenIndexes.add(index);
         }
         return activitySet;
+    }
+
+    /**
+     * Handler method for emotes sending.
+     * @param emote the emote being sent over the server through "/app/sendEmote"
+     * @return emote to be received by the clients subscribed to "/topic/jokers"
+     */
+    @MessageMapping("/sendEmote")
+    @SendTo("/topic/emotes")
+    public Emote handleEmote(Emote emote) {
+        return new Emote(emote.getUsername(), emote.getReactionId());
     }
 }
