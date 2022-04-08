@@ -5,9 +5,11 @@ import client.Networking.WsClient;
 import commons.models.Game;
 import commons.models.Player;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Pair;
 import org.springframework.messaging.simp.stomp.StompSession;
 
@@ -30,6 +32,8 @@ public class MainCtrl {
 
     private Username usernameRoom;
     private Scene userScene;
+
+    //
 
 
 
@@ -73,6 +77,8 @@ public class MainCtrl {
         primaryStage.setTitle("QUIZZ");
         primaryStage.setScene(new Scene(overview.getValue()));
         primaryStage.show();
+
+
     }
 
     //Sets and shows the scene.
@@ -84,6 +90,19 @@ public class MainCtrl {
     public void setAndShowScenes(Scene scene){
         primaryStage.setScene(scene);
         primaryStage.show();
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent wI) {
+                System.out.println("You closed the window");
+               try{
+                   sessie.disconnect();
+               }catch(Exception x){
+                   System.out.println(x.getMessage());
+               }
+                Platform.exit();
+                System.exit(0);
+            }
+        });
     }
 
     /**
