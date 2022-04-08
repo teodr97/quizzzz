@@ -56,9 +56,9 @@ public class MultiPlayer implements Initializable {
     @FXML private ImageView imgBttnReactClap;
     @FXML private ImageView imgBttnReactSweaty;
 
-    @FXML private Button answerA;
-    @FXML private Button answerB;
-    @FXML private Button answerC;
+    @FXML public Button answerA;
+    @FXML public Button answerB;
+    @FXML public Button answerC;
 
     private ArrayList<Button> answerButtons;
 
@@ -91,6 +91,8 @@ public class MultiPlayer implements Initializable {
     public double progressInc = 0.001;
 
     private static final double EPSILON = 0.00001;
+
+    int displaycounter= 0;
 
 
     private WebSocketStompClient stompClient;
@@ -150,6 +152,7 @@ public class MultiPlayer implements Initializable {
         answerButtons.add(answerA);
         answerButtons.add(answerB);
         answerButtons.add(answerC);
+
         settingUp();
     }
 
@@ -212,6 +215,17 @@ public class MultiPlayer implements Initializable {
                 // the username of the player, and a MessageType that holds the type
                 // of reaction (reaction id).
                 incomingEmote = (Emote) payload;
+
+                if(displaycounter == 2 ){
+                    displaycounter = 0;
+                    return;
+                }
+                if(incomingEmote.getUsername().equals(mainCtrl.getPlayer().getNickname())){
+                    displaycounter++;
+                }else{
+                    displaycounter--;
+                }
+
                 switch (incomingEmote.getReactionId()) {
                     case REACT_LOL: reactionImage = reactionLol; break;
                     case REACT_ANGRY: reactionImage = reactionAngry; break;
@@ -229,6 +243,8 @@ public class MultiPlayer implements Initializable {
                 });
             }
         });
+
+
 
         /*
          * The client-server communication handler for the jokers. Subscribes to the path
@@ -469,6 +485,7 @@ public class MultiPlayer implements Initializable {
         bartimer = new Timer();
         bartimer.scheduleAtFixedRate(new IncreaseTimerBar(this), 0, 10);
     }
+
 
     /**
      * Used by the button for displaying a laugh reaction on the game screen.
