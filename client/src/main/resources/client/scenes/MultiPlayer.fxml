@@ -39,30 +39,30 @@
             <Font name="Arial Bold" size="48.0" />
          </font>
       </Text>
-      <Text fx:id="questionField" fill="WHITE" layoutX="300.0" layoutY="344.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="497.83019945468277">
+      <Text fx:id="questionField" fill="WHITE" layoutX="300.0" layoutY="310.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="497.83019945468277">
          <font>
-            <Font name="Arial Bold" size="30.0" />
+            <Font name="Arial Bold" size="18.0" />
          </font>
       </Text>
-      <Button fx:id="answerA" layoutX="345.0" layoutY="392.0" mnemonicParsing="false" onAction="#checkAnswer" prefHeight="28.0" prefWidth="408.0" style="-fx-background-color: #0249bd;" styleClass="buttons" text="answerA" textAlignment="CENTER" textFill="WHITE">
+      <Button fx:id="answerA" layoutX="345.0" layoutY="406.0" mnemonicParsing="false" onAction="#checkAnswer" prefHeight="28.0" prefWidth="408.0" style="-fx-background-color: #0249bd;" styleClass="buttons" text="answerA" textAlignment="CENTER" textFill="WHITE">
          <font>
-            <Font size="24.0" />
+            <Font size="18.0" />
          </font>
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button fx:id="answerB" layoutX="345.0" layoutY="457.0" mnemonicParsing="false" onAction="#checkAnswer" prefHeight="28.0" prefWidth="408.0" style="-fx-background-color: #0249bd;" styleClass="buttons" text="answerB" textAlignment="CENTER" textFill="WHITE">
+      <Button fx:id="answerB" layoutX="345.0" layoutY="482.0" mnemonicParsing="false" onAction="#checkAnswer" prefHeight="28.0" prefWidth="408.0" style="-fx-background-color: #0249bd;" styleClass="buttons" text="answerB" textAlignment="CENTER" textFill="WHITE">
          <font>
-            <Font size="24.0" />
+            <Font size="18.0" />
          </font>
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button fx:id="answerC" layoutX="345.0" layoutY="525.0" mnemonicParsing="false" onAction="#checkAnswer" prefHeight="28.0" prefWidth="408.0" style="-fx-background-color: #0249bd;" styleClass="buttons" text="answerC" textAlignment="CENTER" textFill="WHITE">
+      <Button fx:id="answerC" layoutX="345.0" layoutY="552.0" mnemonicParsing="false" onAction="#checkAnswer" prefHeight="28.0" prefWidth="408.0" style="-fx-background-color: #0249bd;" styleClass="buttons" text="answerC" textAlignment="CENTER" textFill="WHITE">
          <font>
-            <Font size="24.0" />
+            <Font size="18.0" />
          </font>
          <cursor>
             <Cursor fx:constant="HAND" />
@@ -84,7 +84,7 @@
             <Font name="Arial Bold" size="25.0" />
          </font>
       </Text>
-      <ListView fx:id="listViewReactions" focusTraversable="false" layoutX="814.0" layoutY="219.0" pickOnBounds="false" prefHeight="426.0" prefWidth="250.0" />
+      <ListView fx:id="listViewReactions" focusTraversable="false" layoutX="814.0" layoutY="219.0" pickOnBounds="false" prefHeight="426.0" prefWidth="250.0" style="-fx-background-color: linear-gradient(#02274f, #101b25);" />
       <Button fx:id="bttnReactLol" layoutX="1060.0" layoutY="230.0" mnemonicParsing="false" onMouseReleased="#displayReactionLol" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: transparent;">
          <graphic>
             <ImageView fx:id="imgBttnReactLol" fitHeight="40.0" fitWidth="40.0" layoutX="1070.0" pickOnBounds="true" preserveRatio="true">

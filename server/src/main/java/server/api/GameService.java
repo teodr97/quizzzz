@@ -143,6 +143,25 @@ public class GameService {
     }
 
     /**
+     * Increments players points
+     * @param point
+     * @param username
+     * @return the incremented point
+     * @throws NotFoundException
+     */
+    public int incrementPoint(int point, String username) throws NotFoundException{
+        Game game = GameStorage.getInstance().getGames().values().stream()
+                .filter(it -> it.contains(username))
+                .findAny().orElseThrow(() -> new NotFoundException("No player with username, " + username + " in the game"));
+        for(Player p: game.getPlayers()){
+            if(p.getNickname().equals(username)){
+                p.addPoints(point);
+            }
+        }
+        return point;
+    }
+
+    /**
      * Makes a leaderboard at the end of the game.
      * @param players All the players that were in the game.
      * @return Returns the List of players in order by points.

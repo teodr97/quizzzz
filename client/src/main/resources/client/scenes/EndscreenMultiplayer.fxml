@@ -6,7 +6,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="783.0" prefWidth="1119.0" style="-fx-background-color: linear-gradient(#02274f, #101b25);" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.MainCtrl">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="783.0" prefWidth="1119.0" style="-fx-background-color: linear-gradient(#02274f, #101b25);" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.EndscreenMultiplayer">
    <children>
       <Button layoutX="795.0" layoutY="609.0" mnemonicParsing="false" onAction="#switchToSplash" prefHeight="74.0" prefWidth="224.0" style="-fx-background-color: #0249bd;" styleClass="buttons" text="Back to Menu" textAlignment="CENTER" textFill="WHITE">
          <font>
@@ -44,17 +44,17 @@
             <Font size="36.0" />
          </font>
       </Text>
-      <Text fx:id="first" fill="WHITE" layoutX="406.0" layoutY="258.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="306.417236328125">
+      <Text fx:id="first" fill="WHITE" layoutX="405.0" layoutY="281.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="306.417236328125">
          <font>
             <Font size="54.0" />
          </font>
       </Text>
-      <Text fx:id="second" fill="WHITE" layoutX="407.0" layoutY="324.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="306.417236328125">
+      <Text fx:id="second" fill="WHITE" layoutX="407.0" layoutY="340.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="306.417236328125">
          <font>
             <Font size="42.0" />
          </font>
       </Text>
-      <Text fx:id="third" fill="WHITE" layoutX="407.0" layoutY="374.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="306.417236328125">
+      <Text fx:id="third" fill="WHITE" layoutX="407.0" layoutY="389.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="306.417236328125">
          <font>
             <Font size="36.0" />
          </font>
