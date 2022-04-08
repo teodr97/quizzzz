@@ -19,7 +19,7 @@
             <Font name="Arial Bold" size="72.0" />
          </font>
       </Text>
-      <Label fx:id="fileText" layoutX="804.0" layoutY="212.0" text="Zip file to be unpacked" textAlignment="CENTER" textFill="WHITE">
+      <Label fx:id="fileText" layoutX="827.0" layoutY="212.0" text="File to be imported" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="Arial" size="25.0" />
          </font>
@@ -55,5 +55,6 @@
       </Label>
       <ImageView fx:id="testImage" fitHeight="192.0" fitWidth="345.0" layoutX="758.0" layoutY="577.0" pickOnBounds="true" preserveRatio="true" />
       <Button fx:id="testImg" layoutX="643.0" layoutY="609.0" mnemonicParsing="false" onAction="#testImage" prefHeight="25.0" prefWidth="98.0" text="Check Image" />
+      <Button layoutX="643.0" layoutY="181.0" mnemonicParsing="false" onAction="#refreshTable" prefHeight="25.0" prefWidth="98.0" text="Refresh" />
    </children>
 </AnchorPane>
