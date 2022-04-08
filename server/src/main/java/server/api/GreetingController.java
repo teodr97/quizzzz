@@ -20,7 +20,7 @@ import org.springframework.stereotype.Controller;
 
 import server.database.ActivityRepository;
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
+
 
 @Controller
 @Slf4j
@@ -92,13 +92,19 @@ public class GreetingController {
         System.out.println(message.toString());
 
         //retrieve all activites from the database
-        this.allactivies = (ArrayList<Activity>) repository.findAll();
+        try{
+            this.allactivies = (ArrayList<Activity>) repository.findAll();
+            this.game = new Game();
+            this.game.createQuestionList(allactivies);
+            this.questionIterator = Arrays.stream(game.questions).iterator();
+            qtimer = new Timer();
+        }catch(Exception eX){
+            System.out.println(eX.getMessage());
+        }
+
         List<Integer> alreadyChosenIndexes = new ArrayList<>();
 
-        this.game = new Game();
-        this.game.createQuestionList(allactivies);
-        this.questionIterator = Arrays.stream(game.questions).iterator();
-        qtimer = new Timer();
+        
 
         //will be replaced  with game state functionality:
         gamestarted = true;

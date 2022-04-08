@@ -92,7 +92,7 @@ public class MainCtrl {
         primaryStage.show();
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
-            public void handle(WindowEvent e) {
+            public void handle(WindowEvent wI) {
                 System.out.println("You closed the window");
                try{
                    sessie.disconnect();
