@@ -498,21 +498,21 @@ public class MultiPlayer implements Initializable {
      * Used by the button for displaying an angry reaction on the game screen.
      */
     public void displayReactionAngry() {
-        mainCtrl.sessie.send("/app/sendEmote", new Emote(mainCtrl.getPlayer().getNickname(), MessageType.REACT_ANGRY));
+        mainCtrl.sessie.send("/topic/emotes", new Emote(mainCtrl.getPlayer().getNickname(), MessageType.REACT_ANGRY));
     }
 
     /**
      * Used by the button for displaying a clapping reaction on the game screen.
      */
     public void displayReactionClap() {
-        mainCtrl.sessie.send("/app/sendEmote", new Emote(mainCtrl.getPlayer().getNickname(), MessageType.REACT_CLAP));
+        mainCtrl.sessie.send("/topic/emotes", new Emote(mainCtrl.getPlayer().getNickname(), MessageType.REACT_CLAP));
     }
 
     /**
      * Used by the button for displaying a "cool" reaction on the game screen.
      */
     public void displayReactionCool() {
-        mainCtrl.sessie.send("/app/sendEmote", new Emote(mainCtrl.getPlayer().getNickname(), MessageType.REACT_COOL));
+        mainCtrl.sessie.send("/topic/emotes", new Emote(mainCtrl.getPlayer().getNickname(), MessageType.REACT_COOL));
     }
 
     /**
