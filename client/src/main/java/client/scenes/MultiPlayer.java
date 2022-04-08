@@ -105,6 +105,8 @@ public class MultiPlayer implements Initializable {
     public boolean gamended;
     private ServerSelectorCtrl serverSelectorCtrl;
 
+    private String chatstyle;
+
     /**
      * Constructor function.
      * @param mainCtrl The UI controller for the screen
@@ -152,6 +154,8 @@ public class MultiPlayer implements Initializable {
         answerButtons.add(answerA);
         answerButtons.add(answerB);
         answerButtons.add(answerC);
+
+        chatstyle = listViewReactions.getStyle();
 
         settingUp();
     }
@@ -216,14 +220,12 @@ public class MultiPlayer implements Initializable {
                 // of reaction (reaction id).
                 incomingEmote = (Emote) payload;
 
-                if(displaycounter == 2 ){
+                if(displaycounter == 1 ){
                     displaycounter = 0;
                     return;
                 }
                 if(incomingEmote.getUsername().equals(mainCtrl.getPlayer().getNickname())){
                     displaycounter++;
-                }else{
-                    displaycounter--;
                 }
 
                 switch (incomingEmote.getReactionId()) {
@@ -234,13 +236,11 @@ public class MultiPlayer implements Initializable {
                     case REACT_CLAP: reactionImage = reactionClap; break;
                     default: throw new IllegalArgumentException("The reaction id sent by the server to the client is invalid!");
                 }
-                // Wrapper to run the UI elements on the JFX thread.
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        displayReaction(incomingEmote.getUsername(), reactionImage);
-                    }
-                });
+
+
+                displayReaction(incomingEmote.getUsername(), reactionImage);
+
+
             }
         });
 
@@ -539,8 +539,15 @@ public class MultiPlayer implements Initializable {
         reactionList.add(0, newReaction.getAnchorPane());
         // If there are more than 8 reactions after adding the newest one, remove the oldest one from the list.
         if (reactionList.size() > 8) reactionList.remove(reactionList.size() - 1);
-        // Update the list.
-        listViewReactions.setItems(FXCollections.observableArrayList(reactionList));
+        //
+        Platform.runLater(new Runnable(){
+            @Override
+            public void run(){
+                listViewReactions.setItems(FXCollections.observableArrayList(reactionList));
+                listViewReactions.setStyle(chatstyle);
+            }
+        });
+        //listViewReactions.setItems(FXCollections.observableArrayList(reactionList));
         //listViewReactions.setStyle("-fx-background-color:  linear-gradient(#02274f, #101b25)");
         // Start the display timer for the newly added reaction.
         newReaction.start();

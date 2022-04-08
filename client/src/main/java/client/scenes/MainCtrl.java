@@ -33,6 +33,8 @@ public class MainCtrl {
     private Username usernameRoom;
     private Scene userScene;
 
+    //
+
 
 
     public MainCtrl() {
@@ -75,6 +77,8 @@ public class MainCtrl {
         primaryStage.setTitle("QUIZZ");
         primaryStage.setScene(new Scene(overview.getValue()));
         primaryStage.show();
+
+
     }
 
     //Sets and shows the scene.
