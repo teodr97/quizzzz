@@ -21,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import server.database.ActivityRepository;
 import java.util.*;
 
+
 @Controller
 @Slf4j
 @EnableScheduling
@@ -57,14 +58,7 @@ public class GreetingController {
     @Autowired
     public GreetingController(ActivityRepository repo){
         this.repository = repo;
-        //retrieve all activites from the database
-        this.allactivies = (ArrayList<Activity>) repository.findAll();
-        List<Integer> alreadyChosenIndexes = new ArrayList<>();
 
-        this.game = new Game();
-        this.game.createQuestionList(allactivies);
-        this.questionIterator = Arrays.stream(game.questions).iterator();
-        qtimer = new Timer();
     }
 
     /**
@@ -97,6 +91,21 @@ public class GreetingController {
 
         System.out.println(message.toString());
 
+        //retrieve all activites from the database
+        try{
+            this.allactivies = (ArrayList<Activity>) repository.findAll();
+            this.game = new Game();
+            this.game.createQuestionList(allactivies);
+            this.questionIterator = Arrays.stream(game.questions).iterator();
+            qtimer = new Timer();
+        }catch(Exception eX){
+            System.out.println(eX.getMessage());
+        }
+
+        List<Integer> alreadyChosenIndexes = new ArrayList<>();
+
+        
+
         //will be replaced  with game state functionality:
         gamestarted = true;
         return new Message(MessageType.GAME_STARTED, "Server", "Someone started the game");
@@ -108,6 +117,9 @@ public class GreetingController {
     @Scheduled(fixedRate = 10000)
     public void sendQuestion(){
         //the game started reference will probably be a game class attribute
+        if(questionIterator == null){
+            return;
+        }
 
 
         if(gamestarted){
