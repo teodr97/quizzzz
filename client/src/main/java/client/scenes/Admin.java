@@ -300,6 +300,14 @@ public class Admin implements Initializable {
         textConsole.setText("Activity data has been changed");
     }
 
+    /**
+     * refreshes the table
+     */
+    public void refreshTable(){
+        fetchActivities();
+        tableActivity.refresh();
+        textConsole.setText("Table has been refreshed.");
+    }
 
     /**
      * displays the image on the admin panel
