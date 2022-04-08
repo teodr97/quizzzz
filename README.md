@@ -6,6 +6,18 @@ Add your own name (do not add the names for others!) to the section below.
 
 ## Description of project
 
+This project is a quiz game which aims to bring awareness about responsible energy usage to people in a fun and simple way.
+
+There are both a Singleplayer and a Multiplayer mode. The player gets to answer a set of 20 random questions in a short amount of time, and depending on how many correct answers they've got they receive points.
+
+The multiplayer mode lets the player compete against others by answering questions under time pressure (once again) and using special jokers that gives them advantages:
+
+> DOUBLE SCORE: doubles the score;
+> TIME CUT: shrinks the time left to answer a question for everyone;
+> WILDCARD: remove one incorrect answer for the card user;
+
+The multiplayer also features emoticons/reactions to provide player interaction and a more competitive atmosphere.
+
 ## Group members
 
 | Profile Picture | Name | Email |
@@ -19,6 +31,7 @@ Add your own name (do not add the names for others!) to the section below.
 
 ## How to run it
 
+To run it, first download the project. In your preferred IDE, first start an instance of the server and then start client instances.
 
 ## How to import activities
 You need an extracted folder (not zip) containing an activities.json file with all the activities you wish to add
