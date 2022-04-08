@@ -5,9 +5,12 @@ import client.utils.SingleplayerHighscoreHandler;
 import client.utils.StatSharerSingleplayer;
 import com.google.inject.Inject;
 import commons.game.Activity;
+import commons.models.FileInfo;
 import commons.models.Question;
 //import commons.game.Question;
 import commons.models.Game;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.core.GenericType;
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,12 +20,18 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
+import org.apache.tomcat.util.codec.binary.Base64;
+import org.glassfish.jersey.client.ClientConfig;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.*;
+
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 
 public class SinglePlayer implements Initializable {
@@ -257,6 +266,30 @@ public class SinglePlayer implements Initializable {
     }
 
     /**
+     * Set the image for the activity displayed as an option to a single-player question.
+     * @param activity The activity from which the image will be retrieved
+     * @param imageView The corresponding slot in which the image goes
+     */
+    private void displayActivityImage(Activity activity, ImageView imageView) {
+        Activity a = activity;
+        String imagepath = a.getImage_path();
+
+        //request its image path
+        FileInfo fileInfo = ClientBuilder.newClient(new ClientConfig())
+                .target(serverSelectorCtrl.getServer()).path("/images/get")
+                .queryParam("image_path", imagepath )
+                .request(APPLICATION_JSON).accept(APPLICATION_JSON)
+                .get(new GenericType<>() {});
+
+        //decode encoded string
+        String s = fileInfo.getEncoding();
+        InputStream in = new ByteArrayInputStream(Base64.decodeBase64(s));
+
+        //set the test image
+        imageView.setImage(new Image(in));
+    }
+
+    /**
      * Sets the font size of the button texts to a variable size, depending on the length
      * of the text displayed on each button. The button also has its color switch to either
      * green or red depending on whether the answer is correct or not.
@@ -381,6 +414,9 @@ public class SinglePlayer implements Initializable {
         answerA.setText(question.getActivityList().get(0).getTitle());
         answerB.setText(question.getActivityList().get(1).getTitle());
         answerC.setText(question.getActivityList().get(2).getTitle());
+        displayActivityImage(question.getActivityList().get(0), imgBttnA);
+        displayActivityImage(question.getActivityList().get(1), imgBttnB);
+        displayActivityImage(question.getActivityList().get(2), imgBttnC);
 
         resetGamescreen();
     }
